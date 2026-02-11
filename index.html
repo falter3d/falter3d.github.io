@@ -225,7 +225,7 @@
             font-size: 0.95rem;
             letter-spacing: 0.05em;
             backdrop-filter: blur(10px);
-            cursor: pointer;
+            cursor: none;
         }
 
         .link-btn::before {
@@ -1452,7 +1452,7 @@ items:
         </div>
 
     <script>
-        
+        // Mouse Glow and Custom Cursor Effect
         const mouseGlow = document.getElementById('mouseGlow');
         const cursor = document.getElementById('cursor');
 
@@ -1481,7 +1481,7 @@ items:
         }
         animateCursor();
 
-        
+        // Hide scroll indicator on scroll
         window.addEventListener('scroll', () => {
             const scrollIndicator = document.querySelector('.scroll-indicator');
             if (window.scrollY > 100) {
@@ -1493,7 +1493,7 @@ items:
             }
         });
 
-        
+        // Typing Effect Function
         function typeWriter(elementId, text, speed = 100) {
             const element = document.getElementById(elementId);
             let i = 0;
@@ -1527,12 +1527,12 @@ items:
             deleteChar();
         }
 
-        
+        // Typing loop for Discord and Projects
         function typingLoop() {
             const discord = document.getElementById('typingDiscord');
             const projects = document.getElementById('typingProjects');
             
-            
+            // START WITH BOTH ALREADY TYPED OUT
             discord.textContent = 'Discord Bot Development';
             projects.textContent = 'Configuration Work';
             
@@ -1543,30 +1543,30 @@ items:
             ];
             
             function cycle() {
-                
+                // Wait 7 seconds before starting to delete
                 setTimeout(() => {
                     const current = texts[currentIndex];
                     
-                    
+                    // DELETE SLOWLY LETTER BY LETTER (100ms per letter)
                     let deleteIndex = current.text.length;
                     function deleteChar() {
                         if (deleteIndex > 0) {
                             current.element.textContent = current.text.substring(0, deleteIndex - 1);
                             deleteIndex--;
-                            setTimeout(deleteChar, 100); 
+                            setTimeout(deleteChar, 100); // 100ms per letter - SLOW DELETE
                         } else {
-                            
+                            // Wait 1.5 seconds after deletion, then SLOWLY RETYPE
                             setTimeout(() => {
                                 let typeIndex = 0;
                                 function typeChar() {
                                     if (typeIndex < current.text.length) {
                                         current.element.textContent = current.text.substring(0, typeIndex + 1);
                                         typeIndex++;
-                                        setTimeout(typeChar, 120); 
+                                        setTimeout(typeChar, 120); // 120ms per letter - SLOW TYPING
                                     } else {
-                                        
+                                        // Move to next text
                                         currentIndex = (currentIndex + 1) % texts.length;
-                                        cycle(); 
+                                        cycle(); // Continue the loop
                                     }
                                 }
                                 typeChar();
@@ -1574,18 +1574,18 @@ items:
                         }
                     }
                     deleteChar();
-                }, 7000); 
+                }, 7000); // Wait 7 seconds before deleting
             }
             
             cycle();
         }
 
-        
+        // Initialize typing effects when page loads
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(typingLoop, 1000);
             setTimeout(() => typeWriter('typingSkills', 'Technical Skills', 100), 2000);
             
-            
+            // Animate messages on scroll
             const messagesObserver = new IntersectionObserver((entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
@@ -1606,7 +1606,7 @@ items:
             }
         });
 
-        
+        // Discord Profile Widget
         async function loadDiscordProfile() {
             const userId = '184491496291041280';
             const widget = document.getElementById('discordWidget');
@@ -1664,7 +1664,7 @@ items:
 
         window.addEventListener('DOMContentLoaded', loadDiscordProfile);
 
-        
+        // Modal Functions
         function openModal(modalId) {
             const modal = document.getElementById(modalId + '-modal');
             modal.classList.add('active');
@@ -1701,7 +1701,7 @@ items:
             }
         });
 
-        
+        // Animate cards on scroll
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
