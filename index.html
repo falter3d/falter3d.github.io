@@ -330,16 +330,7 @@
         }
 
         .terminal-cursor {
-            display: inline-block;
-            width: 10px;
-            height: 20px;
-            background: var(--purple-bright);
-            animation: blink 1s step-end infinite;
-            margin-left: 5px;
-        }
-
-        @keyframes blink {
-            50% { opacity: 0; }
+            display: none;
         }
 
         /* Modal Styles */
@@ -503,15 +494,46 @@
         <div class="glitch-container">
             <h1>falter</h1>
         </div>
-        <p class="subtitle">SERVER <span>CONFIGURATOR</span></p>
+        <p class="subtitle"><span>MINECRAFT SERVER CONFIGURATOR & DISCORD BOT DEVELOPER</span></p>
         <div class="links">
             <a href="https://github.com/falter3d" class="link-btn" target="_blank">GITHUB</a>
-            <a href="#" class="link-btn">DISCORD: falter3d</a>
+            <a href="#" class="link-btn" onclick="copyDiscord(event)">DISCORD: falter3d</a>
         </div>
     </header>
 
     <main>
-        <h2 class="section-title">Configuration Work<span class="terminal-cursor"></span></h2>
+        <h2 class="section-title">Discord Bot Development</h2>
+        
+        <div class="projects-grid">
+            <div class="project-card" onclick="openModal('vanish-bot')">
+                <span class="project-tag">DISCORD BOT</span>
+                <h3 class="project-title">Vanish Discord Bot</h3>
+                <p class="project-desc">
+                    Comprehensive Discord moderation bot for the Vanish Guild from UltimisMC Minecraft server featuring bilingual support, advanced permission systems, and automated member management.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Discord.js</span>
+                    <span class="tech-tag">Node.js</span>
+                    <span class="tech-tag">JavaScript</span>
+                </div>
+            </div>
+
+            <div class="project-card" onclick="openModal('vanish-games')">
+                <span class="project-tag">DISCORD BOT</span>
+                <span class="project-tag">MINIGAMES BOT</span>
+                <h3 class="project-title">Vanish Games Discord Bot</h3>
+                <p class="project-desc">
+                    All-in-one Discord gaming bot with 11 interactive button-based games including Tic Tac Toe, Blackjack, Trivia, and more. Features cooldown systems and game state management.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Discord.js</span>
+                    <span class="tech-tag">Slash Commands</span>
+                    <span class="tech-tag">Button Interactions</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Configuration Work</h2>
         
         <div class="projects-grid">
             <div class="project-card" onclick="openModal('coinsengine')">
@@ -567,8 +589,19 @@
         </div>
 
         <div class="skills-section">
-            <h2 class="section-title">Technical Skills<span class="terminal-cursor"></span></h2>
+            <h2 class="section-title">Technical Skills</h2>
             <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Discord Bot Development</h3>
+                    <ul>
+                        <li>Discord.js</li>
+                        <li>Slash Commands</li>
+                        <li>Button Interactions</li>
+                        <li>Embed Builders</li>
+                        <li>Permission Systems</li>
+                    </ul>
+                </div>
+
                 <div class="skill-category">
                     <h3>Configuration</h3>
                     <ul>
@@ -603,7 +636,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2026 falter • Server Configurator</p>
+        <p>&copy; 2026 falter • Server Configurator & Discord Bot Developer</p>
     </footer>
 
     <!-- Modals -->
@@ -642,6 +675,7 @@ Command_Aliases: silver
 Column_Name: coins
 Decimal: false
 Start_Value: 0.0</code></div>
+                <a href="https://pastebin.com/jU13bUbA" target="_blank" class="link-btn" style="display: inline-block; margin-top: 1rem;">VIEW FULL CONFIG</a>
             </div>
         </div>
     </div>
@@ -695,6 +729,8 @@ items:
     display_name: '&f&lIron Rank'
     lore:
       - '&7Cost: &f1,000 ⚡ Silver'</code></div>
+                <a href="https://pastebin.com/sTJ79gH0" target="_blank" class="link-btn" style="display: inline-block; margin-right: 1rem; margin-top: 1rem;">VIEW SHOP CONFIG</a>
+                <a href="https://pastebin.com/hZHK2gff" target="_blank" class="link-btn" style="display: inline-block; margin-top: 1rem;">VIEW DELUXEMENUS CONFIG</a>
             </div>
         </div>
     </div>
@@ -770,6 +806,73 @@ items:
         </div>
     </div>
 
+    <!-- Discord Bot Modals -->
+    <div id="vanish-bot-modal" class="modal" onclick="closeModal(event, 'vanish-bot')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal(event, 'vanish-bot')">&times;</button>
+            <span class="modal-tag">DISCORD BOT</span>
+            <h2 class="modal-title">Vanish Discord Bot</h2>
+            
+            <div class="modal-section">
+                <h3>Overview</h3>
+                <p>Comprehensive Discord moderation bot built for the Vanish Guild Discord server, this guild was created on the UltimisMC Minecraft server. This bot features advanced permission hierarchies, bilingual English/Arabic support, and sophisticated member management systems.</p>
+            </div>
+
+            <div class="modal-section">
+                <h3>Key Features</h3>
+                <ul class="feature-list">
+                    <li>Bilingual support (English/Arabic) across all commands</li>
+                    <li>Role-based permission system (Leader, Manager, Admin, Officer)</li>
+                    <li>Advanced moderation (warn, mute, kick, ban)</li>
+                    <li>Temporary role assignment system</li>
+                    <li>DM notification systems</li>
+                    <li>Clean embed formatting without visible user IDs</li>
+                </ul>
+            </div>
+
+            <div class="modal-section">
+                <h3>Technical Implementation</h3>
+                <p>Built with Discord.js and Node.js, implementing complex command structures with over 10,000 lines of code. Utilizes slash commands, button interactions, and advanced permission checks for secure guild management.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="vanish-games-modal" class="modal" onclick="closeModal(event, 'vanish-games')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal(event, 'vanish-games')">&times;</button>
+            <span class="modal-tag">DISCORD BOT</span>
+            <span class="modal-tag">MINIGAMES BOT</span>
+            <h2 class="modal-title">Vanish Games Discord Bot</h2>
+            
+            <div class="modal-section">
+                <h3>Overview</h3>
+                <p>All-in-one Discord gaming bot featuring 11 interactive button-based games with slash commands, cooldown systems, and comprehensive game state management. Built with 1,113 lines of production-ready code.</p>
+            </div>
+
+            <div class="modal-section">
+                <h3>Available Games</h3>
+                <ul class="feature-list">
+                    <li>Tic Tac Toe - Interactive board game with AI opponent</li>
+                    <li>Rock Paper Scissors - Classic choice game</li>
+                    <li>Trivia Quiz - Multiple categories (General, Science, History)</li>
+                    <li>Math Quiz - Difficulty levels (Easy, Medium, Hard)</li>
+                    <li>Dice Roll - Customizable dice games</li>
+                    <li>Coin Flip - Heads or tails prediction</li>
+                    <li>Magic 8-Ball - Fortune telling responses</li>
+                    <li>Higher or Lower - Number prediction game</li>
+                    <li>Blackjack - Full casino-style card game</li>
+                    <li>Guess the Number - Random number guessing</li>
+                    <li>Would You Rather - Community voting game</li>
+                </ul>
+            </div>
+
+            <div class="modal-section">
+                <h3>Technical Implementation</h3>
+                <p>Built with Discord.js featuring slash commands, button interactions, embed builders, and action rows. Implements per-game cooldown systems, active game state tracking, and configurable game settings. Uses Collections for efficient data management and includes admin configuration commands.</p>
+            </div>
+        </div>
+    </div>
+
     <script>
         function openModal(modalId) {
             const modal = document.getElementById(modalId + '-modal');
@@ -784,6 +887,20 @@ items:
             document.body.style.overflow = 'auto';
         }
 
+        function copyDiscord(event) {
+            event.preventDefault();
+            navigator.clipboard.writeText('falter3d').then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✓ COPIED!';
+                btn.style.background = 'rgba(168, 85, 247, 0.3)';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                }, 2000);
+            });
+        }
+
         // Close modal on Escape key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
@@ -792,6 +909,35 @@ items:
                     document.body.style.overflow = 'auto';
                 });
             }
+        });
+
+        // Smooth scroll fade-in/fade-out animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                } else {
+                    entry.target.style.opacity = '0';
+                    entry.target.style.transform = 'translateY(30px)';
+                }
+            });
+        }, observerOptions);
+
+        // Apply fade-in to all project cards and skill categories
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.project-card, .skill-category, .section-title');
+            elements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
         });
     </script>
 </body>
