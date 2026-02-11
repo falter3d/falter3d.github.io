@@ -192,6 +192,7 @@
             position: relative;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             animation: cardSlideIn 0.6s ease-out backwards;
+            cursor: pointer;
         }
 
         .project-card:nth-child(1) { animation-delay: 0.1s; }
@@ -341,6 +342,147 @@
             50% { opacity: 0; }
         }
 
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 2px solid var(--purple-bright);
+            max-width: 900px;
+            max-height: 90vh;
+            width: 90%;
+            padding: 3rem;
+            position: relative;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            box-shadow: 0 0 60px rgba(168, 85, 247, 0.4);
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--purple-bright);
+            transform: rotate(90deg);
+        }
+
+        .modal-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 2rem;
+            color: var(--purple-bright);
+            margin-bottom: 1rem;
+        }
+
+        .modal-tag {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(168, 85, 247, 0.2);
+            color: var(--purple-bright);
+            font-size: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-section {
+            margin-bottom: 2rem;
+        }
+
+        .modal-section h3 {
+            font-family: 'Syne', sans-serif;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .modal-section p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .proof-image {
+            width: 100%;
+            border: 1px solid var(--border);
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .proof-image:hover {
+            transform: scale(1.02);
+            border-color: var(--purple-bright);
+        }
+
+        .code-block {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .code-block code {
+            color: var(--text-secondary);
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .feature-list li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--purple-bright);
+        }
+
         @media (max-width: 768px) {
             header {
                 padding: 2rem 1rem;
@@ -372,7 +514,7 @@
         <h2 class="section-title">Configuration Work<span class="terminal-cursor"></span></h2>
         
         <div class="projects-grid">
-            <div class="project-card">
+            <div class="project-card" onclick="openModal('coinsengine')">
                 <span class="project-tag">ECONOMY SYSTEM</span>
                 <h3 class="project-title">Custom Currency (CoinsEngine)</h3>
                 <p class="project-desc">
@@ -385,7 +527,7 @@
                 </div>
             </div>
 
-            <div class="project-card">
+            <div class="project-card" onclick="openModal('deluxemenus')">
                 <span class="project-tag">GUI SYSTEM</span>
                 <h3 class="project-title">Rank Shop Menu (DeluxeMenus)</h3>
                 <p class="project-desc">
@@ -398,7 +540,7 @@
                 </div>
             </div>
 
-            <div class="project-card">
+            <div class="project-card" onclick="openModal('luckperms')">
                 <span class="project-tag">PERMISSIONS</span>
                 <h3 class="project-title">Rank Hierarchy (LuckPerms)</h3>
                 <p class="project-desc">
@@ -410,7 +552,7 @@
                 </div>
             </div>
 
-            <div class="project-card">
+            <div class="project-card" onclick="openModal('tab')">
                 <span class="project-tag">DISPLAY</span>
                 <h3 class="project-title">Scoreboard System (TAB)</h3>
                 <p class="project-desc">
@@ -463,5 +605,194 @@
     <footer>
         <p>&copy; 2026 falter • Server Configurator</p>
     </footer>
+
+    <!-- Modals -->
+    <div id="coinsengine-modal" class="modal" onclick="closeModal(event, 'coinsengine')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal(event, 'coinsengine')">&times;</button>
+            <span class="modal-tag">ECONOMY SYSTEM</span>
+            <h2 class="modal-title">Custom Currency (CoinsEngine)</h2>
+            
+            <div class="modal-section">
+                <h3>Overview</h3>
+                <p>Designed and implemented a custom "Silver" currency system using CoinsEngine. This included full Vault integration, PlaceholderAPI support for dynamic display, and configuration of economy settings for server-wide use.</p>
+            </div>
+
+            <div class="modal-section">
+                <h3>Key Features</h3>
+                <ul class="feature-list">
+                    <li>Custom Silver currency with ⚡ symbol</li>
+                    <li>Vault integration for cross-plugin compatibility</li>
+                    <li>PlaceholderAPI support for real-time balance display</li>
+                    <li>Configured transfer settings and leaderboards</li>
+                </ul>
+            </div>
+
+            <div class="modal-section">
+                <h3>Proof</h3>
+                <img src="https://via.placeholder.com/800x450/13131a/a855f7?text=Silver+Currency+In-Game" class="proof-image" alt="Silver Currency Screenshot">
+                <img src="https://via.placeholder.com/800x450/13131a/a855f7?text=Currency+Balance+Display" class="proof-image" alt="Balance Display Screenshot">
+            </div>
+
+            <div class="modal-section">
+                <h3>Configuration Sample</h3>
+                <div class="code-block"><code>Name: Silver
+Symbol: ⚡
+Command_Aliases: silver
+Column_Name: coins
+Decimal: false
+Start_Value: 0.0</code></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="deluxemenus-modal" class="modal" onclick="closeModal(event, 'deluxemenus')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal(event, 'deluxemenus')">&times;</button>
+            <span class="modal-tag">GUI SYSTEM</span>
+            <h2 class="modal-title">Rank Shop Menu (DeluxeMenus)</h2>
+            
+            <div class="modal-section">
+                <h3>Overview</h3>
+                <p>Built a complete rank purchase system with DeluxeMenus featuring a custom GUI, Silver currency integration, and automated rank assignment through LuckPerms commands.</p>
+            </div>
+
+            <div class="modal-section">
+                <h3>Key Features</h3>
+                <ul class="feature-list">
+                    <li>Custom purple/black themed GUI</li>
+                    <li>4 purchasable ranks: Iron, Gold, Diamond, Emerald</li>
+                    <li>Currency integration with CoinsEngine</li>
+                    <li>Automatic rank assignment via LuckPerms</li>
+                    <li>Price-based requirements (1k, 3k, 5k, 10k Silver)</li>
+                </ul>
+            </div>
+
+            <div class="modal-section">
+                <h3>Proof</h3>
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; margin-bottom: 1rem;">
+                    <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 1px solid var(--border);" 
+                            src="https://www.youtube.com/embed/YOUR_VIDEO_ID" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                    </iframe>
+                </div>
+                <img src="https://via.placeholder.com/800x450/13131a/a855f7?text=Rank+Shop+GUI" class="proof-image" alt="Shop Menu Screenshot">
+                <img src="https://via.placeholder.com/800x450/13131a/a855f7?text=Purchase+Confirmation" class="proof-image" alt="Purchase Screenshot">
+            </div>
+
+            <div class="modal-section">
+                <h3>Configuration Sample</h3>
+                <div class="code-block"><code>menu_title: '&8[&5Rank Shop&8]'
+open_command: shop
+size: 27
+
+items:
+  'iron_rank':
+    material: IRON_INGOT
+    slot: 10
+    display_name: '&f&lIron Rank'
+    lore:
+      - '&7Cost: &f1,000 ⚡ Silver'</code></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="luckperms-modal" class="modal" onclick="closeModal(event, 'luckperms')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal(event, 'luckperms')">&times;</button>
+            <span class="modal-tag">PERMISSIONS</span>
+            <h2 class="modal-title">Rank Hierarchy (LuckPerms)</h2>
+            
+            <div class="modal-section">
+                <h3>Overview</h3>
+                <p>Configured comprehensive permission system with rank hierarchy including custom prefixes, inheritance structure, and chat formatting integration.</p>
+            </div>
+
+            <div class="modal-section">
+                <h3>Key Features</h3>
+                <ul class="feature-list">
+                    <li>4-tier rank structure: Iron, Gold, Diamond, Emerald</li>
+                    <li>Custom colored prefixes for each rank</li>
+                    <li>Permission inheritance hierarchy</li>
+                    <li>Integration with TAB for display</li>
+                </ul>
+            </div>
+
+            <div class="modal-section">
+                <h3>Proof</h3>
+                <img src="https://via.placeholder.com/800x450/13131a/a855f7?text=Rank+Prefixes+in+Chat" class="proof-image" alt="Rank Prefixes Screenshot">
+                <img src="https://via.placeholder.com/800x450/13131a/a855f7?text=Permission+Groups" class="proof-image" alt="LuckPerms Groups Screenshot">
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-modal" class="modal" onclick="closeModal(event, 'tab')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal(event, 'tab')">&times;</button>
+            <span class="modal-tag">DISPLAY</span>
+            <h2 class="modal-title">Scoreboard System (TAB)</h2>
+            
+            <div class="modal-section">
+                <h3>Overview</h3>
+                <p>Designed custom scoreboard displaying player rank, currency balance, and server statistics with PlaceholderAPI integration for real-time updates.</p>
+            </div>
+
+            <div class="modal-section">
+                <h3>Key Features</h3>
+                <ul class="feature-list">
+                    <li>Real-time Silver balance display</li>
+                    <li>Dynamic rank prefix integration</li>
+                    <li>Online player counter</li>
+                    <li>Clean light blue/white color scheme</li>
+                </ul>
+            </div>
+
+            <div class="modal-section">
+                <h3>Proof</h3>
+                <img src="https://via.placeholder.com/800x450/13131a/a855f7?text=Scoreboard+Display" class="proof-image" alt="Scoreboard Screenshot">
+                <img src="https://via.placeholder.com/800x450/13131a/a855f7?text=Silver+Balance+on+Scoreboard" class="proof-image" alt="Balance on Scoreboard Screenshot">
+            </div>
+
+            <div class="modal-section">
+                <h3>Configuration Sample</h3>
+                <div class="code-block"><code>scoreboard:
+  enabled: true
+  scoreboards:
+    default:
+      title: '&b&lFreeLand &3&lNetwork'
+      lines:
+        - '&7Rank: %luckperms_prefix%'
+        - '&b⚡ Silver: &f%coinsengine_balance_coins%'
+        - '&7Online: &f%online%'</code></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId + '-modal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event, modalId) {
+            event.stopPropagation();
+            const modal = document.getElementById(modalId + '-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.active').forEach(modal => {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                });
+            }
+        });
+    </script>
 </body>
 </html>
