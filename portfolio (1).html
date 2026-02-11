@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>falter - Server Configurator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #13131a;
+            --purple-bright: #a855f7;
+            --purple-deep: #7c3aed;
+            --purple-dark: #5b21b6;
+            --accent: #ec4899;
+            --text-primary: #e4e4e7;
+            --text-secondary: #a1a1aa;
+            --border: rgba(168, 85, 247, 0.2);
+        }
+
+        body {
+            font-family: 'IBM Plex Mono', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 50%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(236, 72, 153, 0.08) 0%, transparent 50%);
+            animation: gradientShift 20s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(5%, -5%) rotate(120deg); }
+            66% { transform: translate(-5%, 5%) rotate(240deg); }
+        }
+
+        /* Grid pattern overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(168, 85, 247, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(168, 85, 247, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        header {
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .glitch-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--purple-bright), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.3)); }
+            50% { filter: drop-shadow(0 0 40px rgba(168, 85, 247, 0.6)); }
+        }
+
+        .subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: var(--text-secondary);
+            font-weight: 300;
+            margin-bottom: 3rem;
+            letter-spacing: 0.1em;
+        }
+
+        .subtitle span {
+            color: var(--purple-bright);
+            font-weight: 500;
+        }
+
+        .links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+
+        .link-btn {
+            padding: 0.8rem 2rem;
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid var(--border);
+            color: var(--purple-bright);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .link-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .link-btn:hover::before {
+            left: 100%;
+        }
+
+        .link-btn:hover {
+            background: rgba(168, 85, 247, 0.2);
+            border-color: var(--purple-bright);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.3);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 6rem;
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--purple-bright), transparent);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .project-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: cardSlideIn 0.6s ease-out backwards;
+        }
+
+        .project-card:nth-child(1) { animation-delay: 0.1s; }
+        .project-card:nth-child(2) { animation-delay: 0.2s; }
+        .project-card:nth-child(3) { animation-delay: 0.3s; }
+        .project-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--purple-bright), var(--accent));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .project-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--purple-bright);
+            box-shadow: 0 20px 60px rgba(168, 85, 247, 0.2);
+        }
+
+        .project-tag {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(168, 85, 247, 0.2);
+            color: var(--purple-bright);
+            font-size: 0.75rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+        }
+
+        .project-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--text-primary);
+        }
+
+        .project-desc {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tech-tag {
+            padding: 0.3rem 0.8rem;
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .skills-section {
+            margin-top: 6rem;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .skill-category {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .skill-category:hover {
+            border-color: var(--purple-bright);
+            transform: translateX(10px);
+        }
+
+        .skill-category h3 {
+            font-family: 'Syne', sans-serif;
+            color: var(--purple-bright);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .skill-category ul {
+            list-style: none;
+        }
+
+        .skill-category li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            position: relative;
+            padding-left: 1.2rem;
+        }
+
+        .skill-category li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--purple-bright);
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 6rem;
+        }
+
+        .terminal-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: var(--purple-bright);
+            animation: blink 1s step-end infinite;
+            margin-left: 5px;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 2rem 1rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="glitch-container">
+            <h1>falter</h1>
+        </div>
+        <p class="subtitle">SERVER <span>CONFIGURATOR</span></p>
+        <div class="links">
+            <a href="https://github.com/falter3d" class="link-btn" target="_blank">GITHUB</a>
+            <a href="#" class="link-btn">DISCORD: falter3d</a>
+        </div>
+    </header>
+
+    <main>
+        <h2 class="section-title">Configuration Work<span class="terminal-cursor"></span></h2>
+        
+        <div class="projects-grid">
+            <div class="project-card">
+                <span class="project-tag">ECONOMY SYSTEM</span>
+                <h3 class="project-title">Custom Currency (CoinsEngine)</h3>
+                <p class="project-desc">
+                    Designed and implemented a custom "Silver" currency system with CoinsEngine. Configured Vault integration, PlaceholderAPI support, and balanced economy settings for server-wide use.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-tag">CoinsEngine</span>
+                    <span class="tech-tag">Vault</span>
+                    <span class="tech-tag">PlaceholderAPI</span>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <span class="project-tag">GUI SYSTEM</span>
+                <h3 class="project-title">Rank Shop Menu (DeluxeMenus)</h3>
+                <p class="project-desc">
+                    Built a complete rank purchase system with DeluxeMenus featuring custom GUI, currency integration, and automated rank assignment through LuckPerms commands.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-tag">DeluxeMenus</span>
+                    <span class="tech-tag">LuckPerms</span>
+                    <span class="tech-tag">YAML</span>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <span class="project-tag">PERMISSIONS</span>
+                <h3 class="project-title">Rank Hierarchy (LuckPerms)</h3>
+                <p class="project-desc">
+                    Configured comprehensive permission system with rank hierarchy (Iron, Gold, Diamond, Emerald) including custom prefixes, inheritance, and chat formatting integration.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-tag">LuckPerms</span>
+                    <span class="tech-tag">Permissions</span>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <span class="project-tag">DISPLAY</span>
+                <h3 class="project-title">Scoreboard System (TAB)</h3>
+                <p class="project-desc">
+                    Designed animated scoreboard displaying player rank, currency balance, and server statistics. Integrated PlaceholderAPI for dynamic real-time updates.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-tag">TAB</span>
+                    <span class="tech-tag">PlaceholderAPI</span>
+                    <span class="tech-tag">Formatting</span>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <span class="project-tag">MINIGAME</span>
+                <h3 class="project-title">Bedwars Arena (Bedwars1058)</h3>
+                <p class="project-desc">
+                    Configured fully functional Bedwars arena from scratch including spawn points, team setup, and custom kill messages. Tested and optimized for competitive gameplay.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Bedwars1058</span>
+                    <span class="tech-tag">Arena Config</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="skills-section">
+            <h2 class="section-title">Technical Skills<span class="terminal-cursor"></span></h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Configuration</h3>
+                    <ul>
+                        <li>YAML Configuration</li>
+                        <li>Plugin Integration</li>
+                        <li>Economy Systems</li>
+                        <li>Permission Management</li>
+                    </ul>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Plugins</h3>
+                    <ul>
+                        <li>LuckPerms</li>
+                        <li>CoinsEngine</li>
+                        <li>DeluxeMenus</li>
+                        <li>TAB Plugin</li>
+                        <li>Bedwars1058</li>
+                    </ul>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Server Management</h3>
+                    <ul>
+                        <li>Paper/Spigot</li>
+                        <li>PlaceholderAPI</li>
+                        <li>Vault Integration</li>
+                        <li>System Debugging</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 falter • Server Configurator</p>
+    </footer>
+</body>
+</html>
