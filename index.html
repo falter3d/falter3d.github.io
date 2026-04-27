@@ -13,8 +13,8 @@
     --surface: #110d0d;
     --border: #1f1515;
     --accent: #c0001a;
-    --text: #e8e2e2;
-    --muted: #5a4a4a;
+    --text: #ffffff;
+    --muted: #b0a0a0;
     --mono: 'JetBrains Mono', monospace;
     --display: 'Oswald', sans-serif;
   }
@@ -28,13 +28,15 @@
     min-height: 100vh;
     overflow-x: hidden;
     cursor: crosshair;
+    -webkit-font-smoothing: antialiased;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
   }
 
   body::after {
     content: '';
     position: fixed;
     inset: 0;
-    background: rgba(8,6,8,0.88);
+    background: rgba(8,6,8,0.72);
     z-index: -1;
     pointer-events: none;
   }
@@ -65,7 +67,7 @@
     align-items: center;
     padding: 1.2rem 2.5rem;
     border-bottom: 1px solid var(--border);
-    background: rgba(8,6,8,0.88);
+    background: rgba(8,6,8,0.72);
     backdrop-filter: blur(12px);
   }
 
