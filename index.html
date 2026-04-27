@@ -127,12 +127,12 @@
   .section-label::after { content: ''; display: block; width: 60px; height: 3px; background: #ffffff; margin: 0.6rem auto 0; }
 
   /* TRAITS */
-  .traits-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .traits-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.12); }
 
-  .trait-card { background: var(--bg); padding: 2rem; transition: background 0.2s; position: relative; overflow: hidden; }
-  .trait-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 0; background: var(--accent); transition: height 0.3s ease; }
-  .trait-card:hover::before { height: 100%; }
-  .trait-card:hover { background: var(--surface); }
+  .trait-card { background: rgba(8,6,8,0.75); border: 1px solid rgba(255,255,255,0.12); padding: 2rem; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; backdrop-filter: blur(6px); }
+  .trait-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
+  .trait-card:hover::before { transform: scaleX(1); }
+  .trait-card:hover { background: rgba(8,6,8,0.88); transform: translateY(-6px); border-color: var(--accent); box-shadow: 0 16px 48px rgba(192,0,26,0.25); }
 
   .trait-num { font-size: 0.65rem; color: var(--muted); margin-bottom: 1rem; letter-spacing: 0.1em; }
   .trait-title { font-family: var(--display); font-size: 1.3rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--text); }
@@ -141,10 +141,10 @@
   /* PROJECTS */
   .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 1rem; }
 
-  .project-card { background: var(--surface); border: 1px solid var(--border); padding: 2rem; position: relative; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; border-radius: 8px; }
+  .project-card { background: rgba(8,6,8,0.75); border: 1px solid rgba(255,255,255,0.12); padding: 2rem; position: relative; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; border-radius: 8px; backdrop-filter: blur(6px); }
   .project-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; border-radius: 8px 8px 0 0; }
   .project-card:hover::before { transform: scaleX(1); }
-  .project-card:hover { transform: translateY(-6px); border-color: var(--accent); box-shadow: 0 16px 48px rgba(192,0,26,0.2); }
+  .project-card:hover { transform: translateY(-6px); border-color: var(--accent); box-shadow: 0 16px 48px rgba(192,0,26,0.25); background: rgba(8,6,8,0.85); }
 
   .project-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
   .project-tag { font-size: 0.6rem; padding: 0.2rem 0.5rem; border: 1px solid var(--accent); color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; }
@@ -157,9 +157,20 @@
   .stack-tag { font-size: 0.65rem; padding: 0.2rem 0.5rem; border: 1px solid var(--border); color: var(--muted); letter-spacing: 0.05em; }
 
   /* SKILLS */
-  .skills-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; background: transparent; border: none; }
-  .skill-row { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1.75rem 1.25rem; gap: 0.75rem; background: transparent; transition: background 0.2s; border: none; }
-  .skill-row:hover { background: rgba(255,255,255,0.05); }
+  .skills-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.12); }
+  .skill-row { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1.75rem 1.25rem; gap: 0.75rem; background: rgba(8,6,8,0.75); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.12); backdrop-filter: blur(6px); position: relative; overflow: hidden; }
+  .skill-row:hover { background: rgba(8,6,8,0.9); transform: translateY(-6px); box-shadow: 0 16px 48px rgba(192,0,26,0.2); border-color: var(--accent); }
+  .skill-row::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .skill-row:hover::before { transform: scaleX(1); }
   .skill-name { font-family: var(--display); font-size: 1.1rem; font-weight: 600; color: var(--text); }
 
   .skill-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
@@ -167,8 +178,8 @@
   .tag.hot { border-color: var(--accent); color: var(--accent); }
 
   /* CONTACT */
-  .discord-block { display: flex; align-items: center; gap: 2rem; padding: 2.5rem; border: 1px solid var(--border); max-width: 460px; position: relative; overflow: hidden; transition: border-color 0.3s; text-decoration: none; }
-  .discord-block:hover { border-color: var(--accent); }
+  .discord-block { display: flex; align-items: center; gap: 2rem; padding: 2.5rem; border: 1px solid rgba(255,255,255,0.12); max-width: 460px; position: relative; overflow: hidden; transition: border-color 0.3s; text-decoration: none; background: rgba(8,6,8,0.75); backdrop-filter: blur(6px); border-radius: 8px; }
+  .discord-block:hover { border-color: var(--accent); background: rgba(8,6,8,0.88); }
   .discord-block::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(192,0,26,0.05) 0%, transparent 60%); pointer-events: none; }
 
   .discord-handle { font-family: var(--display); font-size: 1.6rem; font-weight: 700; color: var(--text); }
@@ -400,14 +411,14 @@
     <div class="trait-card"><p class="trait-num">01</p><h3 class="trait-title">Direct</h3><p class="trait-desc">No beating around the bush. I say what I think, when I think it. You'll always know where you stand with me.</p></div>
     <div class="trait-card"><p class="trait-num">02</p><h3 class="trait-title">Honest</h3><p class="trait-desc">Even when it's uncomfortable. I'd rather give you a hard truth than a comfortable lie.</p></div>
     <div class="trait-card"><p class="trait-num">03</p><h3 class="trait-title">Harsh if needed</h3><p class="trait-desc">If the situation calls for it, I won't soften the blow. Tough love is still love.</p></div>
-    <div class="trait-card"><p class="trait-num">04</p><h3 class="trait-title">Builder</h3><p class="trait-desc">I build things: bots, plugins, systems. If I can imagine it, I'll figure out how to make it work.</p></div>
+    <div class="trait-card"><p class="trait-num">04</p><h3 class="trait-title">Creator</h3><p class="trait-desc">I build things: bots, plugins, systems. If I can imagine it, I'll figure out how to make it work.</p></div>
     <div class="trait-card"><p class="trait-num">05</p><h3 class="trait-title">No-Nonsense</h3><p class="trait-desc">Fluff is a waste of everyone's time. Get to the point, say what matters, move on.</p></div>
     <div class="trait-card"><p class="trait-num">06</p><h3 class="trait-title">Accountable</h3><p class="trait-desc">I hold myself to a standard and I hold others to one too. No exceptions, no excuses.</p></div>
     <div class="trait-card"><p class="trait-num">07</p><h3 class="trait-title">Adaptable</h3><p class="trait-desc">Solo or in a team. Doesn't matter. I work with whatever the situation needs and get it done either way.</p></div>
     <div class="trait-card"><p class="trait-num">08</p><h3 class="trait-title">Persistent</h3><p class="trait-desc">I grind through hard problems, but I'm not stupid about it. A break beats burning out. I come back and finish it.</p></div>
     <div class="trait-card"><p class="trait-num">09</p><h3 class="trait-title">Zero Tolerance</h3><p class="trait-desc">Can't commit? Have a good reason or you're out. Slacking and cutting corners isn't something I let slide.</p></div>
     <div class="trait-card"><p class="trait-num">10</p><h3 class="trait-title">Proactive</h3><p class="trait-desc">I don't wait for problems to come to me. I go to them. That's how I developed this side of myself in the first place.</p></div>
-    <div class="trait-card"><p class="trait-num">11</p><h3 class="trait-title">Experienced</h3><p class="trait-desc">Staffed multiple servers and shipped real projects. I don't just talk about doing things. I've done them.</p></div>
+    <div class="trait-card"><p class="trait-num">11</p><h3 class="trait-title">Experienced</h3><p class="trait-desc">Staffed multiple servers and created real projects. I don't just talk about doing things. I've done them.</p></div>
     <div class="trait-card"><p class="trait-num">12</p><h3 class="trait-title">Unfiltered</h3><p class="trait-desc">What you see is what you get. No performing, no people-pleasing, no adjusting myself depending on who's in the room.</p></div>
   </div>
 </section>
@@ -592,7 +603,7 @@
     </div>
   </a>
   <div class="contact-links reveal">
-    <button class="btn" style="border-color:rgba(255,255,255,0.6);color:#ffffff;background:transparent;" onclick="copyDiscord(this)">Copy Discord Tag</button>
+    <button class="btn" style="border-color:rgba(255,255,255,0.6);color:#ffffff;background:transparent;transition:background 0.2s,color 0.2s;" onmouseenter="this.style.background='rgba(255,255,255,0.1)'" onmouseleave="this.style.background='transparent'" onclick="copyDiscord(this)">Copy Discord Tag</button>
     <a href="https://github.com/falter3d" target="_blank" class="btn btn-ghost">GitHub &rarr;</a>
   </div>
 </section>
