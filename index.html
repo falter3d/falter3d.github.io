@@ -30,6 +30,22 @@
     cursor: crosshair;
   }
 
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(8,6,8,0.72);
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .bg-image {
+    position: fixed;
+    inset: 0;
+    background: url('bg.jpg') center center / cover no-repeat;
+    z-index: -2;
+  }
+
   body::before {
     content: '';
     position: fixed;
@@ -66,6 +82,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    text-align: center;
     padding: 8rem 2.5rem 4rem;
     position: relative;
     border-bottom: 1px solid var(--border);
@@ -76,12 +94,12 @@
 
   .hero-name { font-family: var(--display); font-size: clamp(4rem, 12vw, 10rem); font-weight: 700; line-height: 0.92; letter-spacing: 0.02em; margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.35s; }
   .hero-name .accent { color: var(--accent); }
-  .hero-name .dim { color: var(--muted); }
+  .hero-name .dim { color: #ffffff; }
 
   .hero-desc { max-width: 540px; font-size: 0.85rem; line-height: 1.9; color: #aaa; opacity: 0; animation: fadeUp 0.7s ease forwards 0.5s; }
   .hero-desc strong { color: var(--text); font-weight: 500; }
 
-  .status-widget { display: inline-flex; align-items: center; gap: 0.75rem; padding: 0.6rem 1rem; border: 1px solid var(--border); background: var(--surface); margin-top: 2rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.6s; width: fit-content; }
+  .status-widget { display: inline-flex; align-items: center; gap: 0.75rem; padding: 0.6rem 1rem; border: 1px solid var(--border); background: var(--surface); margin-top: 2rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.6s; width: fit-content; align-self: center; }
 
   .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex-shrink: 0; transition: background 0.3s; }
   .status-dot.online { background: #23a559; box-shadow: 0 0 6px #23a55980; }
@@ -92,7 +110,7 @@
   .status-text { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.05em; }
   .status-text strong { color: var(--text); font-weight: 400; }
 
-  .hero-cta { margin-top: 2rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s ease forwards 0.75s; }
+  .hero-cta { margin-top: 2rem; display: flex; gap: 1rem; align-items: center; justify-content: center; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s ease forwards 0.75s; }
 
   .btn { display: inline-block; padding: 0.75rem 1.75rem; border: 1px solid var(--accent); color: var(--accent); text-decoration: none; font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; transition: background 0.2s, color 0.2s; cursor: pointer; }
   .btn:hover { background: var(--accent); color: var(--bg); }
@@ -104,8 +122,8 @@
   /* SECTIONS */
   section { padding: 5rem 2.5rem; border-bottom: 1px solid var(--border); }
 
-  .section-label { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 3rem; display: flex; align-items: center; gap: 1rem; }
-  .section-label::after { content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--accent); opacity: 0.4; }
+  .section-label { font-size: 2rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 3rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; font-family: var(--display); font-weight: 700; text-align: center; }
+  .section-label::after { content: ''; display: block; width: 60px; height: 3px; background: #ffffff; margin: 0.6rem auto 0; }
 
   /* TRAITS */
   .traits-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
@@ -120,12 +138,12 @@
   .trait-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.7; }
 
   /* PROJECTS */
-  .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 1rem; }
 
-  .project-card { background: var(--bg); padding: 2rem; transition: background 0.2s; position: relative; overflow: hidden; }
-  .project-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; }
+  .project-card { background: var(--surface); border: 1px solid var(--border); padding: 2rem; position: relative; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; border-radius: 8px; }
+  .project-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; border-radius: 8px 8px 0 0; }
   .project-card:hover::before { transform: scaleX(1); }
-  .project-card:hover { background: var(--surface); }
+  .project-card:hover { transform: translateY(-6px); border-color: var(--accent); box-shadow: 0 16px 48px rgba(192,0,26,0.2); }
 
   .project-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
   .project-tag { font-size: 0.6rem; padding: 0.2rem 0.5rem; border: 1px solid var(--accent); color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; }
@@ -138,12 +156,12 @@
   .stack-tag { font-size: 0.65rem; padding: 0.2rem 0.5rem; border: 1px solid var(--border); color: var(--muted); letter-spacing: 0.05em; }
 
   /* SKILLS */
-  .skills-list { display: flex; flex-direction: column; }
-  .skill-row { display: flex; align-items: baseline; justify-content: space-between; padding: 1.25rem 0; border-bottom: 1px solid var(--border); gap: 1rem; transition: padding-left 0.2s; }
-  .skill-row:hover { padding-left: 1rem; }
-  .skill-name { font-family: var(--display); font-size: 1.1rem; font-weight: 600; }
+  .skills-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .skill-row { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1.75rem 1.25rem; gap: 0.75rem; background: var(--bg); transition: background 0.2s; }
+  .skill-row:hover { background: var(--surface); }
+  .skill-name { font-family: var(--display); font-size: 1.1rem; font-weight: 600; color: var(--text); }
 
-  .skill-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; }
+  .skill-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
   .tag { font-size: 0.65rem; padding: 0.25rem 0.6rem; border: 1px solid var(--border); color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
   .tag.hot { border-color: var(--accent); color: var(--accent); }
 
@@ -155,9 +173,9 @@
   .discord-handle { font-family: var(--display); font-size: 1.6rem; font-weight: 700; color: var(--text); }
   .discord-label { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.25rem; }
 
-  .contact-links { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
+  .contact-links { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; justify-content: center; }
 
-  footer { padding: 2rem 2.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.05em; }
+  footer { padding: 2rem 2.5rem; display: flex; justify-content: center; align-items: center; gap: 2rem; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.05em; }
 
 
   /* CUSTOM CURSOR - from old site, red */
@@ -303,6 +321,18 @@
   .scroll-arrow::before { right: 50%; transform: rotate(45deg); transform-origin: right; }
   .scroll-arrow::after { left: 50%; transform: rotate(-45deg); transform-origin: left; }
   @keyframes smoothBounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+  /* ORBS */
+  .bg-orbs { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.25; animation: floatOrb ease-in-out infinite; }
+  .orb1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(192,0,26,0.3) 0%, transparent 70%); top: -10%; left: -10%; animation-duration: 25s; }
+  .orb2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(120,0,15,0.2) 0%, transparent 70%); top: 40%; right: -10%; animation-duration: 20s; animation-delay: -5s; }
+  .orb3 { width: 350px; height: 350px; background: radial-gradient(circle, rgba(80,0,10,0.15) 0%, transparent 70%); bottom: -10%; left: 30%; animation-duration: 22s; animation-delay: -10s; }
+  @keyframes floatOrb {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -30px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+  }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
@@ -317,12 +347,15 @@
     .hero { padding: 7rem 1.25rem 3rem; }
     section { padding: 3.5rem 1.25rem; }
     footer { flex-direction: column; gap: 0.5rem; text-align: center; }
-    .projects-grid, .traits-grid { grid-template-columns: 1fr; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .traits-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
+<div class="bg-image"></div>
+<div class="bg-orbs"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
 <nav>
   <div class="nav-logo">falter3d</div>
   <ul class="nav-links">
@@ -379,9 +412,9 @@
 </section>
 
 
-<section id="history">
+<section id="history" style="text-align:center;">
   <p class="section-label reveal">Background</p>
-  <div class="reveal" style="max-width: 680px; display: flex; flex-direction: column; gap: 1.25rem;">
+  <div class="reveal" style="max-width: 680px; display: flex; flex-direction: column; gap: 1.25rem; margin: 0 auto; align-items: center;">
     <p style="font-size: 0.85rem; line-height: 1.9; color: #aaa;">
       Previously served as a <strong style="color: var(--text); font-weight: 500;">Developer</strong> and 
       <strong style="color: var(--text); font-weight: 500;">Staff Member</strong> at UltimisMC, and held 
@@ -397,7 +430,7 @@
 </section>
 <section id="projects">
   <p class="section-label reveal">Current work</p>
-  <div class="projects-grid reveal" style="grid-template-columns: 1fr; margin-bottom: 1px;">
+  <div class="projects-grid reveal">
     <div class="project-card" onclick="openModal('gory-bot')" style="cursor:none">
       <div class="project-tags"><span class="project-tag">Discord Bot</span><span class="project-tag" style="border-color:#23a559;color:#23a559;">In Progress</span></div>
       <h3 class="project-title">Gory Bot</h3>
@@ -409,9 +442,56 @@
         <span class="stack-tag">Slash Commands</span>
       </div>
     </div>
+
+    <div class="project-card" onclick="openModal('vanishitems-v2')" style="cursor:none">
+      <div class="project-tags"><span class="project-tag">Minecraft Plugin</span><span class="project-tag" style="border-color:#23a559;color:#23a559;">In Progress</span></div>
+      <h3 class="project-title">VanishItems v2</h3>
+      <p class="project-desc">Rebuilt gear plugin for Vanish SMP. Fully config-driven ability registry. Abilities defined in YAML with triggers, targets, cooldowns, point costs, and effect stacks. No hardcoded logic.</p>
+      <div class="project-stack">
+        <span class="stack-tag">Java</span>
+        <span class="stack-tag">Spigot / Paper</span>
+        <span class="stack-tag">PacketEvents</span>
+        <span class="stack-tag">YAML</span>
+      </div>
+    </div>
+
+    <div class="project-card" onclick="openModal('vanishteams')" style="cursor:none">
+      <div class="project-tags"><span class="project-tag">Minecraft Plugin</span><span class="project-tag" style="border-color:#23a559;color:#23a559;">In Progress</span></div>
+      <h3 class="project-title">VanishTeams v1</h3>
+      <p class="project-desc">Private fork of BetterTeams, heavily modified and built exclusively for Vanish SMP. Custom team mechanics tailored to the server. Not distributed anywhere.</p>
+      <div class="project-stack">
+        <span class="stack-tag">Java</span>
+        <span class="stack-tag">Spigot / Paper</span>
+        <span class="stack-tag">LuckPerms</span>
+      </div>
+    </div>
+
+    <div class="project-card" onclick="openModal('vanishitems-v1')" style="cursor:none">
+      <div class="project-tags"><span class="project-tag">Minecraft Plugin</span><span class="project-tag archived">Completed</span></div>
+      <h3 class="project-title">VanishItems v1</h3>
+      <p class="project-desc">Custom gear plugin with 40+ abilities across combat, utility, passive, and visual categories. Lifesteal, Shadowstep, Grapple, Homing, Ore Sight, armor set bonuses, GUI item editor, and more.</p>
+      <div class="project-stack">
+        <span class="stack-tag">Java</span>
+        <span class="stack-tag">Spigot / Paper</span>
+        <span class="stack-tag">WorldGuard</span>
+        <span class="stack-tag">ProtocolLib</span>
+      </div>
+    </div>
+
+    <div class="project-card" onclick="openModal('vanishcolors')" style="cursor:none">
+      <div class="project-tags"><span class="project-tag">Minecraft Plugin</span><span class="project-tag archived">Completed</span></div>
+      <h3 class="project-title">VanishColors v1</h3>
+      <p class="project-desc">Custom name and chat colour plugin. Supports standard colours, hex, gradients, and rainbow. GUI colour picker, SQLite-backed, permission-gated per feature, PlaceholderAPI support.</p>
+      <div class="project-stack">
+        <span class="stack-tag">Java</span>
+        <span class="stack-tag">LuckPerms</span>
+        <span class="stack-tag">PlaceholderAPI</span>
+        <span class="stack-tag">SQLite</span>
+      </div>
+    </div>
   </div>
 
-  <p class="section-label reveal" style="margin-top: 3rem;">Past work</p>
+  <p class="section-label reveal" style="margin-top: 0; padding-top: 5rem; border-top: 1px solid var(--border);">Previous Work</p>
   <div class="projects-grid reveal">
 
     <div class="project-card" onclick="openModal('vanish-bot')" style="cursor:none">
@@ -490,8 +570,8 @@
 <section id="skills">
   <p class="section-label reveal">What I do</p>
   <div class="skills-list">
-    <div class="skill-row reveal"><span class="skill-name">Discord Bots</span><div class="skill-tags"><span class="tag hot">Shipped</span><span class="tag">Discord.js</span><span class="tag">Node.js</span></div></div>
-    <div class="skill-row reveal"><span class="skill-name">Minecraft Plugins</span><div class="skill-tags"><span class="tag hot">Shipped</span><span class="tag">Java</span><span class="tag">Spigot / Paper</span></div></div>
+    <div class="skill-row reveal"><span class="skill-name">Discord Bots</span><div class="skill-tags"><span class="tag hot">Completed</span><span class="tag">Discord.js</span><span class="tag">Node.js</span></div></div>
+    <div class="skill-row reveal"><span class="skill-name">Minecraft Plugins</span><div class="skill-tags"><span class="tag hot">Completed</span><span class="tag">Java</span><span class="tag">Spigot / Paper</span></div></div>
     <div class="skill-row reveal"><span class="skill-name">Server Configuration</span><div class="skill-tags"><span class="tag hot">Experience</span><span class="tag">YAML</span><span class="tag">Plugin Integration</span></div></div>
     <div class="skill-row reveal"><span class="skill-name">Server Staff</span><div class="skill-tags"><span class="tag hot">Experience</span><span class="tag">Moderation</span><span class="tag">Management</span></div></div>
     <div class="skill-row reveal"><span class="skill-name">Economy Systems</span><div class="skill-tags"><span class="tag">CoinsEngine</span><span class="tag">Vault</span><span class="tag">PlaceholderAPI</span></div></div>
@@ -499,7 +579,7 @@
   </div>
 </section>
 
-<section id="contact">
+<section id="contact" style="display:flex;flex-direction:column;align-items:center;text-align:center;">
   <p class="section-label reveal">Find me</p>
   <a href="https://discord.com/users/184491496291041280" target="_blank" class="discord-block reveal">
     <svg width="38" height="38" viewBox="0 0 71 55" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -528,6 +608,103 @@
 <div id="cursor"></div>
 
 <!-- MODALS -->
+
+
+<div class="modal-overlay" id="modal-vanishitems-v2" onclick="closeModal(event, 'vanishitems-v2')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalById('vanishitems-v2')">&times;</button>
+    <div class="modal-tags"><span class="project-tag">Minecraft Plugin</span><span class="project-tag" style="border-color:#23a559;color:#23a559;">In Progress</span></div>
+    <h2 class="modal-title">VanishItems v2</h2>
+    <div class="modal-section">
+      <p class="modal-section-label">Overview</p>
+      <p>Full rebuild of VanishItems for Vanish SMP. Where v1 had hardcoded ability logic in Java, v2 moves everything to a config-driven registry. New abilities can be added entirely in YAML without touching any code.</p>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Features</p>
+      <ul class="modal-feature-list">
+        <li>Fully YAML-driven ability definitions with triggers, targets, cooldowns, and point costs</li>
+        <li>Ability categories: Combat, Utility, Passive, Visual</li>
+        <li>Triggers: ON_HIT, ON_KILL, ON_RIGHT_CLICK, ON_BLOCK_BREAK, PASSIVE, ON_DAMAGED, ON_SNEAK_RIGHT_CLICK</li>
+        <li>Effect stack system for config-driven abilities without custom handlers</li>
+        <li>Shop integration with price points per ability</li>
+        <li>Armor hide via PacketEvents</li>
+      </ul>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Stack</p>
+      <div class="modal-stack"><span class="stack-tag">Java</span><span class="stack-tag">Spigot / Paper</span><span class="stack-tag">PacketEvents</span><span class="stack-tag">YAML</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-vanishteams" onclick="closeModal(event, 'vanishteams')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalById('vanishteams')">&times;</button>
+    <div class="modal-tags"><span class="project-tag">Minecraft Plugin</span><span class="project-tag" style="border-color:#23a559;color:#23a559;">In Progress</span></div>
+    <h2 class="modal-title">VanishTeams v1</h2>
+    <div class="modal-section">
+      <p class="modal-section-label">Overview</p>
+      <p>Private fork of BetterTeams, heavily modified and built exclusively for Vanish SMP. The base plugin handles team creation and management. The fork customises the mechanics, integrations, and behaviour specifically for the server. Not distributed anywhere.</p>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Stack</p>
+      <div class="modal-stack"><span class="stack-tag">Java</span><span class="stack-tag">Spigot / Paper</span><span class="stack-tag">LuckPerms</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-vanishitems-v1" onclick="closeModal(event, 'vanishitems-v1')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalById('vanishitems-v1')">&times;</button>
+    <div class="modal-tags"><span class="project-tag">Minecraft Plugin</span><span class="project-tag archived">Completed</span></div>
+    <h2 class="modal-title">VanishItems v1</h2>
+    <div class="modal-section">
+      <p class="modal-section-label">Overview</p>
+      <p>Custom gear plugin for Vanish SMP with a config-driven item system and 40+ unique abilities. Built with WorldGuard integration, soulbound items, a GUI item editor, and custom kill messages. Superseded by v2 which rebuilds the ability system to be fully config-driven.</p>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Abilities</p>
+      <ul class="modal-feature-list">
+        <li>Combat: Lifesteal, Shadowstep, Shockwave, Bleed, Venom, Thunder Strike, Pierce, Shatter</li>
+        <li>Projectile: Grapple, Homing, Multishot</li>
+        <li>Tool: Auto-Smelt, Multi-Mine, Auto-Replant, Ore Sight, Blast Mine, Magnet, XP Boost</li>
+        <li>Passive: Armor set bonuses, Speed on Kill, Night Vision, Silent Steps, No Fall Damage</li>
+        <li>Visual: Particle Burst, Ambient Aura</li>
+      </ul>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Stack</p>
+      <div class="modal-stack"><span class="stack-tag">Java</span><span class="stack-tag">Spigot / Paper</span><span class="stack-tag">WorldGuard</span><span class="stack-tag">ProtocolLib</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-vanishcolors" onclick="closeModal(event, 'vanishcolors')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalById('vanishcolors')">&times;</button>
+    <div class="modal-tags"><span class="project-tag">Minecraft Plugin</span><span class="project-tag archived">Completed</span></div>
+    <h2 class="modal-title">VanishColors v1</h2>
+    <div class="modal-section">
+      <p class="modal-section-label">Overview</p>
+      <p>Custom name and chat colour plugin built for Vanish SMP. Players can personalise their name colour and message colour with standard colours, hex codes, gradients, or rainbow. All features are permission-gated via LuckPerms.</p>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Features</p>
+      <ul class="modal-feature-list">
+        <li>Name colour and message colour customisation independently</li>
+        <li>Standard colours, hex, gradients (up to 3 stops), and rainbow</li>
+        <li>GUI colour picker accessible via /vcolor</li>
+        <li>PlaceholderAPI expansion for display in tab, scoreboard, etc.</li>
+        <li>SQLite-backed persistent storage</li>
+        <li>Admin commands to change other players colours</li>
+      </ul>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Stack</p>
+      <div class="modal-stack"><span class="stack-tag">Java</span><span class="stack-tag">LuckPerms</span><span class="stack-tag">PlaceholderAPI</span><span class="stack-tag">SQLite</span></div>
+    </div>
+  </div>
+</div>
 
 <div class="modal-overlay" id="modal-gory-bot" onclick="closeModal(event, 'gory-bot')">
   <div class="modal-box" onclick="event.stopPropagation()">
@@ -849,10 +1026,11 @@ items:
   // Reveal on scroll
   const reveals = document.querySelectorAll('.reveal');
   const obs = new IntersectionObserver((entries) => {
-    entries.forEach((e, i) => {
+    entries.forEach((e) => {
       if (e.isIntersecting) {
-        setTimeout(() => e.target.classList.add('visible'), i * 60);
-        obs.unobserve(e.target);
+        e.target.classList.add('visible');
+      } else {
+        e.target.classList.remove('visible');
       }
     });
   }, { threshold: 0.08 });
