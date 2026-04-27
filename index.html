@@ -115,8 +115,8 @@
 
   .btn { display: inline-block; padding: 0.75rem 1.75rem; border: 1px solid var(--accent); color: var(--accent); text-decoration: none; font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; transition: background 0.2s, color 0.2s; cursor: pointer; }
   .btn:hover { background: var(--accent); color: var(--bg); }
-  .btn-ghost { border-color: var(--border); color: var(--muted); }
-  .btn-ghost:hover { background: var(--surface); color: var(--text); }
+  .btn-ghost { border-color: rgba(255,255,255,0.6); color: #ffffff; }
+  .btn-ghost:hover { background: rgba(255,255,255,0.1); color: #ffffff; }
 
   .hero-corner { position: absolute; bottom: 3rem; right: 2.5rem; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; writing-mode: vertical-rl; opacity: 0; animation: fadeUp 0.7s ease forwards 0.9s; }
 
@@ -592,7 +592,7 @@
     </div>
   </a>
   <div class="contact-links reveal">
-    <button class="btn" onclick="copyDiscord(this)">Copy Discord Tag</button>
+    <button class="btn" style="border-color:rgba(255,255,255,0.6);color:#ffffff;background:transparent;" onclick="copyDiscord(this)">Copy Discord Tag</button>
     <a href="https://github.com/falter3d" target="_blank" class="btn btn-ghost">GitHub &rarr;</a>
   </div>
 </section>
