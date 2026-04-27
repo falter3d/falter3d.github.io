@@ -1,1211 +1,695 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>falter - Server Configurator & Discord Bot Developer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=IBM+Plex+Mono:wght@300;400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-         :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary:  #13131a;
-            --discord-dark: #1a1a1e;
-            --blue-bright: #01cfff;
-            --blue-deep: #00b8e6;
-            --blue-dark: #0099cc;
-            --accent: #01cfff;
-            --text-primary:  #e4e4e7;
-            --text-secondary: #a1a1aa;
-            --border: rgba(1, 207, 255, 0.2);
-        }
-        body {
-            font-family: 'IBM Plex Mono', monospace;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            overflow-x:  hidden;
-            line-height:  1.6;
-            cursor: none;
-        }
-        #mouseGlow {
-            position: fixed;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(1, 207, 255, 0.12) 0%, rgba(1, 207, 255, 0.06) 30%, transparent 70%);
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition:  opacity 0.3s ease;
-            opacity: 0;
-            mix-blend-mode: screen
-        }
-        body.mouse-active #mouseGlow {
-            opacity: 1
-        }
-        #cursor {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background:  var(--blue-bright);
-            pointer-events: none;
-            z-index: 10000;
-            transform: translate(-50%, -50%);
-            transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
-         box-shadow: 0 0 20px rgba(1, 207, 255, 0.6);
-        }
-        a:hover ~ #cursor,
-        button:hover ~ #cursor,
-        .project-card:hover ~ #cursor,
-        .link-btn:hover ~ #cursor {
-            width: 16px;
-            height: 16px;
-            opacity: 0.8;
-        }
-        .bg-gradient {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-         top:  0;
-            left: 0;
-            z-index: -2;
-            background: linear-gradient(180deg, #0a0a0f 0%, #13131a 100%);
-        }
-        .bg-orbs {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            overflow: hidden
-        }
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.3;
-            animation: float ease-in-out infinite;
-        }
-        .orb1 {
-            width:  500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(1, 207, 255, 0.4) 0%, transparent 70%);
-            top: -10%;
-            left: -10%;
-            animation-duration:  25s;
-        }
-        .orb2 {
-            width: 400px;
-            height:  400px;
-            background: radial-gradient(circle, rgba(124, 58, 237, 0.3) 0%, transparent 70%);
-            top: 40%;
-            right: -10%;
-            animation-duration: 20s;
-            animation-delay: -5s;
-        }
-         .orb3 {
-            width: 350px;
-            height: 350px;
-            background: radial-gradient(circle, rgba(236, 72, 153, 0.25) 0%, transparent 70%);
-            bottom: -10%;
-         left: 30%;
-            animation-duration: 22s;
-            animation-delay: -10s;
-        }
-        @keyframes float {
-            0%, 100% {
-                transform: translate(0, 0) scale(1);
-            }
-            33% {
-                transform: translate(30px, -30px) scale(1.1);
-            }
-            66% {
-         transform: translate(-20px, 20px) scale(0.9);
-            }
-        }
-        .grid-pattern {
-            position: fixed;
-            top:  0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image:
-                linear-gradient(rgba(1, 207, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(1, 207, 255, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            z-index: -1;
-            pointer-events: none
-        }
-        header {
-            padding:  4rem 2rem 3rem;
-            text-align: center;
-            position: relative;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-         }
-        header > div {
-            width: 100%;
-            max-width: 1200px;
-            margin:  0 auto;
-        }
-        h1 {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(3.5rem, 10vw, 7rem);
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--blue-bright), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.02em;
-            margin-bottom:  1rem;
-            animation: titleGlow 3s ease-in-out infinite;
-        }
-        @keyframes titleGlow {
-            0%, 100% { filter: drop-shadow(0 0 30px rgba(1, 207, 255, 0.4)); }
-            50% { filter: drop-shadow(0 0 50px rgba(1, 207, 255, 0.6)); }
-        }
-        .subtitle {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            color: var(--text-secondary);
-            font-weight: 300;
-            margin-bottom: 2.5rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-        }
-        .subtitle span {
-            color: var(--blue-bright);
-            font-weight: 600;
-        }
-        .links {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 3rem;
-        }
-        .link-btn {
-            padding:  1rem 2.5rem;
-            background: rgba(1, 207, 255, 0.1);
-            border: 2px solid var(--border);
-            color: var(--blue-bright);
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            position:  relative;
-            overflow: hidden;
-            font-size: 0.95rem;
-            letter-spacing: 0.05em;
-         backdrop-filter: blur(10px);
-            cursor: none;
-        }
-        .link-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(1, 207, 255, 0.3), transparent);
-            transition: left 0.5s ease;
-        }
-        .link-btn:hover::before {
-            left: 100%;
-         }
-        .link-btn:hover {
-            background: rgba(1, 207, 255, 0.2);
-            border-color: var(--blue-bright);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 40px rgba(1, 207, 255, 0.3);
-        }
-        .discord-profiles {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            margin-top: 2rem;
-            flex-wrap:  wrap;
-        }
-        .discord-profile-card {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-         padding: 1.5rem;
-            display: flex;
-            align-items:  center;
-            gap: 1rem;
-            transition:  all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-        .discord-profile-card:hover {
-            border-color: var(--blue-bright);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(1, 207, 255, 0.3)
-        }
-        .discord-avatar {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            border: 3px solid var(--blue-bright);
-            box-shadow: 0 0 20px rgba(1, 207, 255, 0.4);
-            object-fit:  cover;
-            display: block;
-        }
-        .discord-info {
-            display: flex;
-            flex-direction:  column;
-            gap: 0.25rem;
-        }
-        .discord-name {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.1rem;
-         font-weight: 700;
-            color: var(--text-primary);
-        }
-        .discord-tag {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>falter3d</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.discord-widget {
-         background: var(--bg-secondary);
-            border-radius: 16px;
-            padding: 2rem;
-            max-width: 420px;
-         margin: 0 auto 3rem;
-            border: 2px solid var(--border);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-         transition: all 0.4s ease;
-            backdrop-filter: blur(10px);
-        }
+  :root {
+    --bg: #080608;
+    --surface: #110d0d;
+    --border: #1f1515;
+    --accent: #c0001a;
+    --text: #e8e2e2;
+    --muted: #5a4a4a;
+    --mono: 'JetBrains Mono', monospace;
+    --display: 'Oswald', sans-serif;
+  }
 
-.discord-widget:hover {
-            border-color: var(--blue-bright);
-            transform: translateY(-6px);
-            box-shadow:  0 16px 48px rgba(1, 207, 255, 0.3);
-        }
-        .widget-header {
-            display: flex;
-            align-items: center;
-            gap: 1.25rem;
-            margin-bottom:  1.25rem;
-        }
-        .avatar-container {
-            position: relative;
-            width: 80px;
-            height: 80px
-        }
-        .avatar {
-            width: 80px;
-            height:  80px;
-            border-radius: 50%;
-            border: 4px solid var(--bg-secondary);
-            background: var(--bg-primary);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-        }
-        .status-indicator {
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: #23a559;
-            border: 4px solid var(--bg-secondary);
-            box-shadow: 0 0 10px rgba(35, 165, 89, 0.5);
-        }
-        .status-indicator.offline {
-            background: #80848e;
-            box-shadow: none;
-        }
-        .status-indicator.idle {
-            background: #f0b232;
-            box-shadow: 0 0 10px rgba(240, 178, 50, 0.5);
-        }
-         .status-indicator.dnd {
-            background: #f23f43;
-            box-shadow: 0 0 10px rgba(242, 63, 67, 0.5);
-        }
-        .widget-info {
-            flex: 1;
-         }
-        .username {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.25rem;
-        }
-        .discriminator {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-        .bio {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            margin-top: 1.25rem;
-            padding: 1rem;
-            background: rgba(1, 207, 255, 0.05);
-            border-radius: 8px;
-            border-left: 3px solid var(--blue-bright);
-        }
-        .scroll-indicator {
-            position: absolute;
-         bottom: 3rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-         animation: smoothBounce 2s ease-in-out infinite;
-            opacity: 0.8;
-            transition: opacity 0.3s ease;
-         cursor: pointer;
-        }
-        .scroll-indicator:hover {
-            opacity: 1;
-        }
-        .scroll-text {
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-        .scroll-arrow {
-            width: 30px;
-            height: 30px;
-            position: relative;
-        }
-        .scroll-arrow::before,
-        .scroll-arrow::after {
-            content: '';
-            position: absolute;
-            width: 15px;
-            height: 2px;
-            background: var(--blue-bright);
-            border-radius: 2px;
-        }
-        .scroll-arrow::before {
-            right: 50%;
-            transform: rotate(45deg);
-            transform-origin: right;
-        }
-        .scroll-arrow::after {
-            left: 50%;
-            transform: rotate(-45deg);
-            transform-origin: left;
-         }
-        @keyframes smoothBounce {
-            0%, 100% {
-                transform: translateX(-50%) translateY(0);
-            }
-            50% {
-                transform: translateX(-50%) translateY(10px);
-            }
-        }
-        main {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem 4rem;
-            position: relative;
-            z-index:  1;
-        }
-        .section-title {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(2rem, 5vw, 3rem);
-            font-weight: 700;
-            margin-bottom: 3rem;
-            position: relative;
-            display: inline-block;
-            min-height: 3.5rem
-        }
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 60%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--blue-bright), transparent);
-        }
-        .typing-text {
-            opacity: 0;
-            animation: fadeIn 0.3s ease forwards;
-        }
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-        .typing-cursor {
-            display: inline-block;
-            width: 3px;
-            height: 1em;
-            background: var(--blue-bright);
-            margin-left: 5px;
-            animation: blink 1s step-end infinite;
-            vertical-align: text-bottom;
-        }
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
+  html { scroll-behavior: smooth; }
 
-.projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
 
-.project-card {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border);
-         padding: 2rem;
-            position: relative;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: none;
-            border-radius: 8px;
-            backdrop-filter: blur(10px);
-        }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 999;
+  }
 
-.project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--blue-bright), var(--accent));
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s ease;
-            border-radius:  8px 8px 0 0;
-        }
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(8,6,8,0.88);
+    backdrop-filter: blur(12px);
+  }
 
-.project-card:hover::before {
-            transform: scaleX(1);
-        }
+  .nav-logo { font-family: var(--display); font-size: 1.1rem; font-weight: 700; color: var(--accent); letter-spacing: 0.05em; }
 
-.project-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--blue-bright);
-            box-shadow: 0 20px 60px rgba(1, 207, 255, 0.25);
-        }
-        .project-tag {
-            display: inline-block;
-            padding: 0.4rem 0.9rem;
-            background: rgba(1, 207, 255, 0.15);
-            color: var(--blue-bright);
-            font-size: 0.75rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            border-radius: 4px
-        }
-        .project-title {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.8rem;
-            color: var(--text-primary);
-        }
-        .project-desc {
-            color: var(--text-secondary);
-         margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-            line-height: 1.7;
-        }
-        .tech-stack {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        .tech-tag {
-            padding: 0.4rem 0.9rem;
-            background: rgba(1, 207, 255, 0.08);
-            border: 1px solid rgba(1, 207, 255, 0.3);
-            color:  var(--text-secondary);
-            font-size: 0.8rem;
-            border-radius: 4px;
-        }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
 
-.skills-section {
-            margin-top: 6rem;
-        }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--accent); }
 
-.skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-        .skill-category {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border);
-            padding: 2rem;
-            transition: all 0.3s ease;
-            border-radius: 8px;
-            backdrop-filter: blur(10px);
-        }
-        .skill-category:hover {
-         border-color: var(--blue-bright);
-            transform: translateX(10px);
-            box-shadow: 0 8px 32px rgba(1, 207, 255, 0.15);
-        }
-        .skill-category h3 {
-            font-family: 'Syne', sans-serif;
-            color: var(--blue-bright);
-            margin-bottom: 1.25rem;
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-        .skill-category ul {
-            list-style: none;
-        }
-        .skill-category li {
-            padding: 0.6rem 0;
-            color:  var(--text-secondary);
-         position: relative;
-            padding-left: 1.5rem;
-            transition: all 0.2s ease;
-        }
-        .skill-category li:hover {
-            color: var(--text-primary);
-            padding-left: 2rem;
-        }
-        .skill-category li::before {
-            content: '▹';
-            position: absolute;
-         left: 0;
-            color: var(--blue-bright);
-            font-weight: 700;
-        }
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 2.5rem 4rem;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+  }
 
-.contact-section {
-            margin-top: 6rem;
-            padding: 3.5rem 2.5rem;
-            background: var(--bg-secondary);
-            border: 2px solid var(--border);
-            border-radius: 16px;
-            text-align: center;
-            backdrop-filter:  blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-         .contact-title {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(2rem, 5vw, 3rem);
-            font-weight: 800;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--blue-bright), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .contact-subtitle {
-            color: var(--text-secondary);
-            font-size: 1.15rem;
-            margin-bottom: 2.5rem;
-            line-height: 1.6;
-        }
-        .contact-discord {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 1.25rem 3rem;
-            background: linear-gradient(135deg, var(--blue-bright), var(--blue-deep));
-            color: white;
-            text-decoration: none;
-            font-weight: 700;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            margin-bottom: 3.5rem;
-            cursor: none;
-            box-shadow: 0 8px 24px rgba(1, 207, 255, 0.3);
-        }
-        .contact-discord:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(1, 207, 255, 0.5)
-        }
-        .conversation-wrapper {
-            max-width: 650px;
-            margin: 3rem auto 0;
-            text-align: left;
-        }
-        .conversation-header {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-        .conversation-header h3 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.8rem;
-            color: var(--blue-bright);
-            margin-bottom: 0.75rem;
-         font-weight: 700;
-        }
-        .conversation-header p {
-            color: var(--text-secondary);
-         font-size: 1rem
-        }
+  .hero-tag { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.6s ease forwards 0.2s; }
+  .hero-tag span { color: var(--accent); margin-right: 0.5rem; }
 
-.message-card {
-            background: var(--discord-dark);
-            border-radius: 8px;
-            padding: 1rem 1.25rem;
-            border:  1px solid rgba(1, 207, 255, 0.1);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            margin-bottom: 0.75rem;
-            opacity: 0;
-            transform: translateY(20px);
-        }
+  .hero-name { font-family: var(--display); font-size: clamp(4rem, 12vw, 10rem); font-weight: 700; line-height: 0.92; letter-spacing: 0.02em; margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.35s; }
+  .hero-name .accent { color: var(--accent); }
+  .hero-name .dim { color: var(--muted); }
 
-.message-card.show {
-            animation: messageSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-        @keyframes messageSlideIn {
-         to {
-                opacity: 1;
-                transform:  translateY(0);
-            }
-        }
-        .message-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.65rem;
-        }
-         .message-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            flex-shrink:  0;
-            object-fit: cover;
-            display: block;
-        }
-        .message-info {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .message-author {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #F2F3F5;
-            font-family: 'Inter', sans-serif;
-        }
-        .message-badge {
-            font-size: 0.65rem;
-            font-weight: 600;
-            color: #ffffff;
-            background: #5865F2;
-            padding: 3px 6px;
-            border-radius: 3px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .message-time {
-         font-size: 0.75rem;
-            color: #949BA4;
-         font-family: 'Inter', sans-serif;
-        }
-        .message-content {
-            color: #DBDEE1;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            font-family: 'Inter', sans-serif;
-            margin-left: 3rem;
-        }
-        footer {
-            text-align: center;
-            padding:  4rem 2rem;
-            color: var(--text-secondary);
-            border-top: 1px solid var(--border);
-            margin-top: 6rem;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width:  100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 1;
-        }
-        .modal-content {
-            background: var(--bg-secondary);
-            border: 2px solid var(--blue-bright);
-            max-width: 900px;
-            max-height: 90vh;
-            width: 90%;
-            padding: 3rem;
-            position: relative;
-         overflow-y: auto;
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-            box-shadow: 0 0 60px rgba(1, 207, 255, 0.4);
-            border-radius: 12px;
-        }
-        .modal.active .modal-content {
-            transform: scale(1);
-        }
-        .modal-close {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: rgba(1, 207, 255, 0.1);
-            border: none;
-            color: var(--text-primary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            border-radius: 8px;
-        }
-        .modal-close:hover {
-            background: var(--blue-bright);
-            color: white;
-            transform:  rotate(90deg);
-        }
-        .modal-title {
-         font-family: 'Syne', sans-serif;
-            font-size: 2rem;
-            color: var(--blue-bright);
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-        .modal-tag {
-         display: inline-block;
-            padding:  0.4rem 1rem;
-            background: rgba(1, 207, 255, 0.2);
-            color: var(--blue-bright);
-            font-size: 0.8rem;
-            margin-bottom:  2rem;
-            border-radius: 4px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
+  .hero-desc { max-width: 540px; font-size: 0.85rem; line-height: 1.9; color: #aaa; opacity: 0; animation: fadeUp 0.7s ease forwards 0.5s; }
+  .hero-desc strong { color: var(--text); font-weight: 500; }
 
-.modal-section {
-            margin-bottom: 2rem;
-        }
+  .status-widget { display: inline-flex; align-items: center; gap: 0.75rem; padding: 0.6rem 1rem; border: 1px solid var(--border); background: var(--surface); margin-top: 2rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.6s; width: fit-content; }
 
-.modal-section h3 {
-            font-family: 'Syne', sans-serif;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-            font-weight: 600;
-        }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex-shrink: 0; transition: background 0.3s; }
+  .status-dot.online { background: #23a559; box-shadow: 0 0 6px #23a55980; }
+  .status-dot.idle { background: #f0b232; box-shadow: 0 0 6px #f0b23280; }
+  .status-dot.dnd { background: #f23f43; box-shadow: 0 0 6px #f23f4380; }
+  .status-dot.offline { background: #80848e; }
 
-.modal-section p {
-            color: var(--text-secondary);
-            line-height: 1.8;
-            margin-bottom: 1rem;
-        }
-         .feature-list {
-            list-style: none;
-            margin-top: 1rem;
-        }
-        .feature-list li {
-            padding: 0.5rem 0;
-            padding-left: 1.5rem;
-         position: relative;
-         color: var(--text-secondary);
-        }
-        .feature-list li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--blue-bright);
-            font-weight: 700;
-        }
-        @media (max-width: 768px) {
-            body {
-                cursor: auto;
-            }
-            #mouseGlow, #cursor {
-                display: none;
-            }
-            header {
-                padding: 2rem 1rem;
-                min-height: auto;
-            }
-            .scroll-indicator {
-                display: none;
-            }
+  .status-text { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.05em; }
+  .status-text strong { color: var(--text); font-weight: 400; }
 
-.projects-grid, .skills-grid {
-                grid-template-columns: 1fr;
-         }
-            .modal-content {
-                padding: 2rem 1.5rem;
-            }
+  .hero-cta { margin-top: 2rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s ease forwards 0.75s; }
 
-.discord-widget {
-                max-width: 100%;
-            }
-            .conversation-wrapper {
-                padding: 0 0.5rem;
-            }
-            .message-content {
-                margin-left: 0;
-                margin-top:  0.5rem;
-            }
-        }
-        .loading {
-            text-align: center;
-            color: var(--text-secondary);
-            padding: 1rem;
-        }
-        .spinner {
-            width: 30px;
-            height: 30px;
-            border: 3px solid rgba(1, 207, 255, 0.2);
-            border-top-color: var(--blue-bright);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 0.5rem;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        html {
-            scroll-behavior: smooth;
-        }
-        ::-webkit-scrollbar {
-            width: 12px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--blue-dark);
-            border-radius: 6px;
-         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--blue-bright);
-        }
-    </style>
+  .btn { display: inline-block; padding: 0.75rem 1.75rem; border: 1px solid var(--accent); color: var(--accent); text-decoration: none; font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; transition: background 0.2s, color 0.2s; cursor: pointer; }
+  .btn:hover { background: var(--accent); color: var(--bg); }
+  .btn-ghost { border-color: var(--border); color: var(--muted); }
+  .btn-ghost:hover { background: var(--surface); color: var(--text); }
+
+  .hero-corner { position: absolute; bottom: 3rem; right: 2.5rem; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; writing-mode: vertical-rl; opacity: 0; animation: fadeUp 0.7s ease forwards 0.9s; }
+
+  /* SECTIONS */
+  section { padding: 5rem 2.5rem; border-bottom: 1px solid var(--border); }
+
+  .section-label { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 3rem; display: flex; align-items: center; gap: 1rem; }
+  .section-label::after { content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--accent); opacity: 0.4; }
+
+  /* TRAITS */
+  .traits-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+
+  .trait-card { background: var(--bg); padding: 2rem; transition: background 0.2s; position: relative; overflow: hidden; }
+  .trait-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 0; background: var(--accent); transition: height 0.3s ease; }
+  .trait-card:hover::before { height: 100%; }
+  .trait-card:hover { background: var(--surface); }
+
+  .trait-num { font-size: 0.65rem; color: var(--muted); margin-bottom: 1rem; letter-spacing: 0.1em; }
+  .trait-title { font-family: var(--display); font-size: 1.3rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--text); }
+  .trait-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.7; }
+
+  /* PROJECTS */
+  .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+
+  .project-card { background: var(--bg); padding: 2rem; transition: background 0.2s; position: relative; overflow: hidden; }
+  .project-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; }
+  .project-card:hover::before { transform: scaleX(1); }
+  .project-card:hover { background: var(--surface); }
+
+  .project-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .project-tag { font-size: 0.6rem; padding: 0.2rem 0.5rem; border: 1px solid var(--accent); color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; }
+  .project-tag.archived { border-color: var(--muted); color: var(--muted); }
+
+  .project-title { font-family: var(--display); font-size: 1.3rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--text); }
+  .project-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.25rem; }
+
+  .project-stack { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .stack-tag { font-size: 0.65rem; padding: 0.2rem 0.5rem; border: 1px solid var(--border); color: var(--muted); letter-spacing: 0.05em; }
+
+  /* SKILLS */
+  .skills-list { display: flex; flex-direction: column; }
+  .skill-row { display: flex; align-items: baseline; justify-content: space-between; padding: 1.25rem 0; border-bottom: 1px solid var(--border); gap: 1rem; transition: padding-left 0.2s; }
+  .skill-row:hover { padding-left: 1rem; }
+  .skill-name { font-family: var(--display); font-size: 1.1rem; font-weight: 600; }
+
+  .skill-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; }
+  .tag { font-size: 0.65rem; padding: 0.25rem 0.6rem; border: 1px solid var(--border); color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+  .tag.hot { border-color: var(--accent); color: var(--accent); }
+
+  /* CONTACT */
+  .discord-block { display: flex; align-items: center; gap: 2rem; padding: 2.5rem; border: 1px solid var(--border); max-width: 460px; position: relative; overflow: hidden; transition: border-color 0.3s; text-decoration: none; }
+  .discord-block:hover { border-color: var(--accent); }
+  .discord-block::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(192,0,26,0.05) 0%, transparent 60%); pointer-events: none; }
+
+  .discord-handle { font-family: var(--display); font-size: 1.6rem; font-weight: 700; color: var(--text); }
+  .discord-label { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.25rem; }
+
+  .contact-links { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
+
+  footer { padding: 2rem 2.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.05em; }
+
+
+  /* CUSTOM CURSOR - from old site, red */
+  body, a, button, .project-card, .trait-card, .skill-row, .discord-block, .modal-close, .btn { cursor: none !important; }
+  #mouseGlow {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(192,0,26,0.10) 0%, rgba(192,0,26,0.05) 30%, transparent 70%);
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s ease;
+    opacity: 0;
+    mix-blend-mode: screen;
+  }
+  body.mouse-active #mouseGlow { opacity: 1; }
+  #cursor {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+    box-shadow: 0 0 20px rgba(192,0,26,0.6);
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    max-width: 680px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    padding: 3rem;
+    animation: fadeUp 0.3s ease;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .modal-close:hover { border-color: var(--accent); color: var(--accent); }
+
+  .modal-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+
+  .modal-title {
+    font-family: var(--display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+  }
+
+  .modal-section { margin-bottom: 1.75rem; }
+
+  .modal-section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .modal-section p {
+    font-size: 0.82rem;
+    color: var(--text);
+    line-height: 1.8;
+  }
+
+  .modal-feature-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .modal-feature-list li {
+    font-size: 0.8rem;
+    color: var(--text);
+    line-height: 1.6;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .modal-feature-list li::before {
+    content: '▹';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+
+
+
+  .modal-code { margin-top: 0.75rem; background: #0a0608; border: 1px solid var(--border); padding: 1.25rem; overflow-x: auto; }
+  .modal-code code { font-family: var(--mono); font-size: 0.75rem; color: #aaa; white-space: pre; line-height: 1.7; }
+  .modal-links { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+  .modal-proof { margin-top: 0.5rem; }
+  .modal-proof img { width: 100%; border: 1px solid var(--border); margin-top: 0.75rem; display: block; }
+  .modal-proof iframe { width: 100%; aspect-ratio: 16/9; border: 1px solid var(--border); margin-top: 0.75rem; display: block; }
+  .modal-stack { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+
+
+  .scroll-indicator { position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.75rem; animation: smoothBounce 2s ease-in-out infinite; opacity: 0.6; cursor: none; }
+  .scroll-indicator:hover { opacity: 1; }
+  .scroll-text { color: var(--muted); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; }
+  .scroll-arrow { width: 24px; height: 24px; position: relative; }
+  .scroll-arrow::before, .scroll-arrow::after { content: ''; position: absolute; width: 12px; height: 2px; background: var(--accent); border-radius: 2px; }
+  .scroll-arrow::before { right: 50%; transform: rotate(45deg); transform-origin: right; }
+  .scroll-arrow::after { left: 50%; transform: rotate(-45deg); transform-origin: left; }
+  @keyframes smoothBounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  .cursor-blink::after { content: '_'; animation: blink 1s step-end infinite; color: var(--accent); }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  @media (max-width: 600px) {
+    nav { padding: 1rem 1.25rem; }
+    .nav-links { gap: 1.2rem; }
+    .hero { padding: 7rem 1.25rem 3rem; }
+    section { padding: 3.5rem 1.25rem; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    .projects-grid, .traits-grid { grid-template-columns: 1fr; }
+  }
+</style>
 </head>
-
 <body>
-    <div class="bg-gradient"></div>
-    <div class="bg-orbs">
-        <div class="orb orb1"></div>
-        <div class="orb orb2"></div>
-        <div class="orb orb3"></div>
+
+<nav>
+  <div class="nav-logo">falter3d</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero" id="about">
+  <p class="hero-tag"><span>//</span> Developer &amp; Server Staff</p>
+  <h1 class="hero-name"><span class="dim">falter</span><span class="accent">3d</span></h1>
+  <p class="hero-desc">
+    I'm a <strong>developer</strong> who doesn't sugarcoat things.
+    Direct, honest, and blunt when it needs to be. I say what I mean
+    and I mean what I say. Whether I'm building a Discord bot,
+    writing a Minecraft plugin, or staffing a server,
+    I get the job done <strong>without the fluff</strong>.
+  </p>
+  <div class="status-widget">
+    <div class="status-dot offline" id="statusDot"></div>
+    <span class="status-text" id="statusText">Loading...</span>
+  </div>
+  <div class="hero-cta">
+    <a href="#projects" class="btn">See my work</a>
+    <a href="https://discord.com/users/184491496291041280" target="_blank" class="btn btn-ghost">Discord</a>
+    <a href="https://github.com/falter3d" target="_blank" class="btn btn-ghost">GitHub</a>
+  </div>
+  <p class="hero-corner cursor-blink">Scroll to explore</p>
+
+<div class="scroll-indicator" onclick="document.getElementById('traits').scrollIntoView({behavior:'smooth'})">
+  <span class="scroll-text">Scroll Down</span>
+  <div class="scroll-arrow"></div>
+</div>
+</section>
+
+<section id="traits">
+  <p class="section-label reveal">Who I am</p>
+  <div class="traits-grid reveal">
+    <div class="trait-card"><p class="trait-num">01</p><h3 class="trait-title">Direct</h3><p class="trait-desc">No beating around the bush. I say what I think, when I think it. You'll always know where you stand with me.</p></div>
+    <div class="trait-card"><p class="trait-num">02</p><h3 class="trait-title">Honest</h3><p class="trait-desc">Even when it's uncomfortable. I'd rather give you a hard truth than a comfortable lie.</p></div>
+    <div class="trait-card"><p class="trait-num">03</p><h3 class="trait-title">Harsh if needed</h3><p class="trait-desc">If the situation calls for it, I won't soften the blow. Tough love is still love.</p></div>
+    <div class="trait-card"><p class="trait-num">04</p><h3 class="trait-title">Builder</h3><p class="trait-desc">I build things: bots, plugins, systems. If I can imagine it, I'll figure out how to make it work.</p></div>
+    <div class="trait-card"><p class="trait-num">05</p><h3 class="trait-title">No-Nonsense</h3><p class="trait-desc">Fluff is a waste of everyone's time. Get to the point, say what matters, move on.</p></div>
+    <div class="trait-card"><p class="trait-num">06</p><h3 class="trait-title">Accountable</h3><p class="trait-desc">I hold myself to a standard and I hold others to one too. No exceptions, no excuses.</p></div>
+    <div class="trait-card"><p class="trait-num">07</p><h3 class="trait-title">Adaptable</h3><p class="trait-desc">Solo or in a team. Doesn't matter. I work with whatever the situation needs and get it done either way.</p></div>
+    <div class="trait-card"><p class="trait-num">08</p><h3 class="trait-title">Persistent</h3><p class="trait-desc">I grind through hard problems, but I'm not stupid about it. A break beats burning out. I come back and finish it.</p></div>
+    <div class="trait-card"><p class="trait-num">09</p><h3 class="trait-title">Zero Tolerance</h3><p class="trait-desc">Can't commit? Have a good reason or you're out. Slacking and cutting corners isn't something I let slide.</p></div>
+    <div class="trait-card"><p class="trait-num">10</p><h3 class="trait-title">Proactive</h3><p class="trait-desc">I don't wait for problems to come to me. I go to them. That's how I developed this side of myself in the first place.</p></div>
+    <div class="trait-card"><p class="trait-num">11</p><h3 class="trait-title">Experienced</h3><p class="trait-desc">Staffed multiple servers and shipped real projects. I don't just talk about doing things. I've done them.</p></div>
+    <div class="trait-card"><p class="trait-num">12</p><h3 class="trait-title">Unfiltered</h3><p class="trait-desc">What you see is what you get. No performing, no people-pleasing, no adjusting myself depending on who's in the room.</p></div>
+  </div>
+</section>
+
+
+<section id="history">
+  <p class="section-label reveal">Background</p>
+  <div class="reveal" style="max-width: 680px; display: flex; flex-direction: column; gap: 1.25rem;">
+    <p style="font-size: 0.85rem; line-height: 1.9; color: #aaa;">
+      Previously served as a <strong style="color: var(--text); font-weight: 500;">Developer</strong> and 
+      <strong style="color: var(--text); font-weight: 500;">Staff Member</strong> at UltimisMC, and held 
+      <strong style="color: var(--text); font-weight: 500;">Partner</strong> rank as a Content Creator 
+      for around 6 months, making 1&ndash;2 montages a month. Resigned from all three roles for personal reasons. 
+      Those experiences shaped a lot of who I am today. Currently stepping back from content creation to focus 
+      on life, personal growth, and finding the right places to work.
+    </p>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <a href="https://www.youtube.com/@falter3d" target="_blank" class="btn btn-ghost" style="font-size: 0.7rem;">YouTube &rarr;</a>
     </div>
-    <div class="grid-pattern"></div>
-    <div id="mouseGlow"></div>
-    <div id="cursor"></div>
-    
-<header>
-        <div>
-            <h1>falter</h1>
-            <p class="subtitle"><span>MINECRAFT SERVER CONFIGURATOR & DISCORD BOT DEVELOPER</span></p>
-            <div class="links">
-                <a href="https://github.com/falter3d" class="link-btn" target="_blank">GITHUB</a>
-                <a href="#" class="link-btn" onclick="copyDiscord(event)">DISCORD: @falter3d</a>
-            </div>
-        </div>
-        <div class="scroll-indicator" onclick="document.querySelector('main').scrollIntoView({behavior: 'smooth'})">
-            <span class="scroll-text">Scroll Down</span>
-            <div class="scroll-arrow"></div>
-        </div>
-    </header>
-    
-<main>
-        <h2 class="section-title">
-            <span id="typingDiscord" class="typing-text"></span><span class="typing-cursor"></span>
-        </h2>
-        <div class="projects-grid">
-         <div class="project-card" onclick="openModal('vanish-bot')">
-                <span class="project-tag">DISCORD BOT</span>
-                <h3 class="project-title">Vanish Discord Bot</h3>
-                <p class="project-desc">
-                    Comprehensive Discord moderation bot for the Vanish Guild from UltimisMC Minecraft server featuring bilingual support, advanced permission systems, and automated member management.
-                </p>
-                <div class="tech-stack">
-                    <span class="tech-tag">Discord.js</span>
-                    <span class="tech-tag">Node.js</span>
-                    <span class="tech-tag">JavaScript</span>
-                </div>
-            </div>
-            <div class="project-card" onclick="openModal('vanish-games')">
-                <span class="project-tag">DISCORD BOT</span>
-                <span class="project-tag">MINIGAMES BOT</span>
-                <h3 class="project-title">Vanish Games Discord Bot</h3>
-                <p class="project-desc">
-                    All-in-one Discord gaming bot with 11 interactive button-based games including Tic Tac Toe, Blackjack, Trivia, and more. Features cooldown systems and game state management.
-                </p>
-                <div class="tech-stack">
-                    <span class="tech-tag">Discord.js</span>
-                    <span class="tech-tag">Slash Commands</span>
-                    <span class="tech-tag">Button Interactions</span>
-                </div>
-            </div>
-        </div>
-         <h2 class="section-title">
-         <span id="typingProjects" class="typing-text"></span><span class="typing-cursor"></span>
-        </h2>
-        <div class="projects-grid">
-            <div class="project-card" onclick="openModal('coinsengine')">
-                <span class="project-tag">Economy System</span>
-                <h3 class="project-title">Custom Currency (CoinsEngine)</h3>
-                <p class="project-desc">
-                    Designed and implemented a custom "Silver" currency system with CoinsEngine. Configured Vault integration, PlaceholderAPI support, and balanced economy settings for server-wide use.
-                </p>
-                <div class="tech-stack">
-                    <span class="tech-tag">CoinsEngine</span>
-                    <span class="tech-tag">Vault</span>
-                    <span class="tech-tag">PlaceholderAPI</span>
-                </div>
-            </div>
-            <div class="project-card" onclick="openModal('deluxemenus')">
-         <span class="project-tag">GUI System</span>
-                <h3 class="project-title">Rank Shop Menu (DeluxeMenus)</h3>
-                <p class="project-desc">
-                    Built a complete rank purchase system with DeluxeMenus featuring custom GUI, currency integration, and automated rank assignment through LuckPerms commands.
-                </p>
-                <div class="tech-stack">
-                    <span class="tech-tag">DeluxeMenus</span>
-                    <span class="tech-tag">LuckPerms</span>
-                    <span class="tech-tag">YAML</span>
-                </div>
-            </div>
-            <div class="project-card" onclick="openModal('luckperms')">
-                <span class="project-tag">Permissions</span>
-                <h3 class="project-title">Rank Hierarchy (LuckPerms)</h3>
-                <p class="project-desc">
-                    Configured comprehensive permission system with custom rank hierarchy including animated rank prefixes, inheritance structure, and chat formatting integration for enhanced server organization.
-                </p>
-                <div class="tech-stack">
-                    <span class="tech-tag">LuckPerms</span>
-                    <span class="tech-tag">Permissions</span>
-                </div>
-            </div>
-            <div class="project-card" onclick="openModal('tab')">
-                <span class="project-tag">Display</span>
-                <h3 class="project-title">Scoreboard System (TAB)</h3>
-                <p class="project-desc">
-                    Designed animated scoreboard displaying player rank, currency balance, and server statistics. Integrated PlaceholderAPI for dynamic real-time updates.
-                </p>
-                <div class="tech-stack">
-                    <span class="tech-tag">TAB</span>
-                    <span class="tech-tag">PlaceholderAPI</span>
-                    <span class="tech-tag">Formatting</span>
-         </div>
-            </div>
-        </div>
-        <div class="skills-section">
-            <h2 class="section-title">
-                <span id="typingSkills" class="typing-text"></span><span class="typing-cursor"></span>
-         </h2>
-            <div class="skills-grid">
-                <div class="skill-category">
-                    <h3>Discord Bot Development</h3>
-                    <ul>
-                        <li>Discord.js</li>
-                        <li>Slash Commands</li>
-                        <li>Button Interactions</li>
-                        <li>Embed Builders</li>
-                        <li>Permission Systems</li>
-                    </ul>
-                </div>
-                <div class="skill-category">
-                    <h3>Configuration</h3>
-                    <ul>
-                        <li>YAML Configuration</li>
-                        <li>Plugin Integration</li>
-                        <li>Economy Systems</li>
-                        <li>Permission Management</li>
-                    </ul>
-                </div>
-                <div class="skill-category">
-                    <h3>Plugins</h3>
-                    <ul>
-                        <li>LuckPerms</li>
-                        <li>CoinsEngine</li>
-                        <li>DeluxeMenus</li>
-                        <li>TAB Plugin</li>
-                    </ul>
-                </div>
-                <div class="skill-category">
-                    <h3>Server Management</h3>
-         <ul>
-                        <li>Paper/Spigot</li>
-                        <li>PlaceholderAPI</li>
-                        <li>Vault Integration</li>
-                        <li>System Debugging</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="contact-section">
-            <h2 class="contact-title">Need Work Done?</h2>
-            <p class="contact-subtitle">Contact me on Discord - Fast responses, professional results, hassle-free process.</p>
-            <a href="#" class="contact-discord" onclick="copyDiscord(event)">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
-                </svg>
-                @falter3d
-            </a>
-        </div>
-    </main>
-    
+  </div>
+</section>
+<section id="projects">
+  <p class="section-label reveal">Current work</p>
+  <div class="projects-grid reveal" style="grid-template-columns: 1fr; margin-bottom: 1px;">
+    <div class="project-card" onclick="openModal('gory-bot')" style="cursor:none">
+      <div class="project-tags"><span class="project-tag">Discord Bot</span><span class="project-tag" style="border-color:#23a559;color:#23a559;">In Progress</span></div>
+      <h3 class="project-title">Gory Bot</h3>
+      <p class="project-desc">Full moderation bot built for gvtt3d's Discord server. Features moderation, ticket system, appeal system, giveaways, user reports, staff activity tracking, snipe, message logging, and more.</p>
+      <div class="project-stack">
+        <span class="stack-tag">Discord.js v14</span>
+        <span class="stack-tag">Node.js</span>
+        <span class="stack-tag">SQLite</span>
+        <span class="stack-tag">Slash Commands</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-label reveal" style="margin-top: 3rem;">Past work</p>
+  <div class="projects-grid reveal">
+
+    <div class="project-card" onclick="openModal('vanish-bot')" style="cursor:none">
+      <div class="project-tags"><span class="project-tag">Discord Bot</span><span class="project-tag archived">No longer maintained</span></div>
+      <h3 class="project-title">Vanish Discord Bot</h3>
+      <p class="project-desc">Comprehensive moderation bot built for the Vanish Guild on UltimisMC. Featured bilingual English/Arabic support, role-based permission hierarchy, advanced moderation commands, and DM notification systems. Over 10,000 lines of code.</p>
+      <div class="project-stack">
+        <span class="stack-tag">Discord.js</span>
+        <span class="stack-tag">Node.js</span>
+        <span class="stack-tag">JavaScript</span>
+        <span class="stack-tag">Slash Commands</span>
+      </div>
+    </div>
+
+    <div class="project-card" onclick="openModal('vanish-games')" style="cursor:none">
+      <div class="project-tags"><span class="project-tag">Discord Bot</span><span class="project-tag">Minigames</span><span class="project-tag archived">No longer maintained</span></div>
+      <h3 class="project-title">Vanish Games Bot</h3>
+      <p class="project-desc">All-in-one gaming bot with 11 interactive button-based games including Tic Tac Toe, Blackjack, and Trivia. Featured per-game cooldown systems, active game state tracking, and slash commands throughout.</p>
+      <div class="project-stack">
+        <span class="stack-tag">Discord.js</span>
+        <span class="stack-tag">Node.js</span>
+        <span class="stack-tag">Button Interactions</span>
+        <span class="stack-tag">Game State</span>
+      </div>
+    </div>
+
+    <div class="project-card" onclick="openModal('currency')" style="cursor:none">
+      <div class="project-tags"><span class="project-tag">Minecraft</span><span class="project-tag">Economy</span></div>
+      <h3 class="project-title">Custom Currency System</h3>
+      <p class="project-desc">Designed and implemented a custom "Silver" currency using CoinsEngine with Vault integration, PlaceholderAPI support, leaderboards, and balanced economy settings for server-wide use.</p>
+      <div class="project-stack">
+        <span class="stack-tag">CoinsEngine</span>
+        <span class="stack-tag">Vault</span>
+        <span class="stack-tag">PlaceholderAPI</span>
+        <span class="stack-tag">YAML</span>
+      </div>
+    </div>
+
+    <div class="project-card" onclick="openModal('rankshop')" style="cursor:none">
+      <div class="project-tags"><span class="project-tag">Minecraft</span><span class="project-tag">GUI System</span></div>
+      <h3 class="project-title">Rank Shop Menu</h3>
+      <p class="project-desc">Complete rank purchase system using DeluxeMenus with custom GUI, Silver currency integration, and automated rank assignment through LuckPerms. Multi-tier progression with price-based requirements.</p>
+      <div class="project-stack">
+        <span class="stack-tag">DeluxeMenus</span>
+        <span class="stack-tag">LuckPerms</span>
+        <span class="stack-tag">CoinsEngine</span>
+        <span class="stack-tag">YAML</span>
+      </div>
+    </div>
+
+    <div class="project-card" onclick="openModal('rankhierarchy')" style="cursor:none">
+      <div class="project-tags"><span class="project-tag">Minecraft</span><span class="project-tag">Permissions</span></div>
+      <h3 class="project-title">Rank Hierarchy</h3>
+      <p class="project-desc">Comprehensive permission system with multi-tier rank structure, animated prefixes, permission inheritance, and chat formatting. Integrated with TAB plugin for real-time display.</p>
+      <div class="project-stack">
+        <span class="stack-tag">LuckPerms</span>
+        <span class="stack-tag">TAB Plugin</span>
+        <span class="stack-tag">PlaceholderAPI</span>
+      </div>
+    </div>
+
+    <div class="project-card" onclick="openModal('scoreboard')" style="cursor:none">
+      <div class="project-tags"><span class="project-tag">Minecraft</span><span class="project-tag">Display</span></div>
+      <h3 class="project-title">Scoreboard System</h3>
+      <p class="project-desc">Animated scoreboard using TAB displaying player rank, Silver balance, and live server stats. PlaceholderAPI integration for dynamic real-time updates across the whole server.</p>
+      <div class="project-stack">
+        <span class="stack-tag">TAB</span>
+        <span class="stack-tag">PlaceholderAPI</span>
+        <span class="stack-tag">Formatting</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="skills">
+  <p class="section-label reveal">What I do</p>
+  <div class="skills-list">
+    <div class="skill-row reveal"><span class="skill-name">Discord Bots</span><div class="skill-tags"><span class="tag hot">Shipped</span><span class="tag">Discord.js</span><span class="tag">Node.js</span></div></div>
+    <div class="skill-row reveal"><span class="skill-name">Minecraft Plugins</span><div class="skill-tags"><span class="tag hot">Shipped</span><span class="tag">Java</span><span class="tag">Spigot / Paper</span></div></div>
+    <div class="skill-row reveal"><span class="skill-name">Server Configuration</span><div class="skill-tags"><span class="tag hot">Experience</span><span class="tag">YAML</span><span class="tag">Plugin Integration</span></div></div>
+    <div class="skill-row reveal"><span class="skill-name">Server Staff</span><div class="skill-tags"><span class="tag hot">Experience</span><span class="tag">Moderation</span><span class="tag">Management</span></div></div>
+    <div class="skill-row reveal"><span class="skill-name">Economy Systems</span><div class="skill-tags"><span class="tag">CoinsEngine</span><span class="tag">Vault</span><span class="tag">PlaceholderAPI</span></div></div>
+    <div class="skill-row reveal"><span class="skill-name">Permission Systems</span><div class="skill-tags"><span class="tag">LuckPerms</span><span class="tag">Rank Hierarchies</span></div></div>
+  </div>
+</section>
+
+<section id="contact">
+  <p class="section-label reveal">Find me</p>
+  <a href="https://discord.com/users/184491496291041280" target="_blank" class="discord-block reveal">
+    <svg width="38" height="38" viewBox="0 0 71 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M60.105 4.898A58.55 58.55 0 0 0 45.993.507a.22.22 0 0 0-.232.11 40.784 40.784 0 0 0-1.8 3.698c-5.456-.817-10.886-.817-16.232 0a37.38 37.38 0 0 0-1.827-3.697.228.228 0 0 0-.233-.11 58.418 58.418 0 0 0-14.11 4.39.207.207 0 0 0-.095.082C1.577 18.19-.944 31.07.292 43.793a.244.244 0 0 0 .093.166c5.928 4.352 11.677 6.993 17.321 8.742a.23.23 0 0 0 .249-.082 42.08 42.08 0 0 0 3.627-5.9.225.225 0 0 0-.123-.312 38.772 38.772 0 0 1-5.539-2.64.228.228 0 0 1-.022-.378c.372-.279.744-.569 1.1-.862a.22.22 0 0 1 .23-.03c11.619 5.304 24.198 5.304 35.68 0a.219.219 0 0 1 .232.027c.356.293.728.586 1.103.865a.228.228 0 0 1-.02.378 36.384 36.384 0 0 1-5.54 2.637.227.227 0 0 0-.121.315 47.249 47.249 0 0 0 3.624 5.897.225.225 0 0 0 .249.084c5.67-1.749 11.419-4.39 17.347-8.742a.228.228 0 0 0 .092-.164c1.448-14.982-2.424-27.99-10.26-39.012a.18.18 0 0 0-.094-.084zm-35.54 31.304c-3.499 0-6.383-3.212-6.383-7.156 0-3.944 2.827-7.156 6.383-7.156 3.584 0 6.44 3.24 6.384 7.156 0 3.944-2.827 7.156-6.384 7.156zm23.604 0c-3.498 0-6.382-3.212-6.382-7.156 0-3.944 2.826-7.156 6.382-7.156 3.585 0 6.44 3.24 6.385 7.156 0 3.944-2.8 7.156-6.385 7.156z" fill="#5865F2"/>
+    </svg>
+    <div>
+      <p class="discord-label">Discord</p>
+      <p class="discord-handle">falter3d</p>
+    </div>
+  </a>
+  <div class="contact-links reveal">
+    <button class="btn" onclick="copyDiscord(this)">Copy Discord Tag</button>
+    <a href="https://github.com/falter3d" target="_blank" class="btn btn-ghost">GitHub &rarr;</a>
+  </div>
+</section>
+
 <footer>
-        <p>&copy; 2026 falter • Discord Server Configurator & Discord Bot Developer</p>
-    </footer>
-    <div id="vanish-bot-modal" class="modal" onclick="closeModal(event, 'vanish-bot')">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeModal(event, 'vanish-bot')">&times;</button>
-            <span class="modal-tag">DISCORD BOT</span>
-            <h2 class="modal-title">Vanish Discord Bot</h2>
-            <div class="modal-section">
-                <h3>Overview</h3>
-         <p>Comprehensive Discord moderation bot built for the Vanish Guild Discord server, this guild was created on the UltimisMC Minecraft server. This bot features advanced permission hierarchies, bilingual English/Arabic support, and sophisticated member management systems.</p>
-            </div>
-            <div class="modal-section">
-                <h3>Key Features</h3>
-                <ul class="feature-list">
-                    <li>Bilingual support (English/Arabic) across all commands</li>
-                    <li>Role-based permission system (Leader, Manager, Admin, Officer)</li>
-                    <li>Advanced moderation (warn, mute, kick, ban)</li>
-                    <li>Temporary role assignment system</li>
-                    <li>DM notification systems</li>
-                    <li>Clean embed formatting without visible user IDs</li>
-                </ul>
-            </div>
-            <div class="modal-section">
-         <h3>Technical Implementation</h3>
-                <p>Built with Discord.js and Node.js, implementing complex command structures with over 10,000 lines of code. Utilizes slash commands, button interactions, and advanced permission checks for secure guild management.</p>
-            </div>
-         </div>
+  <span>falter3d</span>
+  <span style="color: var(--border)">// no fluff</span>
+</footer>
+
+
+
+
+<div id="mouseGlow"></div>
+<div id="cursor"></div>
+
+<!-- MODALS -->
+
+<div class="modal-overlay" id="modal-gory-bot" onclick="closeModal(event, 'gory-bot')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalById('gory-bot')">&times;</button>
+    <div class="modal-tags"><span class="project-tag">Discord Bot</span><span class="project-tag" style="border-color:#23a559;color:#23a559;">In Progress</span></div>
+    <h2 class="modal-title">Gory Bot</h2>
+    <div class="modal-section">
+      <p class="modal-section-label">Overview</p>
+      <p>Full-featured moderation bot built for <a href="https://www.youtube.com/@gvtt3d" target="_blank" style="color:var(--accent);text-decoration:none;">gvtt3d</a>'s Discord server (<a href="https://discord.gg/EFKCNAXdrc" target="_blank" style="color:var(--accent);text-decoration:none;">discord.gg/EFKCNAXdrc</a>). Built on Discord.js v14 with a SQLite database, covering everything from moderation to giveaways to staff tracking. Currently in active development.</p>
     </div>
-    <div id="vanish-games-modal" class="modal" onclick="closeModal(event, 'vanish-games')">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeModal(event, 'vanish-games')">&times;</button>
-            <span class="modal-tag">DISCORD BOT</span>
-            <span class="modal-tag">MINIGAMES BOT</span>
-            <h2 class="modal-title">Vanish Games Discord Bot</h2>
-            <div class="modal-section">
-                <h3>Overview</h3>
-                <p>All-in-one Discord gaming bot featuring 11 interactive button-based games with slash commands, cooldown systems, and comprehensive game state management. Built with 1,113 lines of production-ready code.</p>
-            </div>
-            <div class="modal-section">
-                <h3>Available Games</h3>
-                <ul class="feature-list">
-                    <li>Tic Tac Toe - Interactive board game with AI opponent</li>
-                    <li>Rock Paper Scissors - Classic choice game</li>
-                    <li>Trivia Quiz - Multiple categories (General, Science, History)</li>
-                    <li>Math Quiz - Difficulty levels (Easy, Medium, Hard)</li>
-                    <li>Dice Roll - Customizable dice games</li>
-                    <li>Coin Flip - Heads or tails prediction</li>
-                    <li>Magic 8-Ball - Fortune telling responses</li>
-                    <li>Higher or Lower - Number prediction game</li>
-                    <li>Blackjack - Full casino-style card game</li>
-                    <li>Guess the Number - Random number guessing</li>
-                    <li>Would You Rather - Community voting game</li>
-                </ul>
-            </div>
-            <div class="modal-section">
-                <h3>Technical Implementation</h3>
-                <p>Built with Discord.js featuring slash commands, button interactions, embed builders, and action rows. Implements per-game cooldown systems, active game state tracking, and configurable game settings. Uses Collections for efficient data management and includes admin configuration commands.</p>
-            </div>
-        </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Features</p>
+      <ul class="modal-feature-list">
+        <li>Full moderation suite: warn, mute, kick, ban, tempban, case management</li>
+        <li>Ticket system with categories, ratings, and transcript logging</li>
+        <li>Appeal system with cooldowns, modal forms, and staff review</li>
+        <li>Giveaway system with required roles, bonus entries, and pausing</li>
+        <li>User report system with cooldowns and staff action buttons</li>
+        <li>Staff activity tracking and logging</li>
+        <li>Message snipe, edit/delete logging, member join/leave logging</li>
+        <li>Per-guild config system, bypass system, and more</li>
+      </ul>
     </div>
-    <div id="coinsengine-modal" class="modal" onclick="closeModal(event, 'coinsengine')">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeModal(event, 'coinsengine')">&times;</button>
-            <span class="modal-tag">ECONOMY SYSTEM</span>
-            <h2 class="modal-title">Custom Currency (CoinsEngine)</h2>
-            <div class="modal-section">
-                <h3>Overview</h3>
-                <p>Designed and implemented a custom "Silver" currency system using CoinsEngine. This included full Vault integration, PlaceholderAPI support for dynamic display, and configuration of economy settings for server-wide use.</p>
+    <div class="modal-section">
+      <p class="modal-section-label">Stack</p>
+      <div class="modal-stack"><span class="stack-tag">Discord.js v14</span><span class="stack-tag">Node.js</span><span class="stack-tag">better-sqlite3</span><span class="stack-tag">Slash Commands</span><span class="stack-tag">Modals</span><span class="stack-tag">Buttons</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-vanish-bot" onclick="closeModal(event, 'vanish-bot')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalById('vanish-bot')">&times;</button>
+    <div class="modal-tags"><span class="project-tag">Discord Bot</span><span class="project-tag archived">No longer maintained</span></div>
+    <h2 class="modal-title">Vanish Discord Bot</h2>
+    <div class="modal-section">
+      <p class="modal-section-label">Overview</p>
+      <p>Comprehensive moderation bot built for the Vanish Guild on UltimisMC. Bilingual English/Arabic support, a full role-based permission hierarchy, and advanced member management. Over 10,000 lines of production code. I've since left Vanish Guild and no longer maintain it, but the bot is still running.</p>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Features</p>
+      <ul class="modal-feature-list">
+        <li>Bilingual support across all commands (English / Arabic)</li>
+        <li>Role-based permission system: Leader, Manager, Admin, Officer</li>
+        <li>Advanced moderation: warn, mute, kick, ban with DM notifications</li>
+        <li>Temporary role assignment system</li>
+        <li>Clean embed formatting throughout</li>
+        <li>Slash commands with full permission checks</li>
+      </ul>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Stack</p>
+      <div class="modal-stack"><span class="stack-tag">Discord.js</span><span class="stack-tag">Node.js</span><span class="stack-tag">JavaScript</span><span class="stack-tag">Slash Commands</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-vanish-games" onclick="closeModal(event, 'vanish-games')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalById('vanish-games')">&times;</button>
+    <div class="modal-tags"><span class="project-tag">Discord Bot</span><span class="project-tag">Minigames</span><span class="project-tag archived">No longer maintained</span></div>
+    <h2 class="modal-title">Vanish Games Bot</h2>
+    <div class="modal-section">
+      <p class="modal-section-label">Overview</p>
+      <p>All-in-one gaming bot with 11 interactive button-based games. Built with 1,113 lines of production-ready code. Still running in the Vanish Guild Discord, but I no longer maintain it after leaving the guild.</p>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Games</p>
+      <ul class="modal-feature-list">
+        <li>Tic Tac Toe, Rock Paper Scissors, Coin Flip</li>
+        <li>Blackjack (full casino-style card game)</li>
+        <li>Trivia (General, Science, History categories)</li>
+        <li>Math Quiz (Easy, Medium, Hard difficulty)</li>
+        <li>Higher or Lower, Guess the Number</li>
+        <li>Dice Roll, Magic 8-Ball, Would You Rather</li>
+      </ul>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Stack</p>
+      <div class="modal-stack"><span class="stack-tag">Discord.js</span><span class="stack-tag">Node.js</span><span class="stack-tag">Button Interactions</span><span class="stack-tag">Game State</span><span class="stack-tag">Slash Commands</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-currency" onclick="closeModal(event, 'currency')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalById('currency')">&times;</button>
+    <div class="modal-tags"><span class="project-tag">Minecraft</span><span class="project-tag">Economy</span></div>
+    <h2 class="modal-title">Custom Currency System</h2>
+    <div class="modal-section">
+      <p class="modal-section-label">Overview</p>
+      <p>Designed and implemented a custom "Silver" currency using CoinsEngine. Configured Vault integration, PlaceholderAPI support, leaderboards, and balanced economy settings for server-wide use.</p>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Features</p>
+      <ul class="modal-feature-list">
+        <li>Custom Silver currency with ⚡ symbol</li>
+        <li>Vault integration for cross-plugin compatibility</li>
+        <li>PlaceholderAPI support for real-time balance display</li>
+        <li>Transfer settings, leaderboards, and starting balance config</li>
+      </ul>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-label">Proof</p>
+      <div class="modal-proof">
+        <img src="data:image/png;base64,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" alt="Currency proof">
+        <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAArAmgDASIAAhEBAxEB/8QAHQAAAQQDAQEAAAAAAAAAAAAABgMEBQcAAggBCf/EAFAQAAEDAgUDAgQDBAYFBBMAAAECAwQFEQAGEhMhBxQxIkEVMlFhCCNxFjNCgSQ0UpGhwxclRmKEGEODojU3RFRVVmVydZWjsrTBwtHS4vD/xAAZAQADAQEBAAAAAAAAAAAAAAABAgMEAAX/xAAxEQACAgEEAAMGBQUBAQAAAAABAgARAwQSITETQVEUIoGh0fAyYXGRsQUjweHxJEL/2gAMAwEAAhEDEQA/AI78bf8Asj/xv+RgUyz0mz3Ays1MmZtoeUYlavvUut1F+CuRsrITuslFlaSQpN721JPF8FP43laf2QsPPe/5GB1XVLP+W8v0uj9QcgxqmWd7speZ6Q+9JduvU563ljVbUgcDgBIPtjytWcgye4fupEBPEJeQQyFXcs5voqKZ1LylGmTN/bqlOri0NQdDfO66lILesKKE2vqNxg3pWVurfUGbmDK46g06twab23dKerEqRClbgLiNBsoL0lHNwLKHHjFi5s6aZYp34hcmyo9PjuU+t993tKeZaMNGzESG9toIsLqOo3v6uRbBV0tpsGldYupcSmxWYcRPwrbjsNpbabvHWTpSkAC5JJ+5x5p1rrjtD5X86mhNKAa6F/4nEMqqVFdLjUibMkvQ4ertI77qlIi61al7aSbI1GxVYC/vgjb6udRmmwhOdsyOW/iXVZBJ/wCvi1/wlUvJ9WzBmiDmenUGfLe7T4cxUWWXXF2Q8XdpKwSbAJKtPsBfEj+GfIVLozGbJnUjKkaNCa7PtpGYqclDaLl0K0KeSALkoBt9U/bGltX4RYeYr43MqadrBDd2P2lMT8+T63kqh5XlMw2I9B7jtFMpUla99wOL1kqIPI4sB974HXpg/iWpdvFzjpjo909y1TuibmbxEy3KqtQt+ZmlttcCNtyVtcHTqRqSbeTdWn24xE9aMs5CqXStuqNVHJMPNtOvaLld5huPK3H0J9SbFxelsXHIsSo+MTbU+I+03V1A+iyMu4n4Sl6t1KzpU6Y5TarmesVGE7bcYmT3nW12UFDUlSiDYgEfcDA89Wa3MpTdJl1GXKp8e/bMyH1rRH1K1L20k2TqNibAXsMdidd3enXTmhx3I/TvKrtUn6uzU9RY6o6dCm9e4RpUPSvi1+fOOcOs9X6fV+qoruQ4E6l79+8gyGmGGW9KUIRsttE2vZalXPJNx5OK4dU+UAgGp2XA+IfiuA8YTXG0xoqVvPfwpQ2VKIAvYAfbC66hWKll1ECVJmzIEDVsIdWtbUTcWFK2x4b1qAJt5I98MoC56piPh5kdzzo7e+vwb2tz4vgq1EVa0TsL/wDd/wD4MHp/L8f/AFfx+MXRD2O5mRPMReF1U6lsMJacz1mJ21/UqqyCo8+51416fVPNsSoyFZZr0nLsZzT3shqY7FiIsFbe8pBsLnUE3/iVYecCVSciqmLFO7gRuNG9bc8C97ceb4POmMpdLyNnGc5T4kwJ7GzE1rcaXd1Q9Sbi9r3H3AxRC7uFYx13M4DGb9RZmcJUJh6t5oRmqKzqu9HqDs1MLUUj1lXDes2A/taftgGI3SCQF25HGLLTWfjPTTNgVRqNTg12f9Qi7W5d7+Lk3tbj9TjTMTlCy/W5GTZFJYVSY2nXOZjoNROpIdFnDZPzHT4+Xjzzg58Yb+4DxOzJu99TxBvPrNeRmaTFzJVF1OpM6N6U4+t5bl0JKbrX6jZOkc+LWxNZSzBnunZTnu0XN9Xg0uk7eqK3Un20p3XD+7Qk6R6iSfHm/OJ7OUeOxmzOWZFxmJcik9jsx5KAthzdbShWtPk2HIsRYgecRceo0yrdNs2zosRUOc52XeMMtpbios9ZGykEkXAuq/ueMHwGGX8X3UPgMMv4vuoKTc3V52upr/x6pprSL6agiW4JIujR+91avl9Pnxx4w0o9Qm02pt1ekTpNOmtX234bqmVt3SUnSpJBFwSDzyCcWpLocTL0ldHhr6eOR49tCq4QZp1DUdwgAeVG3Hy6cDzdGy/RX8zValLaq7FF7XtRIUh9h/eGlesJACtJJtYixHN7YR9PlIu4j4MhF3I3KNSzRSaRWq1luvS6PHibHeNw5brBe1KUlHCCAqxKvJ4ubecNZ/ULOkybFnP5nrTkyHr7SSue8p2PrFl7aiq6dQFjbyODggYqFKqfTjN0uJD7Oevsu9ZYaS3ETZ6zeykci4BKr/xHjFUrfcV72H0GAysiCm7ucVZVFHu5ddb6IVeFUnYtVz909gzEadxh+sLbWi6QRdKm7i4IP88Q+V6NnjL+cqhRMs5zjU6G1t/EK7CqjzVJTdsqb3ZCAAOVKQnUPnJSMT2YutVaRWH05t6Y5PTWhp7kT6CsP/KNOrcc1fJptf2t7WwZwenkOkxOruR4VbYYgJ+C7MuuSglCLndVuLCQBdRIFk/2R98YBkyJ7zHk/UWfnNg0+J2tO5UnVfKubGL12oZipebt3+vzqRNdnbFtCG+5cKfTq4SjUedJA8YOcvRerr9MZXVescSgSjq3KfW8yyo85n1G242eU6hZQ+qVJPvh1S6xQp/RDqFScuU0sUmnfDNiRNYQmpSNyTqV3SkHSrSoKCLAWRb3xK9dfgeV+qVWzTN+HVmrSdn4dTV6JEZrSw22737RspN0qCmtJ5IueBhvac26ro/Py+HnG8ID+5fEoCs02bT6s9Hq1PkQZyNO4xIaU24i6QRdKuRcEH+eJypUvMWRU0yst1JVMq7u9/Ro0hxioU+3p/OTZKmtxK7p59SST4xcXUCqZCof4iswVXO1MqNSLPbdrGZYYejuXiJSveQ6Re10FNjwRc+2Bvq9RsiRKCmpCrZ0fzXOveNWpDKn4+haE/0tNtxGps3b5NxpPjEhkdmBPnz8rmR9GQWN2RKooOcczZffedoFbqFID+neRClOMJd0g6dWhQvbUbX8XP1w4zb8fqMGBmet1DvXKzufmuPLcfXslLf5hV5tYBPJ4HtiGcZSTqSBfFhZ7r3ddNMvXo1Hj9/3P7mLp7bbeT+659Gq3q83xvwscgZb8rksJ8QEXK1S2B55wWTeoecalTl0ytZqrlRhO23GZVQedQuygoakqUQbEAjj2GJfNFVi5LrkjLUPLtBqMeHp0SKhCDshetIWdagQDYqIHHgDAx1DokXLub5tIhOPOR2NvQp5QKzqbSo3IAHlR9sc2N8YJB/WMcbIDR/WFfTFeb3576MsZilZehr09/UTNdiw2bBe3vuo4Tc6kp1eVKsPODx+dnXJtQiZ5kdS8o5tl0XX2sJyuvTnDvDaXobNj4VqNlDhNze1sVFkCt5hy93lWp1LNVo7Gj4pElMLep69WpLXcIBCTZRJRqPzAEcjFgSplO6h9Ocy5jVQqPQZeWu17dFGiJjNv9y9oVvD1FWkI9NiLFSvN8Y1yZcZoMa+spp1AQizcrF15SnCUKUB7C+H9AzPX8tl5dEr1SpIf073aTFsBzTfTq0kXtqNr+LnBF+JyNDoXV2sQaRBiwYw2dDLDSW22/6O0TpSkAC5JP6k4uCt5DydOzT1WhS8sy3osf4P2zFCgNKlxtSAV9skpsjURddvKdWFOR7GRj3z+5H1gGkytkbnkGc+1PqVm+VPizV5mrcmdC19rJXUHdyPrFl6FlV06hYG1rjAvImOSVla1AX8pHAxcOeKWmvZHqs7NWUKTkSvUrZ+DxoVN+Goqu66kP3S4Ct/aQEn0W0aze4OLJk5OpeS5ruW6d/obkQ4dtl3NOlVVVrGtW+QlI8qITYfIEYs+osAHk/T/ssdKz8X8Zzvl7P2d6FTkU6j5prcOC3fajs1B5tpu5KjpSlQAuSSbDkm+I2vVep16c7Pq02RLmvW3pDrqluO2ACdSlElVgABfwBi9qXk3prSoXU6PJek1nLtP+E9pUYSo8ia3uEle06UhAus6VWt6QQeRiuM2Zsy5myiPsz8uUqg1qLp+Gqy/CbjRHtShu9ySoqVZCRo0+FKVfg4K6jI42i6+v8A2SfDkRaY/CAUyp1Rykx6TKmvyYETV2bLrqloi61al7SSbI1GxVYc++LE6bZw6tZxzVT8qUrP1YRMmbm27Nq8oI9DanDqKVE+EkDj6YsbJbeWnKCyMso6Rro41dv+2QbNZHqVq7nR6fm1aLf83o98R/QnMLzf4i006bkWj0ObVL7sdVJMZym7UNwjt0k3a3Byu99QP3wPasgRivYEtjxEbSW7lE1LMFeqEJFJlyZTsSPft4rriy3F1EKVtoJsjUQCbeTzhOgyapRqm1VKZU5dOnM32pER5TTqLgpNlpIIuCQbexOLLy27MzJ1QXmSLl/KUKKzbvE1GGW6HFuwUI3QLhGop9Nzy4RbB31NyfTqx04rOYluZAam0TY7VGTilLS955CF90NJJsB6LEc673w2TUtuCn7uIcLvuKnqVS91Y6lp5TnSvqH/AKUkX/8AfwlkvN3UltbNCytWcwoQq/bUymyZGlNtS1bbTauL+pRsPqTi1+s1Zyb086jVSPQMl0Cc+9tfEI1XpbLkWPpZQW+zSgpKNQWouavJAIxStYqtOouaTUsg1Gtw4SP6m9IfS3NbugJc1KasBclYFvKTz74ZNTmdQR8IMgyYzRa6hF1kXnSBmh7LOda47WpdN07bq5b0hCNxCHDtqd5FwUA8Dx9hiVDvVXMfTCs1+q16tTMtw9jcbqcuS4idre0DbCroc0LSNXPpsPfC34rP+3XWv+g/+GZw56Z1GfJ6C9RqfInyXokP4X2sdx1Sm2NcpZXoSTZOo8m3k+cT8fLStfJq/jUOz/0FL9f4uRvRil53qcSuVDK+dY2WY0Dt/iD8qrPQm3NZcS3qUgEKsQoDVblXF74S6l5IzAqnzcyVfqLk3MEtO3vNw605KmSeUITwpN16RY8nhKT9MMeludK/lKjZgVByvT65RpPbfFDPgLksM6VL2dVlBKbqUbavJAtyME0+XB6j9OczZiFDpOXpuWO07ZFGiJitSe5eCF749RXpCPTYpsVK83xwyZFNXxf81DhGM4q/+uZB0LpFU5FNadqObMoZemm+7TqzUFRZrHqNtxpSLouAFD6pUD74F3cq1mNBrEifEcp7lH2O6iy21tPjdNkWQU/oebcEEXxcPU0ZFVnaoDqe5mRjNw2viCsuFhNPX+Ujb2i/+YbN7erV/FqtxbAJ19nZoj9Sa3GzG7CZqT+x8QRS1OpiP6WWy3YL9SrJ0/N4Ve2FwNuYb+iL/wCfvFyYEUX9/wCpXK1kiyTbCSCUuc++LcoPwlVLa+CjIRgc7X7Q6fiHzHVu6ePN9Nv4dOKzzc/Jer0hyVSG6PIOnXDbjFhLXpTayDyLjn73v742nBtS7kThpbuOafRZU6h1SsMrZDFM2d5KidatxRSnSALHkc3IxGgH9MHHS74acj5yNb70wD2O6Yund/ertp1cebXv7XxrLdi5syfWqsul02lSaLsbIpkcMoe3nNKtzyVWCeLEWJPnHez2gI7neBagjuV1MRyq/JHv9sS9CortQoNVrEYspapezvpWTrVuqKU6bCx5HNyMWJlKFJh0GPFqETp1HkI1a2q42UTk3UojdB5FwQU/7unGTMvRMsUXqLSILjzkZn4ZoU8oFZurUbkADyo+2LJgLKLlVw7gLlWqcSDYG5xopRPnBx0xhSmo8mU9EymiNI0bLuY2yEu6SsK2CeDY8Kt49ODGJlak/t3laoPs0eWKr3ncx4KUrp/5TVkbaSP5qvf1A+MTTTlhYk1wEixKWTqv6fONyHFWGoAe5xZOWalCznXY+V5mXKDTmJmrVJp0ENPo0JLg0qJIFykA8eCcM4qouVcoUasN0mmVV+sb++mpRw8lrZc0p2hwU3CvVcm9h4wDgN98TjiN8HiA7bLYT/auPOGShpUUn2NsWXRqVS83ZnoZepsylCqdx3IjMJZiq2kHT29wf7Prvfk4JTTaTVP6FW5XTWFCd/ev0lxLcpNuU6FKFhcgA39icdj07knmFMLG5STba1G44H1xKZZpM7MOYI1DgLjokySsIW+ohA0oUo3sCfCT7YbEWNsFnRdN+qlIUObb1/t+Q5iacvtaSXl6aQGX8u1mr5lZy0pnsag7quiYhTeiyCv1CxIukcce4xBtMLK7kFIB5uPIxb/SWrw6rnOmJq7Tq6vH3e1mNpBXI1Nr19ytRKl6UgJRbx48Y9ylRIsLKdOrDS8qKfqe7vpzEQUp23ClOwLXHB9Vyf4caRhsHb6zQMVg7fWVQhpCfCRz5x4nbYUpQHJ9sXFT6HQnuomW3SugTnp3dfEIdPKHITehkhvQi1xccnVe6gSMDfTTKunNuV51SZhzadVu70MuJ3P3TawdaVJ0/NYjz49sTOmfziezt5wGaLalFSSLnyMbrWlAuo2wzeSG3SlJPGNFKKjdRJOINjo0ZI46NRZ2QpXCPSP8caIcWDYc/bGrYC1WChx9+cOEJSkcDHGhxONDiLRktrP5hsf7OHwAAsBYYjUgqNhycOW1KQmwVf8AXEHEgy3HWMwml5NvV6cZidGToy+fxrNoWcpFQvbvbf8AsMBVM611n4DBpOZMv5czV2G5sS65DXNketZUq61uf+aOAOEpHtg5/GglSzlMJST/AFz/ACMc9oiqPzkDG3WBTkO774noZcxx5TRlm1zrBnVnqbHzXOipbqUHVtU6Y28I8fWyGzpaK9SNSbKNiLmxwknrNmtrqK/nmDtMypOnuoQ3Uw39LO0jW2HLq0i6hdXCuR9MPepVPyvHzxUZ+Y5Up8ytrYYpjjanmdLSAreSsem/pKbeRfAt+zop2dDl+sNS5u3+9RSk7jqrt6xoCgL+Re48A4TNpghoDjr4Rs2bMpIvzjOuZqly83OZno7bWXZq7aE0hJitsWbDZ2wlV06gDfnkqP1wX9Vur+c81xGqRmCOikGPfeiR0PMIe1FCk7qFrOq2kFNxxcn3xA5uyiyzQZFYokGvQGIOnuk1lkNrd1qCUbISmxsb6rkWum2GvXJGrqXUykC/5Vz/ANC3hzpdvvsORCDlTcxNXH+QurlbynSJdDXGg16kStF4VXbXJYZ0qUv8tsrCU3UrUeOSAfIwtmvqrFzBQJNI/YjKlJ7jR/S6ZSgxJb0rCvQvWbX02PHIJHvjf/R7SKoOyotJzlCnu/unqvHS3FRbk61JSSLgEC3uRiPh0LJVPydRqzmByvB+pb/EJTOhO25p/jFxcFPuffBGkprA/OOrZVGwdRx1W6r1zqXT4DNdg0+K7B3Now2loSdZQTfWtR8IFvHviu0tJHnnBq5kz4pVaMMtv/6urm/2Kpq/zEbCfzN3QkgXUFadN+LXtjc07IVTT2VGnViDPc/dPVd1huKi3J1qSCRdIIFvcjHLgZRtAoCRyeLkNtA+M67GdS7HdWy4n5VtqKSPbyMaocdRHcYQ84lt224kKIC7G4uPe2DfK+T4r1EjVesQMwTmJ+vtU0VkOKa21FK97Umybm2mxN7KvhrmPLVNoNVp06ptVmPl6fu6GVJSmoN7aQDrSoBAusgjzdP3wwxZALiDHkAuDcLZCbJQlKx5+pwaUCi53lZUnx6NlOrT6bVtvVJZpzzqTtOE+haRp+a4PnxbjFbFDyH9bSrqHOoHHQWRupuUWummX8uVarZ7o86kiRuroMlphp/deUsXKl3VYWtcCxKvN8ZcgyYnDJ3Dgwg5bLVK8qMXNGV6FNpFWoMymMVjb9U+G4ypWyoK9BVYGxUL8HyPGJ6Y9neh0hUyvdOg+2z+/qVYojylm6rJ3HV2B8hIv/ujFiZWpaq/1XyPU6hPm5myfWviHw2PX3u8kNbLBS7upILYu6AU6SbhKb2Iw56Pszn810yg9SK/Wq1Iqm7sUKXMVIQxtNrWr4jHe5TqGhxmwN7BXFhiQ1T4xwevv5VNKaYjgNx0JT9HqOccz5nn1umZbkVoObffQosJ6RFVZBQ3utpJvbSVDUfIJHjGua8yVmNBqGWJ+V6TQHH9vumWqeuM+NJDiLpJ/Qi48K484sKNQ67H6UZCm5PrCcrKkfEfi9YXJXCiq0v2Z7x9sc2upDer+JVh5x71Oo1BzllzIE+iTlU5dW+JbtWzS8hqQ7tLQB3TyQrVbSUIvewKRxi/tmQPf6/Cr+kZsORVLXz3/wAld03NFYdpMiYvKdLrbULT3lSm09chaNaiEbrt+L/Km/0AHjEMnNciPW3qk3BpjTEjTvU1LJEN3SnSnU0DZVj6hfwrnF4Zl6aqk0OTSskZ2yQxlSnae5kuVXS/L3FBSfiCmkba9DmsNXAsOPN8c0vaS6G3EKQQebixw2LUvkWr6/eQyrlxqFMLqp1Aem0SZR2aDQ6exM0byoMMtKVoUFJ/iseR7j3OA1DK1eRYffDlCEo+UAY2wz5y/Eg+YtLFonVeRDpqGa5lDKeZpib66nWKaZc1+5JG46pd1aRZI+iUpHtgfo/UTMNMr66o7KXXEPW7uLWXHJDM6yClHcI1Dd0Xui59JAI8YGFkfLa98JhAH3xJUUA8dxxqHqrh5nPqTJzBETGgUWk5eZN+5Yo0UxWZ3KSnuEhZDmgglF/lKlW84lMvdXZ0enNxK3lbKmYpab6qlWKeqVLf5JG46pd1aRZI+iUpHtirlOJT73/TCSnVHxxgnGpFVG9oyk3Dmn5pnMZqazFUmY2YpLerWitJVKQ/dBQNwKN1aRa3PGlP0xG1epTqrNcm1GbKmyXbbj8l1TjrlgANSiSTYAAfYDEHClm2h25A8Kws5K9kJ/mcSKEGZWbIbBjkkAXJsMOV1134G/R3ENSmV6dlbyStUWytStkk2RqPzWHOIVa1K5Wq+Eyse2KY1Km5yKVNiGEHPMlqKhudQqDV3031S6jEL8hznjUsqubCwH0AA9sD0t6bUZKpUyQ/IeXbU8+srWqwsLk8ngAYj0OrQsKFuPYjjD0zmQi5vq/sgYd8mQrtlHyORQhBkvME3K85TzDUaoRHbd1TZyVOQ5dgoI3mgQHNBVqTfwoAjEznLqI9WYCYUaj0XLkY37iPRYpitzOQU7yQohzQQSm/ylSvrivXJjrgOn0D7ef78IHk3OJLi53HuHG+RRVyzaF1ckxqe3Fr2U8qZnkt3/1lWqaZc166ifzHVOXVYWSPolKR7YIWOtEiZGztLf7ymV/MXYGNJp12Wme3Nl3UXNabosOL3JPgYpIXBBHkYW7kKX6k6f53thjiX0+7uXXVZV6k9X80ZizA2x8crU2pLYvsrkyHHCzqtq0laja+lN7ebYMqD1cnQ6c3GrGVsrZilovrqVYp6pUx+5JG46pd1aQQkfRKQPbFa4zCkA8GSXVZQbuHU/qPMeYzLEi0ekwIWY+17uPEjFptjtzdGwkLsnUeVXvck2tit3HF3I+X7YelQGEXgHPax+uHSh5QNmZ/xS04nWmK036ul/TlDh+baoAAP0/5zFeScz1xVfTXWa3VBVUXtUVSl92q6NHLoOr5fT5+XjxiHLagq1r43Qz7qP8ALDBEXoSr52YAEwza6j1BnNsjMEajUZtidp76hJiqFJf0N6G9UcKsrSfWLk2X6hgkzB1meqOV6jl1nKOWqPEqW13K6ZTthxe2sLTchwg2I9weCfrirQAPAAxhFxY4Xalg1Auqdbrzk51IzjPz1mN7MNUYjsTpOneRGQpLQ0oShOkKUo+EC9z5vh104zWMqOTC9lTLNdbl6L/Gaf3JZ06v3fqGm+rn66R9MDTSW0n5efrhbHNW3bXEmc7bt3nLL6gdWHM60+ZHq2UsrtS5ejXUo9O0zE6SkjS6paiLhASf93jElA64Pw6fJgsdPchR48zR3TDFGKW39BJRrSHLK0k3F/B8YqLGEgecS8NKqo/teTdu84Zoz9JjZtlV2DRaMzDmaO7oQilNKf0N6Ea44VZWk3cFybL9QwrnDqI/XIKYcGi0bLkY37mPRYpiNTeUlO+kKIc0EEpv8pUr64BCv6Y0JJ84cILuoozvz+csyjdXZUentx63lLKmZJSL6qlWKcZcx65JG46pd1WFkj6JSB7YAMxVSoVuYqXPnyp0k/NIluqcdXwANSiSTYAAfYDDLGYKqF6EBzOV2mFrfUNKOF5IyglfuU0sWP8A18DMt96oSDMmyHpb67anX1la1WAAuTybAAfyw1cUgCyufthRhDiG/WhSRfi+L5MzMtGc+VmWoRZUzRKy9GnRWqfTZ0edt7zU1kuIOgkp4uB5Vfm/gY8r2aJNVjJjsU2nUdg/vmqawWESeQU7qQoheki6b+Ln64gfGNFKPgf34VMzqu0RVysBQhbBzxJjxEom0Kg1eQL65lQiF+Q7yballV1WFgPoAB7Ybys61STmd+uvMRHO609zBcQpUV/SjQjW3q9Wn5hc8K5GBnHoQT9sMM7hdtxvHcLVyey7mmRR4xiuU6m1aMn9w1UmS+mPySrbGoBGom6rebD6YkX+pVRFSpM2LS6RFNK3u2ZYjqQz+aLKukL/AJ8W5PvgIeDgNl8D7eMatoUs2SP54dMzKKBjplZR3JjLOYZOX8wsVmE0y48xq0JeSSk6kFJuAQfBPviSy7mqVTWFRnKdTavGFtlupMl9EfyVbYKgE6ibqt5sMDzUdKeVeo/4YW/wxM52HX6xDmIPEmajmKpyqm3Oju/Ddm/bMQVKZajakgK2kg+jVa6reSTfEuvPoQkqVk3J9h/5M/8A2wHkkDCahqSR9RgJnyBruBc7g3Fp9WEqlw4CYcVntNdn2mtLr2tV/wAxV/Vbwn6DCmT65Ky7mCPV4aGXH2AvSl4EoOpJSb2IPgn3xEAG9rY3QNJB+mGLc3GJ85OZarkrL9ej1iC2y4/H1aEvAlB1JKTcAg+FH3w9oGa5VKYVGdp9Nq0cfuWqkyX0x+SVbY1AI1E3NvNh9MD5HHGPDxgDMwNg+dxRlYdfrCGt5qkz5EWTCgU+hyI2vQ7SWTGUrUADqIVc8Agfqfrifj9VKnGTG2cu5caMTX2+3CUnZ1/No9fpv7284r/GjqilIItz/fhxqH3XHGd7uJPq1uqUAf0OGziiUkDjCylDVyeT9cIKT+fYqCQfc44GzZnXZsxulSlEJHm/FvriRYTK2SFrSD7XFz/fjeOy00m6ACT/ABfXC2FfJfUR3vqNYQcbmAOJJKwRe/8AP/5YkCfphA8+cbpWfB5xF/eNxGN8xTGY9KVAXKSMZhIk6N/GJ/st/wAX/k45+x0D+MT/AGW/4v8AycWD+HXJ+Uqr0boU+p5Woc6W73G4/Ip7Tji7SHQLqUkk2AA/QDA/qOUY8pJ/L+JqOnOo1DKDX2JztmatdO65XpNWmt5oRIf06ktJYCBpSEi1yT4A98RkTOqZOZ51TrEcsCft7smnI0yo+2jSNhSlenVwFXJuL46Xz5k3KEbrT01p8fKlCZhzPivdR26e0lt/RGSUa0hNlaTyL3sfGMyHk3J8nrT1Kp8jKlCehw/hXax3Ke0ptjXGUV6ElNk6jybWufOFb+qWu7b5X86mtsDlqsXdfK5zxXM30F7KNVpEKfmqc/O2dCqq8hxDehwKNiFXFxe/BvYYHq1nGFPrMXM5p7EqsHX38WWyFQ1ekNt6EX1GyRc6j8wBHGBh5RSkWNucNF/N+vnHonUHIORMpzl+5cNBz9lSnT2Z/wAZz5M29X5E2U042q4I9SdXNr3H3AwD5hrcSpZMoVFYbe36Z3G8pQGhe44FJ0m9zYDm4H88DbCElNyLm+FsBtWa2gRjnNVUMabnL4TRsqpprAVUKJ3m53CLtL3lG1tKgTZJP05+uMXKyHTyajRIdYnVBr91HrDTDkRV/SrcSnk2SSRb+IDApFQlbtlC4w/SlKRpCQB9LYgdYVoEXItqSvBFwiynnGMzRI9GrE6vwY0HV2i6O8G1ua1FS94qVY2NtNgLXVfGmYarlaqVGnCRUs3zqe3u9yJj7TjqbgaNq5IF1D1X9gLYDHgEurAFgCcPGG0JQCEi/wBcUOrYJREJ1TBaIjVDDijwLD64sHKc7IM2hRaRninVGMadr7SZQGGG5EncUVL7pbpOvTZARYCw1A+2A3BJ0tjx5nUKlRJcdmRHc3dbTqAtKrMrIuDx5AP8sZADlYL1I4nJcAecJXupxy1WMvtZLipfpWWu5+EfFG9Uhfcp/O7jbWEmylK0aNPFr3N8S/7a5Do1bGdcrys5z82s/uF5hcYdju6k7St4tqDirNlWmyuCE+3GInr1S6ZS36H8Np0OFvdxu9uwlvXbbtfSBe1z/ecVrjs2EY32H785pyap8bFfL+JaGWM9UCfkxjJudnsxR6RA1do3Q1IT3Otwur7kOq0r0qCNFgLeq/NjiD6hZngVKm0zLVCRI/Z+i7vw5yYE94reKVu7xQSg2WDp0gem17nDLqpFjQs+1KNDjsxmEbWltpAQlN2kE2A4HJJxmXIsZ3IWa5Lsdlx9js9lxSAVN6nSFaT5Fxwbecd4dOR58/5uK2pyNeM988/lF875piGmooeTUS4lCYvbeAbl1G5Sv+m7atDu2vVt8ekH64ApxpjlLhuR3Jyql6++L5SWz6vy9u3q+X5tXv4w/wAMJTTfd/KOU3P684bC4UbZMagvw0TadBbBUeRwceKe9ki+C3LsOI906zdJdisOPx+y2HVNgra1PEK0nym44NvOBIADwMUKgAH1gIAo+s1stXJNsJvawbE8e2Po1/o76f8A/iLlj/1Sx/8AjjnX9ncv/wDLU/Z/4FS/g/8A3h2jfb/9jdf7u2n5vV488+cYsWuV7odC5tyaNsdWezU5tS2pXtYffCqWkjzzjo38aGXcv0D9k/gVCpdK3+83uyiNs7mnY06tAF7XNr+Ln64sX8NmTMn1borQKhVcqUGfMd7nckSac064u0l0C6lJJNgAP0Aw7awDEMldxRpmbKcV9TjDGKvbjHuLFz5TqfG6LdM58eBFZmTfivdSG2kpcf0SUhGtQF1aRwL3sPGLs20gesyKtgn0+srTkn3JxuGlEE+MO3kIQElKbXHOCfM0SKz09yjKajMtvyO93nUoAW5pdATqPk2HAv4wytuBI8oFO4EiApJPnHmN3xZ1VvrjUYoOpUdT1B5wqE/XFhfhnptOq3W3L9PqsCLPhu9zuR5LKXW12jOqF0qBBsQD+oGOkPxK5LydSeilfqFKynQYExrttuRGpzTTiLyWgbKSkEXBI/QnGTNqRjyBK7l005dC99Ti62M9IN1D+eMwu0hJbuUgnFbqZiaExNhbSrUP8MaqUo/bG+PCASL465KaAE+MenSnlRxjxKUcG2G55wwFwgXN3VBfyggjkWx426Dwrg/XGuLE/DTTadVuuNBp1VgRJ8J0ytyPJZS42u0Z0i6VAg2IBH3AxzkIpPpK403sF9YBY0W4lPvc/QYQ1q02ubY1w22KEi5WT9hj1txSPuPphNHy49wanVHO6CPT/jjUknziwPxLU6n0jrbX6fSoEWBDa7bbjxmUtNovGaJslIAFySf1Jx5kWnwJXRHqbUJMGK9MhCk9rIcZSpxjXJUF6FEXTqHBta484gGGwP6184/g++U9L+UrxbqU+OThJTiifNv0x0Z+CfLmXswftb8eoNLq3b9ls97Ebf29W/q06wbX0i9vNh9MWT+JTJOTKT0Ur9QpWUqBAmNdttyI1OaacReS0DZSUgi4JH6E4k2rVMvh16fOaE0hOLxLnF7Syrgj+ePXVoCdKV+o+48DHaP4a8l5OqvRSgT6plOgzpjvc7j8mnNOOLtJdAupSSTYAD9AMcs5ehw3unOcZbsVhyRH7HZdU2CtvU8QrSfIuODbziuDKMzsoFV/v6Sb6faFN9i4LssEn0JJP1OHjiFBoJW4Cq/Fza/2xgWoQNwGytrVe3vbEatSlqKlkqJ+uCLczGLYx8I6l8qOn/E4RLagsoPkefpg1oUaM70+zZKcjtLfY7PZdUgFbep0hWk+RccG3nAdgiwAfWEXQPrNUpA++NiQPOMPjBNlmLFf6eZwlPRmXJEfstl1SAVtaniFaT5FxwbecFV3GFV3GCq1Ai1uPvjEKAFrWH2xrh1CQkpKiASD5wGIAgJoRPGYdOpBSSR4wyeJS2SDY4VTcVTc2JAxqTfCbBJSbm/OFMNVRiKjd0WWfvzjEpKvAw5SB5tzgq6SRIk3qJTIkyMzJjrDupp1sLQqzSyLg8HkA/yw6HcQsdeSBBNIskDHtr8Wvgr6RxIs7qFTIs2MzJYXu62nkBaFWZWRcHg8gHArDJM1QPICOP8ADAIpd0Uj3d0ayVgKUzax02N/b/8Ar4ZtuK1gLJP6+RherqJmcnwnj+84Z3JJPvfF8Y92WQe7HEgXRf6HCFyfJ8Ydq5Qf0w4orTanHVKQCUW039vP/wBsAvtW527atzymw3zZayW0fQ+T/LDp2OtHKfUMPceLNkkjGQ5STcynISbke22tw2SP1OHjLKW+fKvrjRhSiuxPBw4wHY9QMT1MPPBxmMxmJxJ
             </div>
-            <div class="modal-section">
-                <h3>Key Features</h3>
-                <ul class="feature-list">
-                    <li>Custom Silver currency with ⚡ symbol</li>
-                    <li>Vault integration for cross-plugin compatibility</li>
-                    <li>PlaceholderAPI support for real-time balance display</li>
-                    <li>Configured transfer settings and leaderboards</li>
-                </ul>
-            </div>
-            <div class="modal-section">
-                <h3>Proof</h3>
-                <img src="data:image/png;base64,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" class="proof-image" alt="Silver Currency Screenshot">
-                <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAArAmgDASIAAhEBAxEB/8QAHQAAAQQDAQEAAAAAAAAAAAAABgMEBQcAAggBCf/EAFAQAAEDAgUDAgQDBAYFBBMAAAECAwQFEQAGEhMhBxQxIkEVMlFhCCNxFjNCgSQ0UpGhwxclRmKEGEODojU3RFRVVmVydZWjsrTBwtHS4vD/xAAZAQADAQEBAAAAAAAAAAAAAAABAgMEAAX/xAAxEQACAgEEAAMGBQUBAQAAAAABAgARAwQSITETQVEUIoGh0fAyYXGRsQUjweHxJEL/2gAMAwEAAhEDEQA/AI78bf8Asj/xv+RgUyz0mz3Ays1MmZtoeUYlavvUut1F+CuRsrITuslFlaSQpN721JPF8FP43laf2QsPPe/5GB1XVLP+W8v0uj9QcgxqmWd7speZ6Q+9JduvU563ljVbUgcDgBIPtjytWcgye4fupEBPEJeQQyFXcs5voqKZ1LylGmTN/bqlOri0NQdDfO66lILesKKE2vqNxg3pWVurfUGbmDK46g06twab23dKerEqRClbgLiNBsoL0lHNwLKHHjFi5s6aZYp34hcmyo9PjuU+t993tKeZaMNGzESG9toIsLqOo3v6uRbBV0tpsGldYupcSmxWYcRPwrbjsNpbabvHWTpSkAC5JJ+5x5p1rrjtD5X86mhNKAa6F/4nEMqqVFdLjUibMkvQ4ertI77qlIi61al7aSbI1GxVYC/vgjb6udRmmwhOdsyOW/iXVZBJ/wCvi1/wlUvJ9WzBmiDmenUGfLe7T4cxUWWXXF2Q8XdpKwSbAJKtPsBfEj+GfIVLozGbJnUjKkaNCa7PtpGYqclDaLl0K0KeSALkoBt9U/bGltX4RYeYr43MqadrBDd2P2lMT8+T63kqh5XlMw2I9B7jtFMpUla99wOL1kqIPI4sB974HXpg/iWpdvFzjpjo909y1TuibmbxEy3KqtQt+ZmlttcCNtyVtcHTqRqSbeTdWn24xE9aMs5CqXStuqNVHJMPNtOvaLld5huPK3H0J9SbFxelsXHIsSo+MTbU+I+03V1A+iyMu4n4Sl6t1KzpU6Y5TarmesVGE7bcYmT3nW12UFDUlSiDYgEfcDA89Wa3MpTdJl1GXKp8e/bMyH1rRH1K1L20k2TqNibAXsMdidd3enXTmhx3I/TvKrtUn6uzU9RY6o6dCm9e4RpUPSvi1+fOOcOs9X6fV+qoruQ4E6l79+8gyGmGGW9KUIRsttE2vZalXPJNx5OK4dU+UAgGp2XA+IfiuA8YTXG0xoqVvPfwpQ2VKIAvYAfbC66hWKll1ECVJmzIEDVsIdWtbUTcWFK2x4b1qAJt5I98MoC56piPh5kdzzo7e+vwb2tz4vgq1EVa0TsL/wDd/wD4MHp/L8f/AFfx+MXRD2O5mRPMReF1U6lsMJacz1mJ21/UqqyCo8+51416fVPNsSoyFZZr0nLsZzT3shqY7FiIsFbe8pBsLnUE3/iVYecCVSciqmLFO7gRuNG9bc8C97ceb4POmMpdLyNnGc5T4kwJ7GzE1rcaXd1Q9Sbi9r3H3AxRC7uFYx13M4DGb9RZmcJUJh6t5oRmqKzqu9HqDs1MLUUj1lXDes2A/taftgGI3SCQF25HGLLTWfjPTTNgVRqNTg12f9Qi7W5d7+Lk3tbj9TjTMTlCy/W5GTZFJYVSY2nXOZjoNROpIdFnDZPzHT4+Xjzzg58Yb+4DxOzJu99TxBvPrNeRmaTFzJVF1OpM6N6U4+t5bl0JKbrX6jZOkc+LWxNZSzBnunZTnu0XN9Xg0uk7eqK3Un20p3XD+7Qk6R6iSfHm/OJ7OUeOxmzOWZFxmJcik9jsx5KAthzdbShWtPk2HIsRYgecRceo0yrdNs2zosRUOc52XeMMtpbios9ZGykEkXAuq/ueMHwGGX8X3UPgMMv4vuoKTc3V52upr/x6pprSL6agiW4JIujR+91avl9Pnxx4w0o9Qm02pt1ekTpNOmtX234bqmVt3SUnSpJBFwSDzyCcWpLocTL0ldHhr6eOR49tCq4QZp1DUdwgAeVG3Hy6cDzdGy/RX8zValLaq7FF7XtRIUh9h/eGlesJACtJJtYixHN7YR9PlIu4j4MhF3I3KNSzRSaRWq1luvS6PHibHeNw5brBe1KUlHCCAqxKvJ4ubecNZ/ULOkybFnP5nrTkyHr7SSue8p2PrFl7aiq6dQFjbyODggYqFKqfTjN0uJD7Oevsu9ZYaS3ETZ6zeykci4BKr/xHjFUrfcV72H0GAysiCm7ucVZVFHu5ddb6IVeFUnYtVz909gzEadxh+sLbWi6QRdKm7i4IP88Q+V6NnjL+cqhRMs5zjU6G1t/EK7CqjzVJTdsqb3ZCAAOVKQnUPnJSMT2YutVaRWH05t6Y5PTWhp7kT6CsP/KNOrcc1fJptf2t7WwZwenkOkxOruR4VbYYgJ+C7MuuSglCLndVuLCQBdRIFk/2R98YBkyJ7zHk/UWfnNg0+J2tO5UnVfKubGL12oZipebt3+vzqRNdnbFtCG+5cKfTq4SjUedJA8YOcvRerr9MZXVescSgSjq3KfW8yyo85n1G242eU6hZQ+qVJPvh1S6xQp/RDqFScuU0sUmnfDNiRNYQmpSNyTqV3SkHSrSoKCLAWRb3xK9dfgeV+qVWzTN+HVmrSdn4dTV6JEZrSw22737RspN0qCmtJ5IueBhvac26ro/Py+HnG8ID+5fEoCs02bT6s9Hq1PkQZyNO4xIaU24i6QRdKuRcEH+eJypUvMWRU0yst1JVMq7u9/Ro0hxioU+3p/OTZKmtxK7p59SST4xcXUCqZCof4iswVXO1MqNSLPbdrGZYYejuXiJSveQ6Re10FNjwRc+2Bvq9RsiRKCmpCrZ0fzXOveNWpDKn4+haE/0tNtxGps3b5NxpPjEhkdmBPnz8rmR9GQWN2RKooOcczZffedoFbqFID+neRClOMJd0g6dWhQvbUbX8XP1w4zb8fqMGBmet1DvXKzufmuPLcfXslLf5hV5tYBPJ4HtiGcZSTqSBfFhZ7r3ddNMvXo1Hj9/3P7mLp7bbeT+659Gq3q83xvwscgZb8rksJ8QEXK1S2B55wWTeoecalTl0ytZqrlRhO23GZVQedQuygoakqUQbEAjj2GJfNFVi5LrkjLUPLtBqMeHp0SKhCDshetIWdagQDYqIHHgDAx1DokXLub5tIhOPOR2NvQp5QKzqbSo3IAHlR9sc2N8YJB/WMcbIDR/WFfTFeb3576MsZilZehr09/UTNdiw2bBe3vuo4Tc6kp1eVKsPODx+dnXJtQiZ5kdS8o5tl0XX2sJyuvTnDvDaXobNj4VqNlDhNze1sVFkCt5hy93lWp1LNVo7Gj4pElMLep69WpLXcIBCTZRJRqPzAEcjFgSplO6h9Ocy5jVQqPQZeWu17dFGiJjNv9y9oVvD1FWkI9NiLFSvN8Y1yZcZoMa+spp1AQizcrF15SnCUKUB7C+H9AzPX8tl5dEr1SpIf073aTFsBzTfTq0kXtqNr+LnBF+JyNDoXV2sQaRBiwYw2dDLDSW22/6O0TpSkAC5JP6k4uCt5DydOzT1WhS8sy3osf4P2zFCgNKlxtSAV9skpsjURddvKdWFOR7GRj3z+5H1gGkytkbnkGc+1PqVm+VPizV5mrcmdC19rJXUHdyPrFl6FlV06hYG1rjAvImOSVla1AX8pHAxcOeKWmvZHqs7NWUKTkSvUrZ+DxoVN+Goqu66kP3S4Ct/aQEn0W0aze4OLJk5OpeS5ruW6d/obkQ4dtl3NOlVVVrGtW+QlI8qITYfIEYs+osAHk/T/ssdKz8X8Zzvl7P2d6FTkU6j5prcOC3fajs1B5tpu5KjpSlQAuSSbDkm+I2vVep16c7Pq02RLmvW3pDrqluO2ACdSlElVgABfwBi9qXk3prSoXU6PJek1nLtP+E9pUYSo8ia3uEle06UhAus6VWt6QQeRiuM2Zsy5myiPsz8uUqg1qLp+Gqy/CbjRHtShu9ySoqVZCRo0+FKVfg4K6jI42i6+v8A2SfDkRaY/CAUyp1Rykx6TKmvyYETV2bLrqloi61al7SSbI1GxVYc++LE6bZw6tZxzVT8qUrP1YRMmbm27Nq8oI9DanDqKVE+EkDj6YsbJbeWnKCyMso6Rro41dv+2QbNZHqVq7nR6fm1aLf83o98R/QnMLzf4i006bkWj0ObVL7sdVJMZym7UNwjt0k3a3Byu99QP3wPasgRivYEtjxEbSW7lE1LMFeqEJFJlyZTsSPft4rriy3F1EKVtoJsjUQCbeTzhOgyapRqm1VKZU5dOnM32pER5TTqLgpNlpIIuCQbexOLLy27MzJ1QXmSLl/KUKKzbvE1GGW6HFuwUI3QLhGop9Nzy4RbB31NyfTqx04rOYluZAam0TY7VGTilLS955CF90NJJsB6LEc673w2TUtuCn7uIcLvuKnqVS91Y6lp5TnSvqH/AKUkX/8AfwlkvN3UltbNCytWcwoQq/bUymyZGlNtS1bbTauL+pRsPqTi1+s1Zyb086jVSPQMl0Cc+9tfEI1XpbLkWPpZQW+zSgpKNQWouavJAIxStYqtOouaTUsg1Gtw4SP6m9IfS3NbugJc1KasBclYFvKTz74ZNTmdQR8IMgyYzRa6hF1kXnSBmh7LOda47WpdN07bq5b0hCNxCHDtqd5FwUA8Dx9hiVDvVXMfTCs1+q16tTMtw9jcbqcuS4idre0DbCroc0LSNXPpsPfC34rP+3XWv+g/+GZw56Z1GfJ6C9RqfInyXokP4X2sdx1Sm2NcpZXoSTZOo8m3k+cT8fLStfJq/jUOz/0FL9f4uRvRil53qcSuVDK+dY2WY0Dt/iD8qrPQm3NZcS3qUgEKsQoDVblXF74S6l5IzAqnzcyVfqLk3MEtO3vNw605KmSeUITwpN16RY8nhKT9MMeludK/lKjZgVByvT65RpPbfFDPgLksM6VL2dVlBKbqUbavJAtyME0+XB6j9OczZiFDpOXpuWO07ZFGiJitSe5eCF749RXpCPTYpsVK83xwyZFNXxf81DhGM4q/+uZB0LpFU5FNadqObMoZemm+7TqzUFRZrHqNtxpSLouAFD6pUD74F3cq1mNBrEifEcp7lH2O6iy21tPjdNkWQU/oebcEEXxcPU0ZFVnaoDqe5mRjNw2viCsuFhNPX+Ujb2i/+YbN7erV/FqtxbAJ19nZoj9Sa3GzG7CZqT+x8QRS1OpiP6WWy3YL9SrJ0/N4Ve2FwNuYb+iL/wCfvFyYEUX9/wCpXK1kiyTbCSCUuc++LcoPwlVLa+CjIRgc7X7Q6fiHzHVu6ePN9Nv4dOKzzc/Jer0hyVSG6PIOnXDbjFhLXpTayDyLjn73v742nBtS7kThpbuOafRZU6h1SsMrZDFM2d5KidatxRSnSALHkc3IxGgH9MHHS74acj5yNb70wD2O6Yund/ertp1cebXv7XxrLdi5syfWqsul02lSaLsbIpkcMoe3nNKtzyVWCeLEWJPnHez2gI7neBagjuV1MRyq/JHv9sS9CortQoNVrEYspapezvpWTrVuqKU6bCx5HNyMWJlKFJh0GPFqETp1HkI1a2q42UTk3UojdB5FwQU/7unGTMvRMsUXqLSILjzkZn4ZoU8oFZurUbkADyo+2LJgLKLlVw7gLlWqcSDYG5xopRPnBx0xhSmo8mU9EymiNI0bLuY2yEu6SsK2CeDY8Kt49ODGJlak/t3laoPs0eWKr3ncx4KUrp/5TVkbaSP5qvf1A+MTTTlhYk1wEixKWTqv6fONyHFWGoAe5xZOWalCznXY+V5mXKDTmJmrVJp0ENPo0JLg0qJIFykA8eCcM4qouVcoUasN0mmVV+sb++mpRw8lrZc0p2hwU3CvVcm9h4wDgN98TjiN8HiA7bLYT/auPOGShpUUn2NsWXRqVS83ZnoZepsylCqdx3IjMJZiq2kHT29wf7Prvfk4JTTaTVP6FW5XTWFCd/ev0lxLcpNuU6FKFhcgA39icdj07knmFMLG5STba1G44H1xKZZpM7MOYI1DgLjokySsIW+ohA0oUo3sCfCT7YbEWNsFnRdN+qlIUObb1/t+Q5iacvtaSXl6aQGX8u1mr5lZy0pnsag7quiYhTeiyCv1CxIukcce4xBtMLK7kFIB5uPIxb/SWrw6rnOmJq7Tq6vH3e1mNpBXI1Nr19ytRKl6UgJRbx48Y9ylRIsLKdOrDS8qKfqe7vpzEQUp23ClOwLXHB9Vyf4caRhsHb6zQMVg7fWVQhpCfCRz5x4nbYUpQHJ9sXFT6HQnuomW3SugTnp3dfEIdPKHITehkhvQi1xccnVe6gSMDfTTKunNuV51SZhzadVu70MuJ3P3TawdaVJ0/NYjz49sTOmfziezt5wGaLalFSSLnyMbrWlAuo2wzeSG3SlJPGNFKKjdRJOINjo0ZI46NRZ2QpXCPSP8caIcWDYc/bGrYC1WChx9+cOEJSkcDHGhxONDiLRktrP5hsf7OHwAAsBYYjUgqNhycOW1KQmwVf8AXEHEgy3HWMwml5NvV6cZidGToy+fxrNoWcpFQvbvbf8AsMBVM611n4DBpOZMv5czV2G5sS65DXNketZUq61uf+aOAOEpHtg5/GglSzlMJST/AFz/ACMc9oiqPzkDG3WBTkO774noZcxx5TRlm1zrBnVnqbHzXOipbqUHVtU6Y28I8fWyGzpaK9SNSbKNiLmxwknrNmtrqK/nmDtMypOnuoQ3Uw39LO0jW2HLq0i6hdXCuR9MPepVPyvHzxUZ+Y5Up8ytrYYpjjanmdLSAreSsem/pKbeRfAt+zop2dDl+sNS5u3+9RSk7jqrt6xoCgL+Re48A4TNpghoDjr4Rs2bMpIvzjOuZqly83OZno7bWXZq7aE0hJitsWbDZ2wlV06gDfnkqP1wX9Vur+c81xGqRmCOikGPfeiR0PMIe1FCk7qFrOq2kFNxxcn3xA5uyiyzQZFYokGvQGIOnuk1lkNrd1qCUbISmxsb6rkWum2GvXJGrqXUykC/5Vz/ANC3hzpdvvsORCDlTcxNXH+QurlbynSJdDXGg16kStF4VXbXJYZ0qUv8tsrCU3UrUeOSAfIwtmvqrFzBQJNI/YjKlJ7jR/S6ZSgxJb0rCvQvWbX02PHIJHvjf/R7SKoOyotJzlCnu/unqvHS3FRbk61JSSLgEC3uRiPh0LJVPydRqzmByvB+pb/EJTOhO25p/jFxcFPuffBGkprA/OOrZVGwdRx1W6r1zqXT4DNdg0+K7B3Now2loSdZQTfWtR8IFvHviu0tJHnnBq5kz4pVaMMtv/6urm/2Kpq/zEbCfzN3QkgXUFadN+LXtjc07IVTT2VGnViDPc/dPVd1huKi3J1qSCRdIIFvcjHLgZRtAoCRyeLkNtA+M67GdS7HdWy4n5VtqKSPbyMaocdRHcYQ84lt224kKIC7G4uPe2DfK+T4r1EjVesQMwTmJ+vtU0VkOKa21FK97Umybm2mxN7KvhrmPLVNoNVp06ptVmPl6fu6GVJSmoN7aQDrSoBAusgjzdP3wwxZALiDHkAuDcLZCbJQlKx5+pwaUCi53lZUnx6NlOrT6bVtvVJZpzzqTtOE+haRp+a4PnxbjFbFDyH9bSrqHOoHHQWRupuUWummX8uVarZ7o86kiRuroMlphp/deUsXKl3VYWtcCxKvN8ZcgyYnDJ3Dgwg5bLVK8qMXNGV6FNpFWoMymMVjb9U+G4ypWyoK9BVYGxUL8HyPGJ6Y9neh0hUyvdOg+2z+/qVYojylm6rJ3HV2B8hIv/ujFiZWpaq/1XyPU6hPm5myfWviHw2PX3u8kNbLBS7upILYu6AU6SbhKb2Iw56Pszn810yg9SK/Wq1Iqm7sUKXMVIQxtNrWr4jHe5TqGhxmwN7BXFhiQ1T4xwevv5VNKaYjgNx0JT9HqOccz5nn1umZbkVoObffQosJ6RFVZBQ3utpJvbSVDUfIJHjGua8yVmNBqGWJ+V6TQHH9vumWqeuM+NJDiLpJ/Qi48K484sKNQ67H6UZCm5PrCcrKkfEfi9YXJXCiq0v2Z7x9sc2upDer+JVh5x71Oo1BzllzIE+iTlU5dW+JbtWzS8hqQ7tLQB3TyQrVbSUIvewKRxi/tmQPf6/Cr+kZsORVLXz3/wAld03NFYdpMiYvKdLrbULT3lSm09chaNaiEbrt+L/Km/0AHjEMnNciPW3qk3BpjTEjTvU1LJEN3SnSnU0DZVj6hfwrnF4Zl6aqk0OTSskZ2yQxlSnae5kuVXS/L3FBSfiCmkba9DmsNXAsOPN8c0vaS6G3EKQQebixw2LUvkWr6/eQyrlxqFMLqp1Aem0SZR2aDQ6exM0byoMMtKVoUFJ/iseR7j3OA1DK1eRYffDlCEo+UAY2wz5y/Eg+YtLFonVeRDpqGa5lDKeZpib66nWKaZc1+5JG46pd1aRZI+iUpHtgfo/UTMNMr66o7KXXEPW7uLWXHJDM6yClHcI1Dd0Xui59JAI8YGFkfLa98JhAH3xJUUA8dxxqHqrh5nPqTJzBETGgUWk5eZN+5Yo0UxWZ3KSnuEhZDmgglF/lKlW84lMvdXZ0enNxK3lbKmYpab6qlWKeqVLf5JG46pd1aRZI+iUpHtirlOJT73/TCSnVHxxgnGpFVG9oyk3Dmn5pnMZqazFUmY2YpLerWitJVKQ/dBQNwKN1aRa3PGlP0xG1epTqrNcm1GbKmyXbbj8l1TjrlgANSiSTYAAfYDEHClm2h25A8Kws5K9kJ/mcSKEGZWbIbBjkkAXJsMOV1134G/R3ENSmV6dlbyStUWytStkk2RqPzWHOIVa1K5Wq+Eyse2KY1Km5yKVNiGEHPMlqKhudQqDV3031S6jEL8hznjUsqubCwH0AA9sD0t6bUZKpUyQ/IeXbU8+srWqwsLk8ngAYj0OrQsKFuPYjjD0zmQi5vq/sgYd8mQrtlHyORQhBkvME3K85TzDUaoRHbd1TZyVOQ5dgoI3mgQHNBVqTfwoAjEznLqI9WYCYUaj0XLkY37iPRYpitzOQU7yQohzQQSm/ylSvrivXJjrgOn0D7ef78IHk3OJLi53HuHG+RRVyzaF1ckxqe3Fr2U8qZnkt3/1lWqaZc166ifzHVOXVYWSPolKR7YIWOtEiZGztLf7ymV/MXYGNJp12Wme3Nl3UXNabosOL3JPgYpIXBBHkYW7kKX6k6f53thjiX0+7uXXVZV6k9X80ZizA2x8crU2pLYvsrkyHHCzqtq0laja+lN7ebYMqD1cnQ6c3GrGVsrZilovrqVYp6pUx+5JG46pd1aQQkfRKQPbFa4zCkA8GSXVZQbuHU/qPMeYzLEi0ekwIWY+17uPEjFptjtzdGwkLsnUeVXvck2tit3HF3I+X7YelQGEXgHPax+uHSh5QNmZ/xS04nWmK036ul/TlDh+baoAAP0/5zFeScz1xVfTXWa3VBVUXtUVSl92q6NHLoOr5fT5+XjxiHLagq1r43Qz7qP8ALDBEXoSr52YAEwza6j1BnNsjMEajUZtidp76hJiqFJf0N6G9UcKsrSfWLk2X6hgkzB1meqOV6jl1nKOWqPEqW13K6ZTthxe2sLTchwg2I9weCfrirQAPAAxhFxY4Xalg1Auqdbrzk51IzjPz1mN7MNUYjsTpOneRGQpLQ0oShOkKUo+EC9z5vh104zWMqOTC9lTLNdbl6L/Gaf3JZ06v3fqGm+rn66R9MDTSW0n5efrhbHNW3bXEmc7bt3nLL6gdWHM60+ZHq2UsrtS5ejXUo9O0zE6SkjS6paiLhASf93jElA64Pw6fJgsdPchR48zR3TDFGKW39BJRrSHLK0k3F/B8YqLGEgecS8NKqo/teTdu84Zoz9JjZtlV2DRaMzDmaO7oQilNKf0N6Ea44VZWk3cFybL9QwrnDqI/XIKYcGi0bLkY37mPRYpiNTeUlO+kKIc0EEpv8pUr64BCv6Y0JJ84cILuoozvz+csyjdXZUentx63lLKmZJSL6qlWKcZcx65JG46pd1WFkj6JSB7YAMxVSoVuYqXPnyp0k/NIluqcdXwANSiSTYAAfYDDLGYKqF6EBzOV2mFrfUNKOF5IyglfuU0sWP8A18DMt96oSDMmyHpb67anX1la1WAAuTybAAfyw1cUgCyufthRhDiG/WhSRfi+L5MzMtGc+VmWoRZUzRKy9GnRWqfTZ0edt7zU1kuIOgkp4uB5Vfm/gY8r2aJNVjJjsU2nUdg/vmqawWESeQU7qQoheki6b+Ln64gfGNFKPgf34VMzqu0RVysBQhbBzxJjxEom0Kg1eQL65lQiF+Q7yballV1WFgPoAB7Ybys61STmd+uvMRHO609zBcQpUV/SjQjW3q9Wn5hc8K5GBnHoQT9sMM7hdtxvHcLVyey7mmRR4xiuU6m1aMn9w1UmS+mPySrbGoBGom6rebD6YkX+pVRFSpM2LS6RFNK3u2ZYjqQz+aLKukL/AJ8W5PvgIeDgNl8D7eMatoUs2SP54dMzKKBjplZR3JjLOYZOX8wsVmE0y48xq0JeSSk6kFJuAQfBPviSy7mqVTWFRnKdTavGFtlupMl9EfyVbYKgE6ibqt5sMDzUdKeVeo/4YW/wxM52HX6xDmIPEmajmKpyqm3Oju/Ddm/bMQVKZajakgK2kg+jVa6reSTfEuvPoQkqVk3J9h/5M/8A2wHkkDCahqSR9RgJnyBruBc7g3Fp9WEqlw4CYcVntNdn2mtLr2tV/wAxV/Vbwn6DCmT65Ky7mCPV4aGXH2AvSl4EoOpJSb2IPgn3xEAG9rY3QNJB+mGLc3GJ85OZarkrL9ej1iC2y4/H1aEvAlB1JKTcAg+FH3w9oGa5VKYVGdp9Nq0cfuWqkyX0x+SVbY1AI1E3NvNh9MD5HHGPDxgDMwNg+dxRlYdfrCGt5qkz5EWTCgU+hyI2vQ7SWTGUrUADqIVc8Agfqfrifj9VKnGTG2cu5caMTX2+3CUnZ1/No9fpv7284r/GjqilIItz/fhxqH3XHGd7uJPq1uqUAf0OGziiUkDjCylDVyeT9cIKT+fYqCQfc44GzZnXZsxulSlEJHm/FvriRYTK2SFrSD7XFz/fjeOy00m6ACT/ABfXC2FfJfUR3vqNYQcbmAOJJKwRe/8AP/5YkCfphA8+cbpWfB5xF/eNxGN8xTGY9KVAXKSMZhIk6N/GJ/st/wAX/k45+x0D+MT/AGW/4v8AycWD+HXJ+Uqr0boU+p5Woc6W73G4/Ip7Tji7SHQLqUkk2AA/QDA/qOUY8pJ/L+JqOnOo1DKDX2JztmatdO65XpNWmt5oRIf06ktJYCBpSEi1yT4A98RkTOqZOZ51TrEcsCft7smnI0yo+2jSNhSlenVwFXJuL46Xz5k3KEbrT01p8fKlCZhzPivdR26e0lt/RGSUa0hNlaTyL3sfGMyHk3J8nrT1Kp8jKlCehw/hXax3Ke0ptjXGUV6ElNk6jybWufOFb+qWu7b5X86mtsDlqsXdfK5zxXM30F7KNVpEKfmqc/O2dCqq8hxDehwKNiFXFxe/BvYYHq1nGFPrMXM5p7EqsHX38WWyFQ1ekNt6EX1GyRc6j8wBHGBh5RSkWNucNF/N+vnHonUHIORMpzl+5cNBz9lSnT2Z/wAZz5M29X5E2U042q4I9SdXNr3H3AwD5hrcSpZMoVFYbe36Z3G8pQGhe44FJ0m9zYDm4H88DbCElNyLm+FsBtWa2gRjnNVUMabnL4TRsqpprAVUKJ3m53CLtL3lG1tKgTZJP05+uMXKyHTyajRIdYnVBr91HrDTDkRV/SrcSnk2SSRb+IDApFQlbtlC4w/SlKRpCQB9LYgdYVoEXItqSvBFwiynnGMzRI9GrE6vwY0HV2i6O8G1ua1FS94qVY2NtNgLXVfGmYarlaqVGnCRUs3zqe3u9yJj7TjqbgaNq5IF1D1X9gLYDHgEurAFgCcPGG0JQCEi/wBcUOrYJREJ1TBaIjVDDijwLD64sHKc7IM2hRaRninVGMadr7SZQGGG5EncUVL7pbpOvTZARYCw1A+2A3BJ0tjx5nUKlRJcdmRHc3dbTqAtKrMrIuDx5AP8sZADlYL1I4nJcAecJXupxy1WMvtZLipfpWWu5+EfFG9Uhfcp/O7jbWEmylK0aNPFr3N8S/7a5Do1bGdcrys5z82s/uF5hcYdju6k7St4tqDirNlWmyuCE+3GInr1S6ZS36H8Np0OFvdxu9uwlvXbbtfSBe1z/ecVrjs2EY32H785pyap8bFfL+JaGWM9UCfkxjJudnsxR6RA1do3Q1IT3Otwur7kOq0r0qCNFgLeq/NjiD6hZngVKm0zLVCRI/Z+i7vw5yYE94reKVu7xQSg2WDp0gem17nDLqpFjQs+1KNDjsxmEbWltpAQlN2kE2A4HJJxmXIsZ3IWa5Lsdlx9js9lxSAVN6nSFaT5Fxwbecd4dOR58/5uK2pyNeM988/lF875piGmooeTUS4lCYvbeAbl1G5Sv+m7atDu2vVt8ekH64ApxpjlLhuR3Jyql6++L5SWz6vy9u3q+X5tXv4w/wAMJTTfd/KOU3P684bC4UbZMagvw0TadBbBUeRwceKe9ki+C3LsOI906zdJdisOPx+y2HVNgra1PEK0nym44NvOBIADwMUKgAH1gIAo+s1stXJNsJvawbE8e2Po1/o76f8A/iLlj/1Sx/8AjjnX9ncv/wDLU/Z/4FS/g/8A3h2jfb/9jdf7u2n5vV488+cYsWuV7odC5tyaNsdWezU5tS2pXtYffCqWkjzzjo38aGXcv0D9k/gVCpdK3+83uyiNs7mnY06tAF7XNr+Ln64sX8NmTMn1borQKhVcqUGfMd7nckSac064u0l0C6lJJNgAP0Aw7awDEMldxRpmbKcV9TjDGKvbjHuLFz5TqfG6LdM58eBFZmTfivdSG2kpcf0SUhGtQF1aRwL3sPGLs20gesyKtgn0+srTkn3JxuGlEE+MO3kIQElKbXHOCfM0SKz09yjKajMtvyO93nUoAW5pdATqPk2HAv4wytuBI8oFO4EiApJPnHmN3xZ1VvrjUYoOpUdT1B5wqE/XFhfhnptOq3W3L9PqsCLPhu9zuR5LKXW12jOqF0qBBsQD+oGOkPxK5LydSeilfqFKynQYExrttuRGpzTTiLyWgbKSkEXBI/QnGTNqRjyBK7l005dC99Ti62M9IN1D+eMwu0hJbuUgnFbqZiaExNhbSrUP8MaqUo/bG+PCASL465KaAE+MenSnlRxjxKUcG2G55wwFwgXN3VBfyggjkWx426Dwrg/XGuLE/DTTadVuuNBp1VgRJ8J0ytyPJZS42u0Z0i6VAg2IBH3AxzkIpPpK403sF9YBY0W4lPvc/QYQ1q02ubY1w22KEi5WT9hj1txSPuPphNHy49wanVHO6CPT/jjUknziwPxLU6n0jrbX6fSoEWBDa7bbjxmUtNovGaJslIAFySf1Jx5kWnwJXRHqbUJMGK9MhCk9rIcZSpxjXJUF6FEXTqHBta484gGGwP6184/g++U9L+UrxbqU+OThJTiifNv0x0Z+CfLmXswftb8eoNLq3b9ls97Ebf29W/q06wbX0i9vNh9MWT+JTJOTKT0Ur9QpWUqBAmNdttyI1OaacReS0DZSUgi4JH6E4k2rVMvh16fOaE0hOLxLnF7Syrgj+ePXVoCdKV+o+48DHaP4a8l5OqvRSgT6plOgzpjvc7j8mnNOOLtJdAupSSTYAD9AMcs5ehw3unOcZbsVhyRH7HZdU2CtvU8QrSfIuODbziuDKMzsoFV/v6Sb6faFN9i4LssEn0JJP1OHjiFBoJW4Cq/Fza/2xgWoQNwGytrVe3vbEatSlqKlkqJ+uCLczGLYx8I6l8qOn/E4RLagsoPkefpg1oUaM70+zZKcjtLfY7PZdUgFbep0hWk+RccG3nAdgiwAfWEXQPrNUpA++NiQPOMPjBNlmLFf6eZwlPRmXJEfstl1SAVtaniFaT5FxwbecFV3GFV3GCq1Ai1uPvjEKAFrWH2xrh1CQkpKiASD5wGIAgJoRPGYdOpBSSR4wyeJS2SDY4VTcVTc2JAxqTfCbBJSbm/OFMNVRiKjd0WWfvzjEpKvAw5SB5tzgq6SRIk3qJTIkyMzJjrDupp1sLQqzSyLg8HkA/yw6HcQsdeSBBNIskDHtr8Wvgr6RxIs7qFTIs2MzJYXu62nkBaFWZWRcHg8gHArDJM1QPICOP8ADAIpd0Uj3d0ayVgKUzax02N/b/8Ar4ZtuK1gLJP6+RherqJmcnwnj+84Z3JJPvfF8Y92WQe7HEgXRf6HCFyfJ8Ydq5Qf0w4orTanHVKQCUW039vP/wBsAvtW527atzymw3zZayW0fQ+T/LDp2OtHKfUMPceLNkkjGQ5STcynISbke22tw2SP1OHjLKW+fKvrjRhSiuxPBw4wHY9QMT1MPPBxmMxmJxJ
-            </div>
-            <div class="modal-section">
-                <h3>Configuration Sample</h3>
-                <div class="code-block"><code>Name: Silver
+            <div class=" alt="Currency proof">
+      </div>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Config Sample</p>
+      <div class="modal-code"><code>Name: Silver
 Symbol: ⚡
 Command_Aliases: silver
 Column_Name: coins
 Decimal: false
 Start_Value: 0.0</code></div>
-                <a href="https://pastebin.com/jU13bUbA" target="_blank" class="link-btn" style="display:  inline-block; margin-top: 1rem;">VIEW FULL CONFIG</a>
-            </div>
-        </div>
+      <div class="modal-links">
+        <a href="https://pastebin.com/jU13bUbA" target="_blank" class="btn btn-ghost">View Full Config &rarr;</a>
+      </div>
     </div>
-    <div id="deluxemenus-modal" class="modal" onclick="closeModal(event, 'deluxemenus')">
-         <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeModal(event, 'deluxemenus')">&times;</button>
-            <span class="modal-tag">GUI SYSTEM</span>
-            <h2 class="modal-title">Rank Shop Menu (DeluxeMenus)</h2>
-            <div class="modal-section">
-                <h3>Overview</h3>
-                <p>Built a complete rank purchase system with DeluxeMenus featuring a custom GUI, Silver currency integration, and automated rank assignment through LuckPerms commands.</p>
-            </div>
-            <div class="modal-section">
-                <h3>Key Features</h3>
-                <ul class="feature-list">
-                    <li>Custom purple/black themed GUI</li>
-                    <li>Multiple purchasable rank tiers with progression system</li>
-                    <li>Currency integration with CoinsEngine</li>
-                    <li>Automatic rank assignment via LuckPerms</li>
-                    <li>Price-based requirements (1k, 3k, 5k, 10k Silver)</li>
-                </ul>
-            </div>
-            <div class="modal-section">
-                <h3>Proof</h3>
-                <div style="position: relative; padding-bottom: 56.25%; height: 0; margin-bottom: 1rem;">
-                    <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 1px solid var(--border);"
-                            src="https://www.youtube.com/embed/V03kB7v5CAE"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen>
-         </iframe>
-                </div>
-                <img src="data:image/png;base64,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
-                <img src="data:image/png;base64,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
-            </div>
-            <div class="modal-section">
-                <h3>Configuration Sample</h3>
-                <div class="code-block"><code>menu_title: '&8[&5Rank Shop&8]'
-open_command:  shop
+    <div class="modal-section">
+      <p class="modal-section-label">Stack</p>
+      <div class="modal-stack"><span class="stack-tag">CoinsEngine</span><span class="stack-tag">Vault</span><span class="stack-tag">PlaceholderAPI</span><span class="stack-tag">YAML</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-rankshop" onclick="closeModal(event, 'rankshop')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalById('rankshop')">&times;</button>
+    <div class="modal-tags"><span class="project-tag">Minecraft</span><span class="project-tag">GUI System</span></div>
+    <h2 class="modal-title">Rank Shop Menu</h2>
+    <div class="modal-section">
+      <p class="modal-section-label">Overview</p>
+      <p>Complete rank purchase system using DeluxeMenus with custom GUI, Silver currency integration, and automated rank assignment through LuckPerms. Multi-tier progression with price-based requirements.</p>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Features</p>
+      <ul class="modal-feature-list">
+        <li>Custom themed GUI with multiple purchasable rank tiers</li>
+        <li>Silver currency integration via CoinsEngine</li>
+        <li>Automated rank assignment via LuckPerms commands</li>
+        <li>Price-based requirements: 1k, 3k, 5k, 10k Silver</li>
+      </ul>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-label">Proof</p>
+      <div class="modal-proof">
+        <iframe src="https://www.youtube.com/embed/V03kB7v5CAE" allowfullscreen></iframe>
+        <img src="data:image/png;base64,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
+                <img src=" alt="Rank shop proof">
+      </div>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Config Sample</p>
+      <div class="modal-code"><code>menu_title: '&8[&5Rank Shop&8]'
+open_command: shop
 size: 27
 items:
   'iron_rank':
@@ -1214,302 +698,188 @@ items:
     display_name: '&f&lIron Rank'
     lore:
       - '&7Cost: &f1,000 ⚡ Silver'</code></div>
-                <a href="https://pastebin.com/sTJ79gH0" target="_blank" class="link-btn" style="display: inline-block; margin-right: 1rem; margin-top: 1rem;">VIEW SHOP CONFIG</a>
-                <a href="https://pastebin.com/hZHK2gff" target="_blank" class="link-btn" style="display: inline-block; margin-top: 1rem;">VIEW DELUXEMENUS CONFIG</a>
-            </div>
-        </div>
+      <div class="modal-links">
+        <a href="https://pastebin.com/sTJ79gH0" target="_blank" class="btn btn-ghost">View Shop Config &rarr;</a>
+        <a href="https://pastebin.com/hZHK2gff" target="_blank" class="btn btn-ghost">View DeluxeMenus Config &rarr;</a>
+      </div>
     </div>
-    <div id="luckperms-modal" class="modal" onclick="closeModal(event, 'luckperms')">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeModal(event, 'luckperms')">&times;</button>
-            <span class="modal-tag">PERMISSIONS</span>
-            <h2 class="modal-title">Rank Hierarchy (LuckPerms)</h2>
-            <div class="modal-section">
-                <h3>Overview</h3>
-                <p>Configured comprehensive permission system with rank hierarchy including custom prefixes, inheritance structure, and chat formatting integration.</p>
-            </div>
-            <div class="modal-section">
-                <h3>Key Features</h3>
-         <ul class="feature-list">
-                    <li>Multi-tier rank structure with progression system</li>
-                    <li>Custom colored and animated prefixes for each rank</li>
-                    <li>Permission inheritance hierarchy</li>
-                    <li>Integration with TAB for display</li>
-                </ul>
-            </div>
-            <div class="modal-section">
-                <h3>Proof</h3>
-                <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCACDArADASIAAhEBAxEB/8QAHAABAQEAAwEBAQAAAAAAAAAAAAcBAgQFBgMI/8QARRAAAQEFAwoFAwEEBgsAAAAAAAECAwQFBhESExQWFyExVWWk0uIHFSIyoyNBUWEkJTNSCCZxgZGhNDZCREVTVoKipbL/xAAbAQEBAQEBAQEBAAAAAAAAAAAAAQIDBAUGB
-                <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCADFAlYDASIAAhEBAxEB/8QAHAAAAAcBAQAAAAAAAAAAAAAAAAECAwQFBgcI/8QAURAAAQMDAwIEAwQGBgYGCAcAAQIDBAAFEQYSIRMxFCJBUQdhcRUygZEWIzNCodEkUnKxweEIYqLS8PEXJTVDU4IYRGNkkpOUsiY2o7O0wuL/xAAbAQACAwEBAQAAAAAAAAAAAAAAAQIDBAUGB
-            </div>
-        </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Stack</p>
+      <div class="modal-stack"><span class="stack-tag">DeluxeMenus</span><span class="stack-tag">LuckPerms</span><span class="stack-tag">CoinsEngine</span><span class="stack-tag">YAML</span></div>
     </div>
-    <div id="tab-modal" class="modal" onclick="closeModal(event, 'tab')">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeModal(event, 'tab')">&times;</button>
-            <span class="modal-tag">DISPLAY</span>
-            <h2 class="modal-title">Scoreboard System (TAB)</h2>
-            <div class="modal-section">
-                <h3>Overview</h3>
-                <p>Designed custom scoreboard displaying player rank, currency balance, and server statistics with PlaceholderAPI integration for real-time updates.</p>
-            </div>
-            <div class="modal-section">
-                <h3>Key Features</h3>
-                <ul class="feature-list">
-                    <li>Real-time Silver balance display</li>
-                    <li>Dynamic rank prefix integration</li>
-                    <li>Online player counter</li>
-                    <li>Clean light blue/white color scheme</li>
-                </ul>
-            </div>
-            <div class="modal-section">
-                <h3>Proof</h3>
-                <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCACgAOUDASIAAhEBAxEB/8QAHAAAAQUBAQEAAAAAAAAAAAAAAwACBAUGBwEI/8QAQxAAAgEDAwIDBgMFBQYHAQEAAQIDBAURABIhBjETQVEHFCJhcYEykaEVscHR8BYjQlThCDNSk6PxF0RTYnKCktJD/8QAGgEAAgMBAQAAAAAAAAAAAAAAAgMAAQQFBv/EADERAAEEAQIEBAUEAwEBAAAAAAEAAgMRIQQSBTFBURNhcZEUIlKBoTJCwfCx0eHxBv/aAAwDAQACEQMRAD8A+RNLS0tOQpaWlosFLUzqWgp5pQDglEJx+WqJAyVCQOaFpak/s64f5Gq/5Tfy0v2fX5x7lU59PCb+Wh8VncId7e6jaWpP7OuH+Rqv+U38tL9nXD/I1X/Kb+Wp4rO4U3t7qNpak/s64f5Gq/5Tfy0GeGaBwk8UkTEZAdSDj76sPacAqw5p5FM0tLS0StLS16is7hEUszHAAGSTqUltrWKAwFC5IUPwSQCcY7+Whc9rf1GlRc1vMqJpatounrlIVCpHyMnL/h+v+mdPXpuvMrxvJSxlcYLSd8+mBnj56SdZAP3hKOoiH7gqbS1eJ0xWuSEqqNiO+JCf4ad/ZS4/+tS
-                <img src="data:image/png;base64,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
-            </div>
-            <div class="modal-section">
-                <h3>Configuration Sample</h3>
-                <div class="code-block"><code>scoreboard:
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-rankhierarchy" onclick="closeModal(event, 'rankhierarchy')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalById('rankhierarchy')">&times;</button>
+    <div class="modal-tags"><span class="project-tag">Minecraft</span><span class="project-tag">Permissions</span></div>
+    <h2 class="modal-title">Rank Hierarchy</h2>
+    <div class="modal-section">
+      <p class="modal-section-label">Overview</p>
+      <p>Comprehensive permission system with multi-tier rank structure, animated prefixes, permission inheritance, and chat formatting. Integrated with TAB plugin for real-time display.</p>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Features</p>
+      <ul class="modal-feature-list">
+        <li>Multi-tier rank structure with progression system</li>
+        <li>Custom colored and animated prefixes per rank</li>
+        <li>Full permission inheritance hierarchy</li>
+        <li>TAB plugin integration for scoreboard and tab list display</li>
+      </ul>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-label">Proof</p>
+      <div class="modal-proof">
+        <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCACDArADASIAAhEBAxEB/8QAHAABAQEAAwEBAQAAAAAAAAAAAAcBAgQFBgMI/8QARRAAAQEFAwoFAwEEBgsAAAAAAAECAwQFBhESExQWFyExVWWk0uIHFSIyoyNBUWEkJTNSCCZxgZGhNDZCREVTVoKipbL/xAAbAQEBAQEBAQEBAAAAAAAAAAAAAQIDBAUGB
+                <img src=" alt="Rank hierarchy proof">
+      </div>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Stack</p>
+      <div class="modal-stack"><span class="stack-tag">LuckPerms</span><span class="stack-tag">TAB Plugin</span><span class="stack-tag">PlaceholderAPI</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-scoreboard" onclick="closeModal(event, 'scoreboard')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalById('scoreboard')">&times;</button>
+    <div class="modal-tags"><span class="project-tag">Minecraft</span><span class="project-tag">Display</span></div>
+    <h2 class="modal-title">Scoreboard System</h2>
+    <div class="modal-section">
+      <p class="modal-section-label">Overview</p>
+      <p>Animated scoreboard using the TAB plugin displaying player rank, Silver balance, and live server stats. PlaceholderAPI integration for dynamic real-time updates across the whole server.</p>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Features</p>
+      <ul class="modal-feature-list">
+        <li>Real-time Silver balance display</li>
+        <li>Dynamic rank prefix integration</li>
+        <li>Online player counter</li>
+        <li>Animated title and clean formatting</li>
+      </ul>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-label">Proof</p>
+      <div class="modal-proof">
+        <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCACgAOUDASIAAhEBAxEB/8QAHAAAAQUBAQEAAAAAAAAAAAAAAwACBAUGBwEI/8QAQxAAAgEDAwIDBgMFBQYHAQEAAQIDBAURABIhBjETQVEHFCJhcYEykaEVscHR8BYjQlThCDNSk6PxF0RTYnKCktJD/8QAGgEAAgMBAQAAAAAAAAAAAAAAAgMAAQQFBv/EADERAAEEAQIEBAUEAwEBAAAAAAEAAgMRIQQSBTFBURNhcZEUIlKBoTJCwfCx0eHxBv/aAAwDAQACEQMRAD8A+RNLS0tOQpaWlosFLUzqWgp5pQDglEJx+WqJAyVCQOaFpak/s64f5Gq/5Tfy0v2fX5x7lU59PCb+Wh8VncId7e6jaWpP7OuH+Rqv+U38tL9nXD/I1X/Kb+Wp4rO4U3t7qNpak/s64f5Gq/5Tfy0GeGaBwk8UkTEZAdSDj76sPacAqw5p5FM0tLS0StLS16is7hEUszHAAGSTqUltrWKAwFC5IUPwSQCcY7+Whc9rf1GlRc1vMqJpatounrlIVCpHyMnL/h+v+mdPXpuvMrxvJSxlcYLSd8+mBnj56SdZAP3hKOoiH7gqbS1eJ0xWuSEqqNiO+JCf4ad/ZS4/+tS
+                <img src=" alt="Scoreboard proof">
+      </div>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Config Sample</p>
+      <div class="modal-code"><code>scoreboard:
   enabled: true
   scoreboards:
     default:
       title: '&b&lFreeLand &3&lNetwork'
       lines:
-        - '&7Rank:  %luckperms_prefix%'
+        - '&7Rank: %luckperms_prefix%'
         - '&b⚡ Silver: &f%coinsengine_balance_coins%'
         - '&7Online: &f%online%'</code></div>
-            </div>
-         </div>
-    
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Stack</p>
+      <div class="modal-stack"><span class="stack-tag">TAB</span><span class="stack-tag">PlaceholderAPI</span><span class="stack-tag">Formatting</span></div>
+    </div>
+  </div>
+</div>
+
 <script>
-        // console.log('Mouse tracking initialized');
-const mouseGlow = document.getElementById('mouseGlow');
-        const cursor = document.getElementById('cursor');
-        let mouseX = 0, mouseY = 0;
-        let cursorX = 0, cursorY = 0;
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-         mouseY = e.clientY;
-            mouseGlow.style.left = e.clientX + 'px';
-            mouseGlow.style.top = e.clientY + 'px';
-            document.body.classList.add('mouse-active');
-        });
-        function animateCursor() {
-            const ease = 0.15;
-            cursorX += (mouseX - cursorX) * ease;
-            cursorY += (mouseY - cursorY) * ease;
-            cursor.style.left = cursorX + 'px';
-            cursor.style.top = cursorY + 'px';
-            requestAnimationFrame(animateCursor);
-        }
-        animateCursor();
-        window.addEventListener('scroll', () => {
-            const scrollIndicator = document.querySelector('.scroll-indicator');
-            if (window.scrollY > 100) {
-                scrollIndicator.style.opacity = '0';
-                scrollIndicator.style.pointerEvents = 'none';
-            } else {
-                scrollIndicator.style.opacity = '0.8';
-                scrollIndicator.style.pointerEvents = 'auto';
-         }
-         });
-        function typeWriter(elementId, text, speed = 100) {
-            const element = document.getElementById(elementId);
-            let i = 0;
-            element.textContent = '';
-            element.style.opacity = '1';
-            function type() {
-                if (i < text.length) {
-                    element.textContent += text.charAt(i);
-                    i++;
-                    setTimeout(type, speed);
-                }
-            }
-            type();
-        }
-        function deleteText(elementId, speed = 50) {
-         const element = document.getElementById(elementId);
-            const text = element.textContent;
-            let i = text.length;
-         function deleteChar() {
-                if (i > 0) {
-                    element.textContent = text.substring(0, i - 1);
-         i--;
-                    setTimeout(deleteChar, speed);
-                }
-            }
-            deleteChar();
-        }
-         function typingLoop() {
-            const discord = document.getElementById('typingDiscord');
-            const projects = document.getElementById('typingProjects');
-            discord.textContent = 'Discord Bot Development';
-            projects.textContent = 'Configuration Work';
-            let currentIndex = 0;
-            const texts = [
-                { element: discord, text: 'Discord Bot Development' },
-                { element: projects, text: 'Configuration Work' }
-            ];
-            function cycle() {
-                setTimeout(() => {
-                    const current = texts[currentIndex];
-                    let deleteIndex = current.text.length;
-                    function deleteChar() {
-                        if (deleteIndex > 0) {
-                            current.element.textContent = current.text.substring(0, deleteIndex - 1);
-                            deleteIndex--;
-                            setTimeout(deleteChar, 100);
-                        } else {
-                            setTimeout(() => {
-                                let typeIndex = 0;
-                                function typeChar() {
-                                    if (typeIndex < current.text.length) {
-                                        current.element.textContent = current.text.substring(0, typeIndex + 1);
-                                        typeIndex++;
-                                        setTimeout(typeChar, 120);
-                                    } else {
-                                        currentIndex = (currentIndex + 1) % texts.length;
-                                        cycle();
-                                    }
-                                }
-                                typeChar();
-                            }, 1500);
-                        }
-                    }
-                    deleteChar();
-                }, 7000);
-            }
-            cycle();
-        }
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(typingLoop, 1000);
-            setTimeout(() => typeWriter('typingSkills', 'Technical Skills', 100), 2000);
-            const messagesObserver = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        const messages = entry.target.querySelectorAll('.message-card');
-                        messages.forEach((msg, i) => {
-                            setTimeout(() => {
-                                msg.classList.add('show');
-                            }, i * 150);
-                        });
-                        messagesObserver.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.2 });
-            const messagesContainer = document.getElementById('messagesContainer');
-            if (messagesContainer) {
-                messagesObserver.observe(messagesContainer);
-         }
-        });
-        async function loadDiscordProfile() {
-            const userId = '184491496291041280';
-            const widget = document.getElementById('discordWidget');
-            try {
-                const response = await fetch(`https://api.lanyard.rest/v1/users/${userId}`);
-                const data = await response.json();
-                if (data.success) {
-                    const user = data.data.discord_user;
-                    const presence = data.data;
-                    const statusClass = presence.discord_status || 'offline';
-                    const avatarUrl = 'https://ui-avatars.com/api/?name=falterhttps://i.imgur.com/7JXxFUN.pngbackground=01cfffhttps://i.imgur.com/7JXxFUN.pngcolor=fffhttps://i.imgur.com/7JXxFUN.pngsize=128';
-                    widget.innerHTML = `
-                        <div class="widget-header">
-                            <div class="avatar-container">
-                                <img src="${avatarUrl}" alt="Avatar" class="avatar">
-                                <div class="status-indicator ${statusClass}"></div>
-                            </div>
-                            <div class="widget-info">
-                                <div class="username">${user.global_name || user.username}</div>
-                                <div class="discriminator">@${user.username}</div>
-                            </div>
-                        </div>
-                        <div class="bio">Developer | Configurator & Bug Fixer</div>
-                    `;
-                } else {
-                    showFallbackProfile(widget);
-                }
-            } catch (error) {
-                console.error('Error loading Discord profile:', error);
-                showFallbackProfile(widget);
-            }
-        }
-        function showFallbackProfile(widget) {
-            const fallbackAvatar = 'https://ui-avatars.com/api/?name=falterhttps://i.imgur.com/7JXxFUN.pngbackground=01cfffhttps://i.imgur.com/7JXxFUN.pngcolor=fffhttps://i.imgur.com/7JXxFUN.pngsize=128';
-            widget.innerHTML = `
-                <div class="widget-header">
-                    <div class="avatar-container">
-                        <img src="${fallbackAvatar}" alt="Avatar" class="avatar">
-                        <div class="status-indicator offline"></div>
-                    </div>
-                    <div class="widget-info">
-                        <div class="username">falter</div>
-                        <div class="discriminator">@falter3d</div>
-                    </div>
-                </div>
-                <div class="bio">Developer | Configurator & Bug Fixer</div>
-            `;
-         }
-         window.addEventListener('DOMContentLoaded', loadDiscordProfile);
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId + '-modal');
-            // console.log(modalId);
-modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeModal(event, modalId) {
-            event.stopPropagation();
-            const modal = document.getElementById(modalId + '-modal');
-         modal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-        function copyDiscord(event) {
-            event.preventDefault();
-            navigator.clipboard.writeText('falter3d').then(() => {
-                const btn = event.target;
-                const originalText = btn.textContent;
-         btn.textContent = '✓ COPIED!';
-                btn.style.background = 'rgba(1, 207, 255, 0.3)';
-         setTimeout(() => {
-                    btn.textContent = originalText;
-                    btn.style.background = '';
-                }, 2000);
-         });
-        }
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.modal.active').forEach(modal => {
-                    modal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                });
-            }
-        });
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }, index * 100);
-                } else {
-                    entry.target.style.opacity = '0';
-                    entry.target.style.transform = 'translateY(30px)';
-         }
-         });
-        }, observerOptions);
-        document.addEventListener('DOMContentLoaded', () => {
-            const cards = document.querySelectorAll('.project-card, .skill-category');
-            cards.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
-                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(card);
-         });
-        });
-    </script>
+
+  // Custom cursor - from old site
+  const mouseGlow = document.getElementById('mouseGlow');
+    const cursor = document.getElementById('cursor');
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    mouseGlow.style.left = e.clientX + 'px';
+    mouseGlow.style.top = e.clientY + 'px';
+    document.body.classList.add('mouse-active');
+    });
+
+  function animateCursor() {
+    const ease = 0.15;
+    cursorX += (mouseX - cursorX) * ease;
+    cursorY += (mouseY - cursorY) * ease;
+    cursor.style.left = cursorX + 'px';
+    cursor.style.top = cursorY + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  // Modals
+  function openModal(id) {
+    document.getElementById('modal-' + id).classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModalById(id) {
+    document.getElementById('modal-' + id).classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function closeModal(event, id) {
+    closeModalById(id);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.active').forEach(m => {
+        m.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    }
+  });
+
+
+  function copyDiscord(btn) {
+    navigator.clipboard.writeText('falter3d').then(() => {
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => btn.textContent = orig, 2000);
+    });
+  }
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 60);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => obs.observe(el));
+
+  // Lanyard Discord status
+  async function loadStatus() {
+    const dot = document.getElementById('statusDot');
+    const text = document.getElementById('statusText');
+    try {
+      const res = await fetch('https://api.lanyard.rest/v1/users/184491496291041280');
+      const data = await res.json();
+      if (data.success) {
+        const status = data.data.discord_status;
+        const user = data.data.discord_user;
+        const name = user.global_name || user.username;
+        dot.className = 'status-dot ' + status;
+        const labels = { online: 'Online', idle: 'Away', dnd: 'Do Not Disturb', offline: 'Offline' };
+        text.innerHTML = '<strong>' + name + '</strong> &mdash; ' + (labels[status] || 'Offline');
+      } else {
+        text.innerHTML = '<strong>falter3d</strong> &mdash; Discord';
+      }
+    } catch(e) {
+      text.innerHTML = '<strong>falter3d</strong> &mdash; Discord';
+    }
+  }
+  loadStatus();
+</script>
 </body>
 </html>
