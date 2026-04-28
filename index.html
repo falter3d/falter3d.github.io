@@ -501,6 +501,19 @@
         <span class="stack-tag">SQLite</span>
       </div>
     </div>
+
+    <div class="project-card" onclick="openModal('staffvanish')" style="cursor:none">
+      <div class="project-tags"><span class="project-tag">Minecraft Plugin</span><span class="project-tag archived">Completed</span></div>
+      <h3 class="project-title">StaffVanish</h3>
+      <p class="project-desc">Rank-based staff vanish plugin built from scratch for Paper & Purpur 1.21.11. Packet-level hiding, glow indicators, rank visibility hierarchy via LuckPerms, TAB & PlaceholderAPI integration, and full configurability.</p>
+      <div class="project-stack">
+        <span class="stack-tag">Java</span>
+        <span class="stack-tag">Paper API</span>
+        <span class="stack-tag">PacketEvents</span>
+        <span class="stack-tag">LuckPerms</span>
+        <span class="stack-tag">TAB</span>
+      </div>
+    </div>
   </div>
 
   <p class="section-label reveal" style="margin-top: 0; padding-top: 5rem; border-top: 1px solid var(--border);">Previous Work</p>
@@ -973,6 +986,45 @@ items:
     <div class="modal-section">
       <p class="modal-section-label">Stack</p>
       <div class="modal-stack"><span class="stack-tag">TAB</span><span class="stack-tag">PlaceholderAPI</span><span class="stack-tag">Formatting</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-staffvanish" onclick="closeModal(event, 'staffvanish')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalById('staffvanish')">&times;</button>
+    <div class="modal-tags"><span class="project-tag">Minecraft Plugin</span><span class="project-tag archived">Completed</span></div>
+    <h2 class="modal-title">StaffVanish</h2>
+    <div class="modal-section">
+      <p class="modal-section-label">Overview</p>
+      <p>A fully custom, rank-based staff vanish plugin built from scratch in Java for Paper & Purpur 1.21.11. Players are hidden entirely via the server packet API — no invisibility effects, no floating armor. Visibility is controlled by a configurable rank hierarchy through LuckPerms permission nodes.</p>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Features</p>
+      <ul class="modal-feature-list">
+        <li>Rank-based visibility — staff can only see vanished players at or below their own level</li>
+        <li>Glow indicator using rank color, visible only to those who can see the vanished player</li>
+        <li>Self-glow suppression via PacketEvents entity metadata packet interception</li>
+        <li>TAB plugin integration for automatic glow color from rank prefix</li>
+        <li>%staffvanish_online% PlaceholderAPI placeholder for accurate player counts</li>
+        <li>Vanish others — admins can vanish/unvanish other players via /vanish &lt;player&gt;</li>
+        <li>Full protection: no damage, no attacking, no item pickup while vanished</li>
+        <li>Configurable block break restrictions with message cooldown</li>
+        <li>Every message, toggle, and behaviour configurable in config.yml</li>
+        <li>In-game debug mode toggle via /sv debugmode</li>
+      </ul>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Stack</p>
+      <div class="modal-stack">
+        <span class="stack-tag">Java</span>
+        <span class="stack-tag">Paper API</span>
+        <span class="stack-tag">PacketEvents</span>
+        <span class="stack-tag">LuckPerms</span>
+        <span class="stack-tag">PlaceholderAPI</span>
+        <span class="stack-tag">TAB</span>
+        <span class="stack-tag">Gradle</span>
+      </div>
     </div>
   </div>
 </div>
