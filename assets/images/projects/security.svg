@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420">
+ <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#62b8ff"/><stop offset="1" stop-color="#ececff"/></linearGradient><radialGradient id="r"><stop stop-color="#1676ff" stop-opacity=".5"/><stop offset="1" stop-color="#001229" stop-opacity="0"/></radialGradient></defs>
+ <rect width="640" height="420" rx="34" fill="#030914"/><circle cx="320" cy="210" r="190" fill="url(#r)"/>
+ <path d="M320 74 451 122v94c0 84-53 145-131 174-78-29-131-90-131-174v-94z" fill="#07182f" stroke="url(#g)" stroke-width="8"/>
+ <path d="m267 211 35 35 76-82" fill="none" stroke="url(#g)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+ <text x="320" y="346" text-anchor="middle" fill="#dceeff" font-family="monospace" font-size="26" letter-spacing="8">SECURITY</text>
+</svg>
