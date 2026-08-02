@@ -546,7 +546,7 @@
       "developedFor": {
         "name": "Public Release",
         "type": "Discord Bot",
-        "logo": "assets/images/brands/permify.webp"
+        "logo": "assets/images/brands/permify-icon.webp"
       },
       "metrics": [
         {
@@ -1211,7 +1211,7 @@
       {
         "name": "Fakepixel",
         "role": "YouTube Rank",
-        "description": "Previously represented falter3d as a ranked creator on the network.",
+        "description": "Previously held Fakepixel's YouTube rank as a recognized content creator on the network.",
         "logo": "assets/images/brands/fakepixel.webp",
         "initials": "FP",
         "url": "",
@@ -1438,8 +1438,8 @@
     "ownerDiscordId": "184491496291041280"
   },
   "_meta": {
-    "contentVersion": 1785636689712,
-    "build": "20260802-5",
-    "updatedAt": "2026-08-02T03:07:00+01:00"
+    "contentVersion": 1785637460434,
+    "build": "20260802-6",
+    "updatedAt": "2026-08-02T03:24:20+01:00"
   }
 }
