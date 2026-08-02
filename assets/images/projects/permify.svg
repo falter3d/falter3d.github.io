@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420">
- <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8ed0ff"/><stop offset="1" stop-color="#695dff"/></linearGradient></defs>
- <rect width="640" height="420" rx="34" fill="#040915"/>
- <g fill="none" stroke="url(#g)" stroke-width="10"><rect x="118" y="102" width="404" height="216" rx="30"/><circle cx="220" cy="210" r="58"/><path d="M278 210h134m-34 0v38m-56-38v26" stroke-linecap="round"/></g>
- <circle cx="220" cy="210" r="18" fill="#dff4ff"/><text x="320" y="363" text-anchor="middle" fill="#dceeff" font-family="monospace" font-size="26" letter-spacing="8">PERMIFY</text>
-</svg>
