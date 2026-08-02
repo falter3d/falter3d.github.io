@@ -3,100 +3,144 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#040914">
-  <meta name="description" content="Developer, YouTuber, and editor creating Discord bots, Minecraft projects, websites, community platforms, and more.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://falter3d.github.io/">
-  <meta property="og:title" content="falter3d — Developer, YouTuber & Editor">
-  <meta property="og:description" content="Developer, YouTuber, and editor creating Discord bots, Minecraft projects, websites, community platforms, and more.">
-  <meta property="og:image" content="https://falter3d.github.io/assets/images/profile.webp">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="falter3d — Developer, YouTuber & Editor">
-  <meta name="twitter:description" content="Developer, YouTuber, and editor creating Discord bots, Minecraft projects, websites, community platforms, and more.">
-  <meta name="twitter:image" content="https://falter3d.github.io/assets/images/profile.webp">
-  <title>falter3d — Developer, YouTuber & Editor</title>
-  <link rel="canonical" href="https://falter3d.github.io/">
-  <link rel="icon" type="image/png" href="assets/images/favicon.png">
-  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#050b17">
+  <style>
+    [hidden] { display: none !important; }
+  </style>
+  <title>falter3d Site Editor</title>
+  <link rel="icon" type="image/png" href="../assets/images/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260802-7">
-  <script src="config.js?v=20260802-7"></script>
-  <script defer src="assets/js/api.js?v=20260802-7"></script>
-  <script defer src="assets/js/app.js?v=20260802-7"></script>
+  <link rel="stylesheet" href="admin.css?v=20260802-8">
+  <script src="../config.js?v=20260802-8"></script>
+  <script>
+    window.__FALTER_EDITOR_STARTED = false;
+    window.__FALTER_EDITOR_READY = false;
+
+    function showEditorStartupFailure(title, message) {
+      const heading = document.getElementById("auth-title");
+      const description = document.getElementById("auth-description");
+      const actions = document.getElementById("auth-actions");
+      const note = document.getElementById("auth-note");
+      if (!heading || !description || !actions) return;
+
+      heading.textContent = title;
+      description.textContent = message;
+      const apiBase = String(window.FALTER_PORTFOLIO_CONFIG?.API_BASE_URL || "").replace(/\/+$/, "");
+      const loginUrl = apiBase
+        ? `${apiBase}/api/auth/login?returnTo=${encodeURIComponent(location.href)}`
+        : "";
+      actions.innerHTML = loginUrl
+        ? `<a class="button primary" href="${loginUrl}">Sign in with Discord</a><a class="button subtle" href="../">Return to portfolio</a>`
+        : `<a class="button subtle" href="../">Return to portfolio</a>`;
+      if (note) note.textContent = "Editor build 2026.08.02.8";
+    }
+
+    window.addEventListener("error", (event) => {
+      if (window.__FALTER_EDITOR_READY) return;
+      showEditorStartupFailure("The editor script crashed.", event.message || "A JavaScript error stopped the editor from starting.");
+    });
+
+    window.addEventListener("unhandledrejection", (event) => {
+      if (window.__FALTER_EDITOR_READY) return;
+      const reason = event.reason?.message || String(event.reason || "Unknown startup error");
+      showEditorStartupFailure("The editor could not start.", reason);
+    });
+
+    window.setTimeout(() => {
+      if (window.__FALTER_EDITOR_READY) return;
+      if (!window.__FALTER_EDITOR_STARTED) {
+        showEditorStartupFailure("The editor script did not load.", "GitHub Pages is still serving an older or missing admin.js file.");
+      } else {
+        showEditorStartupFailure("The editor did not finish starting.", "The script loaded, but startup did not complete. Use the Discord button below to continue.");
+      }
+    }, 5000);
+  </script>
+  <script defer src="admin.js?v=20260802-8"></script>
 </head>
 <body>
-  <div class="loading-screen" id="loading-screen" aria-hidden="true">
-    <div class="loading-moon"><span></span></div>
-    <p>loading falter3d</p>
+  <div class="admin-background" aria-hidden="true"></div>
+
+  <section class="auth-screen" id="auth-screen">
+    <div class="auth-card">
+      <a class="auth-brand" href="../"><span>falter</span><strong>3d</strong><span class="auth-brand-label">site editor</span></a>
+      <div class="auth-orb"><img src="../assets/images/favicon.png" alt=""></div>
+      <p class="auth-kicker">Protected editor</p>
+      <h1 id="auth-title">Loading editor…</h1>
+      <p id="auth-description">Checking the portfolio backend and your session.</p>
+      <div class="auth-actions" id="auth-actions"></div>
+      <p class="auth-note" id="auth-note">Editor build 2026.08.02.8</p>
+    </div>
+  </section>
+
+  <div class="admin-app" id="admin-app" hidden>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><span>falter</span><strong>3d</strong><small>editor</small></div>
+      <button class="sidebar-close" id="sidebar-close" type="button">Close</button>
+      <nav class="sidebar-nav" id="sidebar-nav">
+        <button class="active" data-view="dashboard"><span>01</span>Dashboard</button>
+        <button data-view="site"><span>02</span>Site & Hero</button>
+        <button data-view="projects"><span>03</span>Projects</button>
+        <button data-view="experience"><span>04</span>Experience</button>
+        <button data-view="content"><span>05</span>YouTube</button>
+        <button data-view="worked"><span>06</span>Worked With</button>
+        <button data-view="skills"><span>07</span>Skills</button>
+        <button data-view="socials"><span>08</span>Socials</button>
+        <button data-view="settings"><span>09</span>Settings</button>
+        <button data-view="revisions"><span>10</span>Revisions</button>
+        <button data-view="scheduled"><span>11</span>Scheduled</button>
+        <button data-view="admins"><span>12</span>Administrators</button>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="../" target="_blank" rel="noopener">Open portfolio ↗</a>
+        <button id="logout-button" type="button">Sign out</button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <button class="mobile-sidebar-button" id="mobile-sidebar-button" type="button">Menu</button>
+        <div><p id="view-kicker">Overview</p><h1 id="view-title">Dashboard</h1></div>
+        <div class="draft-state"><i id="draft-dot"></i><span id="draft-label">No unsaved changes</span></div>
+        <div class="publish-actions">
+          <button class="button subtle" id="save-draft" type="button">Save Draft</button>
+          <button class="button subtle" id="preview-draft" type="button">Preview</button>
+          <button class="button primary" id="publish-draft" type="button">Publish</button>
+        </div>
+      </header>
+      <div class="admin-content" id="admin-content"></div>
+    </main>
   </div>
 
-  <div class="background-layer" aria-hidden="true"></div>
-  <div class="background-noise" aria-hidden="true"></div>
-  <div class="mouse-glow" id="mouse-glow" aria-hidden="true"></div>
-  <div class="custom-cursor" id="custom-cursor" aria-hidden="true"><span></span></div>
-
-  <header class="site-header" id="site-header">
-    <a class="brand" href="#top" aria-label="falter3d home">
-      <span class="brand-word">falter</span><span class="brand-accent">3d</span>
-    </a>
-    <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
-    <nav class="main-nav" id="main-nav" aria-label="Main navigation"></nav>
-    <a class="nav-contact" href="#contact">Discord <span>↗</span></a>
-  </header>
-
-  <main id="top">
-    <section class="hero section-shell" id="home">
-      <div class="hero-copy reveal">
-        <p class="eyebrow" id="hero-eyebrow"></p>
-        <h1 id="hero-headline"></h1>
-        <p class="hero-summary" id="hero-summary"></p>
-        <div class="hero-actions" id="hero-actions"></div>
-        <p class="hero-availability" id="hero-availability"></p>
-      </div>
-      <div class="hero-visual reveal" data-delay="100">
-        <div class="profile-orbit" aria-hidden="true"><i></i><i></i><i></i></div>
-        <figure class="profile-frame" id="profile-admin-trigger">
-          <img id="profile-image" src="assets/images/profile.webp" alt="falter3d profile artwork">
-          <span class="profile-shine" aria-hidden="true"></span>
-        </figure>
-        <a class="presence-card" id="presence-card" href="https://discord.com/users/184491496291041280" target="_blank" rel="noopener">
-          <span class="presence-avatar-wrap">
-            <img id="presence-avatar" src="assets/images/favicon.png" alt="">
-            <i class="presence-dot offline" id="presence-dot"></i>
-          </span>
-          <span class="presence-copy">
-            <strong>falter3d</strong>
-            <small id="presence-text">Checking Discord status…</small>
-          </span>
-          <span class="presence-arrow">↗</span>
-        </a>
-      </div>
-      <a class="scroll-cue" href="#about" aria-label="Scroll to about"><span></span>scroll</a>
-    </section>
-
-    <div id="dynamic-sections"></div>
-  </main>
-
-  <footer class="site-footer">
-    <div>
-      <span class="footer-brand">falter3d</span>
-      <span class="footer-note">Built for the things I actually do.</span>
-    </div>
-    <div class="footer-socials" id="footer-socials"></div>
-    <button class="admin-moon" id="admin-moon" type="button" aria-label="Open site editor" title="Site editor">◐</button>
-  </footer>
-
-  <dialog class="project-modal" id="project-modal">
-    <button class="modal-close" id="modal-close" type="button" aria-label="Close project">×</button>
-    <div id="project-modal-content"></div>
+  <dialog class="editor-dialog" id="editor-dialog">
+    <form method="dialog" id="editor-form">
+      <header class="dialog-header">
+        <div><p id="dialog-kicker">Edit</p><h2 id="dialog-title">Item</h2></div>
+        <button class="icon-button" value="cancel" aria-label="Close">×</button>
+      </header>
+      <div class="dialog-body" id="dialog-body"></div>
+      <footer class="dialog-footer">
+        <button class="button danger" id="dialog-delete" type="button" hidden>Archive / Delete</button>
+        <span></span>
+        <button class="button subtle" value="cancel">Cancel</button>
+        <button class="button primary" id="dialog-save" type="submit" value="default">Save changes</button>
+      </footer>
+    </form>
   </dialog>
 
-  <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+  <dialog class="confirm-dialog" id="confirm-dialog">
+    <form method="dialog">
+      <h2 id="confirm-title">Confirm action</h2>
+      <p id="confirm-message"></p>
+      <div class="confirm-actions">
+        <button class="button subtle" value="cancel">Cancel</button>
+        <button class="button danger" id="confirm-accept" value="default">Confirm</button>
+      </div>
+    </form>
+  </dialog>
 
-  <noscript>
-    <div class="noscript">This portfolio needs JavaScript to load its configurable content.</div>
-  </noscript>
+  <input id="image-upload-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+  <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
 </body>
 </html>
