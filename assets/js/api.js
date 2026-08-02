@@ -4,7 +4,7 @@
   const config = window.FALTER_PORTFOLIO_CONFIG || {};
   const trimSlash = (value) => String(value || "").replace(/\/+$/, "");
   const apiBase = trimSlash(config.API_BASE_URL);
-  const buildVersion = String(config.BUILD_VERSION || "20260802-5");
+  const buildVersion = String(config.BUILD_VERSION || "20260802-7");
   const REQUEST_TIMEOUT_MS = 6500;
 
   function contentVersion(content) {

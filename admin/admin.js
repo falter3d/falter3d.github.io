@@ -6,7 +6,7 @@
 
   const config = window.FALTER_PORTFOLIO_CONFIG || {};
   const apiBase = String(config.API_BASE_URL || "").replace(/\/+$/, "");
-  const buildVersion = String(config.BUILD_VERSION || "20260802-5");
+  const buildVersion = String(config.BUILD_VERSION || "20260802-7");
   const contentVersion = (content) => Number(content?._meta?.contentVersion || content?.contentVersion || 0) || 0;
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];

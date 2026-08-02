@@ -18,6 +18,7 @@
   --sidebar: 240px;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { min-width: 320px; background: var(--bg); }
 body { margin: 0; min-height: 100vh; color: var(--text); background: var(--bg); font-family: var(--mono); font-size: 13px; line-height: 1.6; }
 button, input, textarea, select { font: inherit; }
