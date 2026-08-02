@@ -339,7 +339,8 @@
       "links": [],
       "developedFor": {
         "name": "CloudFun Network",
-        "type": "Minecraft Network"
+        "type": "Minecraft Network",
+        "logo": "assets/images/brands/cloudfun.webp"
       },
       "metrics": [
         {
@@ -398,7 +399,8 @@
       "links": [],
       "developedFor": {
         "name": "CloudFun Network",
-        "type": "Private Commission"
+        "type": "Private Commission",
+        "logo": "assets/images/brands/cloudfun-media.webp"
       },
       "metrics": [
         {
@@ -452,7 +454,7 @@
         "Optional key-expiry alerts that survive restarts",
         "Detailed diagnostics, rate limits, redaction, and audit logging"
       ],
-      "image": "assets/images/projects/security.svg",
+      "image": "assets/images/projects/security-cover.webp",
       "imageMode": "cover",
       "links": [
         {
@@ -468,7 +470,8 @@
       ],
       "developedFor": {
         "name": "moxy",
-        "type": "YouTuber"
+        "type": "YouTuber",
+        "logo": "assets/images/brands/moxy.webp"
       },
       "metrics": [
         {
@@ -484,7 +487,12 @@
           "value": "Maintained"
         }
       ],
-      "gallery": []
+      "gallery": [
+        {
+          "url": "assets/images/brands/moxy.webp",
+          "caption": "moxy, the creator Security was developed for."
+        }
+      ]
     },
     {
       "id": "permify",
@@ -521,8 +529,8 @@
         "Per-server change history, logs, and reset tools",
         "Interactive panel and step-by-step setup wizard"
       ],
-      "image": "assets/images/projects/permify.svg",
-      "imageMode": "cover",
+      "image": "assets/images/projects/permify-brand.webp",
+      "imageMode": "logo",
       "links": [
         {
           "label": "Invite Permify",
@@ -537,7 +545,8 @@
       ],
       "developedFor": {
         "name": "Public Release",
-        "type": "Discord Bot"
+        "type": "Discord Bot",
+        "logo": "assets/images/brands/permify.webp"
       },
       "metrics": [
         {
@@ -589,12 +598,13 @@
         "SQLite persistence for moderation and ticket data",
         "Custom configuration for the creator's Discord community"
       ],
-      "image": "assets/images/projects/indianbedwars.svg",
+      "image": "assets/images/projects/indianbedwars-cover.webp",
       "imageMode": "cover",
       "links": [],
       "developedFor": {
         "name": "IndianBedwars",
-        "type": "YouTuber"
+        "type": "YouTuber",
+        "logo": "assets/images/brands/indianbedwars.webp"
       },
       "metrics": [
         {
@@ -646,12 +656,13 @@
         "Redirects, custom 404 handling, and deployment configuration",
         "Project and team presentation built without a framework"
       ],
-      "image": "assets/images/projects/vanish.svg",
+      "image": "assets/images/projects/vanish-studios-cover.webp",
       "imageMode": "cover",
       "links": [],
       "developedFor": {
         "name": "Vanish Studios",
-        "type": "Company Website"
+        "type": "Company Website",
+        "logo": "assets/images/brands/vanish-studios.webp"
       },
       "metrics": [
         {
@@ -1129,55 +1140,61 @@
         "name": "Vanish Studios",
         "role": "Founder & CEO",
         "description": "Founded and leads an independent studio working across Minecraft, Discord, websites, media systems, and community infrastructure.",
-        "logo": "",
+        "logo": "assets/images/brands/vanish-studios.webp",
         "initials": "VS",
         "url": "",
-        "kind": "Leadership"
+        "kind": "Leadership",
+        "logoMode": "contain"
       },
       {
         "name": "Fakepixel",
         "role": "Admin Rank Holder & Beta Tester",
         "description": "Currently holds Fakepixel's non-staff Admin rank and contributes as a Beta Tester by testing upcoming features, systems, and server changes. Previously served on the staff team as a Game Master and held YouTube rank, with plans to return to creating content on the network.",
-        "logo": "",
+        "logo": "assets/images/brands/fakepixel.webp",
         "initials": "FP",
         "url": "",
-        "kind": "Community"
+        "kind": "Community",
+        "logoMode": "cover"
       },
       {
         "name": "UltimisMC",
         "role": "Partner",
         "description": "Current content partner. Previous staff and development work is listed under past experience.",
-        "logo": "",
+        "logo": "assets/images/brands/ultimismc.webp",
         "initials": "UM",
         "url": "",
-        "kind": "Creator"
+        "kind": "Creator",
+        "logoMode": "contain"
       },
       {
         "name": "Mineplex",
         "role": "Content Creator",
         "description": "Holds the network's creator rank as part of falter3d's Minecraft content work.",
-        "logo": "",
+        "logo": "assets/images/brands/mineplex.webp",
         "initials": "MP",
         "url": "",
-        "kind": "Creator"
+        "kind": "Creator",
+        "logoMode": "cover"
       },
       {
         "name": "PikaNetwork",
         "role": "Partner",
         "description": "Current creator partner through the falter3d channel.",
-        "logo": "",
+        "logo": "assets/images/brands/pikanetwork.webp",
         "initials": "PN",
         "url": "",
-        "kind": "Creator"
+        "kind": "Creator",
+        "logoMode": "cover"
       },
       {
         "name": "JartexNetwork",
         "role": "Partner",
         "description": "Current creator partner through the falter3d channel.",
-        "logo": "",
+        "logo": "assets/images/brands/jartexnetwork.webp",
         "initials": "JN",
         "url": "",
-        "kind": "Creator"
+        "kind": "Creator",
+        "logoMode": "contain"
       }
     ],
     "previous": [
@@ -1185,37 +1202,41 @@
         "name": "Fakepixel",
         "role": "Game Master",
         "description": "Previously handled moderation and community responsibilities as part of the server's staff team.",
-        "logo": "",
+        "logo": "assets/images/brands/fakepixel.webp",
         "initials": "FP",
         "url": "",
-        "kind": "Staff"
+        "kind": "Staff",
+        "logoMode": "cover"
       },
       {
         "name": "Fakepixel",
         "role": "YouTube Rank",
         "description": "Previously represented falter3d as a ranked creator on the network.",
-        "logo": "",
+        "logo": "assets/images/brands/fakepixel.webp",
         "initials": "FP",
         "url": "",
-        "kind": "Creator"
+        "kind": "Creator",
+        "logoMode": "cover"
       },
       {
         "name": "UltimisMC",
         "role": "Configurator Developer",
         "description": "Previously built and maintained server configurations and connected systems for the network.",
-        "logo": "",
+        "logo": "assets/images/brands/ultimismc.webp",
         "initials": "UM",
         "url": "",
-        "kind": "Development"
+        "kind": "Development",
+        "logoMode": "contain"
       },
       {
         "name": "UltimisMC",
         "role": "Moderator",
         "description": "Previously served on the moderation team before resigning from staff.",
-        "logo": "",
+        "logo": "assets/images/brands/ultimismc.webp",
         "initials": "UM",
         "url": "",
-        "kind": "Staff"
+        "kind": "Staff",
+        "logoMode": "contain"
       }
     ]
   },
@@ -1264,17 +1285,19 @@
         "name": "moxy",
         "type": "YouTuber",
         "description": "Developed and maintain Security, a Hypixel-linked verification and community security bot.",
-        "logo": "",
+        "logo": "assets/images/brands/moxy.webp",
         "initials": "MX",
-        "url": "https://www.youtube.com/@rbwrivp"
+        "url": "https://www.youtube.com/@rbwrivp",
+        "logoMode": "cover"
       },
       {
         "name": "IndianBedwars",
         "type": "YouTuber",
         "description": "Developed the IndianBedwars Bot for moderation, support tickets, roles, and community management.",
-        "logo": "",
+        "logo": "assets/images/brands/indianbedwars.webp",
         "initials": "IB",
-        "url": ""
+        "url": "",
+        "logoMode": "cover"
       },
       {
         "name": "CloudFun Network",
@@ -1282,15 +1305,17 @@
         "description": "Developed the Community Portal and a private creator-management platform for its media operations.",
         "logo": "assets/images/brands/cloudfun.webp",
         "initials": "CN",
-        "url": ""
+        "url": "",
+        "logoMode": "cover"
       },
       {
         "name": "Vanish Studios",
         "type": "Digital Studio",
         "description": "Founded the studio and developed its current website and project infrastructure.",
-        "logo": "",
+        "logo": "assets/images/brands/vanish-studios.webp",
         "initials": "VS",
-        "url": ""
+        "url": "",
+        "logoMode": "contain"
       }
     ]
   },

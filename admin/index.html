@@ -9,16 +9,26 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="admin.css?v=20260802-3">
   <script src="../config.js"></script>
-  <script defer src="admin.js"></script>
+  <script>
+    window.__FALTER_EDITOR_STARTED = false;
+    window.setTimeout(() => {
+      if (window.__FALTER_EDITOR_STARTED) return;
+      const title = document.getElementById("auth-title");
+      const description = document.getElementById("auth-description");
+      if (title) title.textContent = "The editor script did not load.";
+      if (description) description.textContent = "GitHub Pages may still be serving an older or missing admin.js file. Refresh with Ctrl + F5 after the deployment finishes.";
+    }, 8000);
+  </script>
+  <script defer src="admin.js?v=20260802-3"></script>
 </head>
 <body>
   <div class="admin-background" aria-hidden="true"></div>
 
   <section class="auth-screen" id="auth-screen">
     <div class="auth-card">
-      <a class="auth-brand" href="../"><span>falter</span><strong>3d</strong>&nbsp;site editor</a>
+      <a class="auth-brand" href="../"><span>falter</span><strong>3d</strong><span class="auth-brand-label">site editor</span></a>
       <div class="auth-orb"><img src="../assets/images/favicon.png" alt=""></div>
       <p class="auth-kicker">Protected editor</p>
       <h1 id="auth-title">Loading editor…</h1>

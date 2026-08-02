@@ -1,6 +1,8 @@
 (() => {
   "use strict";
 
+  window.__FALTER_EDITOR_STARTED = true;
+
   const config = window.FALTER_PORTFOLIO_CONFIG || {};
   const apiBase = String(config.API_BASE_URL || "").replace(/\/+$/, "");
   const $ = (selector, root = document) => root.querySelector(selector);
@@ -68,7 +70,23 @@
       headers["Content-Type"] = "application/json";
       options.body = JSON.stringify(options.body);
     }
-    const response = await fetch(`${apiBase}${path}`, { ...options, headers });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 12000);
+    let response;
+    try {
+      response = await fetch(`${apiBase}${path}`, {
+        ...options,
+        headers,
+        signal: options.signal || controller.signal
+      });
+    } catch (error) {
+      if (error?.name === "AbortError") {
+        throw new Error("The portfolio backend did not respond within 12 seconds. Refresh the page or check the Worker.");
+      }
+      throw new Error(`The portfolio backend could not be reached: ${error?.message || error}`);
+    } finally {
+      clearTimeout(timeout);
+    }
     const text = await response.text();
     let body = null;
     try { body = text ? JSON.parse(text) : null; } catch (_) { body = { message: text }; }
@@ -249,6 +267,7 @@
             <div class="quick-item"><div><strong>Update subscriber count</strong><small>Currently ${escapeHtml(state.content.contentCreation.subscriberDisplay)}.</small></div><button data-quick="content">Open</button></div>
             <div class="quick-item"><div><strong>Change current roles</strong><small>Update affiliations without dates.</small></div><button data-quick="experience">Open</button></div>
             <div class="quick-item"><div><strong>Preview the draft</strong><small>See the public layout before publishing.</small></div><button data-quick="preview">Open</button></div>
+            <div class="quick-item"><div><strong>Reload bundled site data</strong><small>Replace this draft with the latest content.json from GitHub.</small></div><button data-quick="reload-bundled">Reload</button></div>
           </div>
         </section>
         <section class="panel">
@@ -485,6 +504,18 @@
       const action = button.dataset.quick;
       if (action === "add-project") { renderView("projects").then(() => openProjectEditor(-1)); return; }
       if (action === "preview") { previewDraft(); return; }
+      if (action === "reload-bundled") {
+        confirmAction("Reload bundled site data?", "This replaces the current editor draft with the latest content.json from GitHub. Nothing goes public until you press Publish.", async () => {
+          try {
+            state.content = await loadBundledContent();
+            state.baseline = clone(state.content);
+            setDirty(true);
+            await renderView("dashboard");
+            toast("Bundled site data loaded. Review it, then Save Draft or Publish.");
+          } catch (error) { toast(error.message, true); }
+        });
+        return;
+      }
       renderView(action);
     }));
 
@@ -597,7 +628,7 @@
     const project = clone(existing || {
       id: "", title: "", category: state.content.projectSettings.categories[0]?.id || "platforms", featured: false, previous: false,
       order: state.content.projects.length + 1, summary: "", details: "", statuses: ["in-development","private"], tags: [], tech: [], features: [],
-      image: "assets/images/projects/platform.svg", imageMode: "cover", links: [], developedFor: { name: "", type: "" }, metrics: [], gallery: []
+      image: "assets/images/projects/platform.svg", imageMode: "cover", links: [], developedFor: { name: "", type: "", logo: "" }, metrics: [], gallery: []
     });
     state.editor = { type: "project", index, object: project };
     $("#dialog-kicker").textContent = existing ? "Project" : "New project";
@@ -617,7 +648,7 @@
       </div></section>
       <section class="form-section"><h3>Status and stack</h3><div class="checkbox-grid">${state.content.projectSettings.statuses.map((status) => `<label class="checkbox-card"><input type="checkbox" name="status:${escapeHtml(status.id)}" ${project.statuses.includes(status.id) ? "checked" : ""}>${escapeHtml(status.label)}</label>`).join("")}</div><div class="form-grid" style="margin-top:14px">${fieldHtml("Tags", "tags", project.tags.join(", "), { help: "Separate with commas." })}${fieldHtml("Technology stack", "tech", project.tech.join(", "), { help: "Separate with commas." })}${fieldHtml("Features", "features", project.features.join("\n"), { type: "textarea", rows: 7, wide: true, help: "One feature per line." })}</div></section>
       <section class="form-section"><h3>Visuals</h3><div class="form-grid">${fieldHtml("Cover image", "image", project.image, { type: "image", wide: true })}${fieldHtml("Image mode", "imageMode", project.imageMode, { type: "select", options: [{value:"cover",label:"Cover"},{value:"logo",label:"Contained logo"}] })}</div><h3 style="margin-top:20px">Gallery</h3>${nestedRows("gallery", project.gallery)}</section>
-      <section class="form-section"><h3>Project relationship</h3><div class="form-grid">${fieldHtml("Developed for", "developedForName", project.developedFor?.name || "")}${fieldHtml("Relationship type", "developedForType", project.developedFor?.type || "")}</div></section>
+      <section class="form-section"><h3>Project relationship</h3><div class="form-grid">${fieldHtml("Developed for", "developedForName", project.developedFor?.name || "")}${fieldHtml("Relationship type", "developedForType", project.developedFor?.type || "")}${fieldHtml("Relationship logo", "developedForLogo", project.developedFor?.logo || "", { type: "image", wide: true })}</div></section>
       <section class="form-section"><h3>Links</h3>${nestedRows("links", project.links)}</section>
       <section class="form-section"><h3>Scale indicators</h3>${nestedRows("metrics", project.metrics)}</section>`;
     wireEditorDialog();
@@ -626,16 +657,16 @@
 
   const genericDefinitions = {
     "experience-current": { title: "Current role", collection: () => state.content.experience.current, fields: [
-      ["Organization","name"],["Role","role"],["Description","description","textarea"],["Type","kind"],["Initials","initials"],["Logo","logo","image"],["Link","url","url"]
+      ["Organization","name"],["Role","role"],["Description","description","textarea"],["Type","kind"],["Initials","initials"],["Logo","logo","image"],["Logo fit","logoMode","select",[{value:"cover",label:"Cover / avatar"},{value:"contain",label:"Contained logo"}]],["Link","url","url"]
     ]},
     "experience-previous": { title: "Previous role", collection: () => state.content.experience.previous, fields: [
-      ["Organization","name"],["Role","role"],["Description","description","textarea"],["Type","kind"],["Initials","initials"],["Logo","logo","image"],["Link","url","url"]
+      ["Organization","name"],["Role","role"],["Description","description","textarea"],["Type","kind"],["Initials","initials"],["Logo","logo","image"],["Logo fit","logoMode","select",[{value:"cover",label:"Cover / avatar"},{value:"contain",label:"Contained logo"}]],["Link","url","url"]
     ]},
     channel: { title: "YouTube channel", collection: () => state.content.contentCreation.channels, fields: [
       ["Channel name","name"],["Handle","handle"],["Description","description","textarea"],["URL","url","url"],["Badge","badge"],["Subscriber display","subscribers"],["Image","image","image"]
     ]},
     video: { title: "Featured video", collection: () => state.content.contentCreation.videos, fields: [["Title","title"],["YouTube URL","url","url"],["Description","description","textarea"]]},
-    worked: { title: "Worked With entry", collection: () => state.content.workedWith.items, fields: [["Name","name"],["Type","type"],["Description","description","textarea"],["Initials","initials"],["Logo","logo","image"],["Link","url","url"]]},
+    worked: { title: "Worked With entry", collection: () => state.content.workedWith.items, fields: [["Name","name"],["Type","type"],["Description","description","textarea"],["Initials","initials"],["Logo","logo","image"],["Logo fit","logoMode","select",[{value:"cover",label:"Cover / avatar"},{value:"contain",label:"Contained logo"}]],["Link","url","url"]]},
     skill: { title: "Skill group", collection: () => state.content.skills.groups, fields: [["Group name","name"],["Skills","items","items"]]},
     social: { title: "Social link", collection: () => state.content.socials, fields: [["Platform","name"],["Displayed label","label"],["URL","url","url"]]},
     category: { title: "Project category", collection: () => state.content.projectSettings.categories, fields: [["ID","id"],["Label","label"]]},
@@ -646,11 +677,11 @@
 
   function defaultForKind(kind) {
     return {
-      "experience-current": { name:"", role:"", description:"", logo:"", initials:"", url:"", kind:"Creator" },
-      "experience-previous": { name:"", role:"", description:"", logo:"", initials:"", url:"", kind:"Previous" },
+      "experience-current": { name:"", role:"", description:"", logo:"", logoMode:"cover", initials:"", url:"", kind:"Creator" },
+      "experience-previous": { name:"", role:"", description:"", logo:"", logoMode:"cover", initials:"", url:"", kind:"Previous" },
       channel: { name:"", handle:"", description:"", url:"", badge:"Channel", subscribers:"", image:"assets/images/profile.webp" },
       video: { title:"", url:"", description:"" },
-      worked: { name:"", type:"", description:"", logo:"", initials:"", url:"" },
+      worked: { name:"", type:"", description:"", logo:"", logoMode:"cover", initials:"", url:"" },
       skill: { name:"", items:[] },
       social: { name:"", label:"", url:"" },
       category: { id:"", label:"" },
@@ -670,11 +701,12 @@
     $("#dialog-title").textContent = def.title;
     $("#dialog-delete").hidden = index < 0;
     $("#dialog-delete").textContent = "Delete entry";
-    $("#dialog-body").innerHTML = `<section class="form-section"><div class="form-grid">${def.fields.map(([label, name, type]) => {
+    $("#dialog-body").innerHTML = `<section class="form-section"><div class="form-grid">${def.fields.map(([label, name, type, options]) => {
       const value = object[name];
       if (type === "textarea") return fieldHtml(label, name, value, { type: "textarea", rows: 5, wide: true });
       if (type === "image") return fieldHtml(label, name, value, { type: "image", wide: true });
       if (type === "items") return fieldHtml(label, name, (value || []).join("\n"), { type: "textarea", rows: 8, wide: true, help: "One item per line or separated with commas." });
+      if (type === "select") return fieldHtml(label, name, value || options?.[0]?.value || "", { type: "select", options: options || [] });
       return fieldHtml(label, name, value, { type: type || "text", wide: ["url"].includes(type) });
     }).join("")}</div></section>`;
     wireEditorDialog();
@@ -773,7 +805,7 @@
       project.features = splitLines(form.get("features"));
       project.image = String(form.get("image") || "").trim();
       project.imageMode = String(form.get("imageMode") || "cover");
-      project.developedFor = { name: String(form.get("developedForName") || "").trim(), type: String(form.get("developedForType") || "").trim() };
+      project.developedFor = { name: String(form.get("developedForName") || "").trim(), type: String(form.get("developedForType") || "").trim(), logo: String(form.get("developedForLogo") || "").trim() };
       project.links = readNested("links");
       project.metrics = readNested("metrics");
       project.gallery = readNested("gallery");
@@ -970,6 +1002,33 @@
     });
   }
 
-  attachGlobalEvents();
-  authenticate().catch((error) => showAuth({ title: "The editor could not load.", description: error.message, actions: [{ href: "../", label: "Return to portfolio", kind: "subtle" }] }));
+  function initializeEditor() {
+    try {
+      attachGlobalEvents();
+      authenticate().catch((error) => showAuth({
+        title: "The editor could not load.",
+        description: error.message,
+        actions: [
+          { href: location.pathname, label: "Try again", kind: "primary" },
+          { href: "../", label: "Return to portfolio", kind: "subtle" }
+        ]
+      }));
+    } catch (error) {
+      console.error("Editor startup failed", error);
+      showAuth({
+        title: "The editor could not start.",
+        description: error?.message || String(error),
+        actions: [
+          { href: location.pathname, label: "Try again", kind: "primary" },
+          { href: "../", label: "Return to portfolio", kind: "subtle" }
+        ]
+      });
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeEditor, { once: true });
+  } else {
+    initializeEditor();
+  }
 })();

@@ -69,7 +69,8 @@
 
   function logoTile(item) {
     if (item.logo) {
-      return `<span class="logo-tile"><img src="${escapeHtml(item.logo)}" alt="${escapeHtml(item.name)} logo" loading="lazy"></span>`;
+      const mode = item.logoMode === "contain" ? " contain" : " cover";
+      return `<span class="logo-tile${mode}"><img src="${escapeHtml(item.logo)}" alt="${escapeHtml(item.name)} logo" loading="lazy"></span>`;
     }
     return `<span class="logo-tile" aria-hidden="true">${escapeHtml(item.initials || item.name.slice(0, 2).toUpperCase())}</span>`;
   }
@@ -404,7 +405,7 @@
             ${gallery.length ? `<section class="modal-section"><h3>Gallery</h3><div class="modal-gallery">${gallery.map((item) => `<figure><img src="${escapeHtml(item.url || item)}" alt="${escapeHtml(item.caption || project.title)}" loading="lazy">${item.caption ? `<figcaption>${escapeHtml(item.caption)}</figcaption>` : ""}</figure>`).join("")}</div></section>` : ""}
           </div>
           <aside>
-            ${project.developedFor ? `<section class="modal-section"><h3>Developed for</h3><div class="developed-for"><small>${escapeHtml(project.developedFor.type)}</small><strong>${escapeHtml(project.developedFor.name)}</strong><span>Project relationship</span></div></section>` : ""}
+            ${project.developedFor ? `<section class="modal-section"><h3>Developed for</h3><div class="developed-for">${project.developedFor.logo ? `<img src="${escapeHtml(project.developedFor.logo)}" alt="${escapeHtml(project.developedFor.name)} logo">` : ""}<div><small>${escapeHtml(project.developedFor.type)}</small><strong>${escapeHtml(project.developedFor.name)}</strong><span>Project relationship</span></div></div></section>` : ""}
             ${project.metrics?.length ? `<section class="modal-section"><h3>Scale</h3><div class="metric-grid">${project.metrics.map((metric) => `<div class="metric"><strong>${escapeHtml(metric.value)}</strong><small>${escapeHtml(metric.label)}</small></div>`).join("")}</div></section>` : ""}
             ${project.tags?.length ? `<section class="modal-section"><h3>Tags</h3><div class="project-tag-row">${projectTags(project.tags)}</div></section>` : ""}
             <section class="modal-section"><h3>Stack</h3><div class="modal-stack">${techTags(project.tech)}</div></section>
