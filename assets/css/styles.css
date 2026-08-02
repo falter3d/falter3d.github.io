@@ -723,3 +723,23 @@ img { max-width: 100%; display: block; }
   text-transform: uppercase;
 }
 .project-tag span { font-size: .78rem; line-height: 1; }
+/* Keep the animated custom cursor in the browser top layer.
+   The layer is re-opened after a native dialog so it stays above the modal. */
+.cursor-layer {
+  position: fixed;
+  z-index: 2147483647;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  pointer-events: none;
+}
+.cursor-layer::backdrop { display: none; }
+.cursor-layer .custom-cursor { z-index: 1; }
+
