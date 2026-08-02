@@ -1,0 +1,1415 @@
+{
+  "schemaVersion": 1,
+  "site": {
+    "title": "falter3d — Developer, YouTuber & Editor",
+    "description": "Developer, YouTuber, and editor creating Discord bots, Minecraft projects, websites, community platforms, and more.",
+    "accent": "#6fc1ff",
+    "accentSecondary": "#7b72ff",
+    "backgroundImage": "assets/images/bg.jpg",
+    "profileImage": "assets/images/profile.webp",
+    "favicon": "assets/images/favicon.png",
+    "revisionLimit": 25,
+    "showLoadingScreen": true,
+    "showCursor": true,
+    "showMouseGlow": true,
+    "showDiscordPresence": true,
+    "discordUserId": "184491496291041280",
+    "adminPath": "admin/",
+    "sectionOrder": [
+      "about",
+      "projects",
+      "experience",
+      "content",
+      "workedWith",
+      "skills",
+      "contact"
+    ],
+    "sectionVisibility": {
+      "about": true,
+      "projects": true,
+      "experience": true,
+      "content": true,
+      "workedWith": true,
+      "skills": true,
+      "contact": true
+    }
+  },
+  "navigation": [
+    {
+      "label": "About",
+      "target": "about"
+    },
+    {
+      "label": "Projects",
+      "target": "projects"
+    },
+    {
+      "label": "Experience",
+      "target": "experience"
+    },
+    {
+      "label": "Content",
+      "target": "content"
+    },
+    {
+      "label": "Skills",
+      "target": "skills"
+    },
+    {
+      "label": "Contact",
+      "target": "contact"
+    }
+  ],
+  "hero": {
+    "eyebrow": "falter3d",
+    "headline": "Developer. YouTuber. Editor.",
+    "summary": "I build Discord bots, Minecraft plugins and mods, websites, creator systems, and the infrastructure behind online communities. I also run falter3d, where I turn Bedwars clips into tightly edited videos.",
+    "primaryAction": {
+      "label": "Explore my work",
+      "target": "projects"
+    },
+    "secondaryAction": {
+      "label": "Contact me on Discord",
+      "url": "https://discord.com/users/184491496291041280"
+    },
+    "availability": "Availability changes, but my Discord DMs are the best way to reach me."
+  },
+  "about": {
+    "heading": "I build across the whole stack of a community.",
+    "intro": "I'm direct about my work, careful with private systems, and focused on making things reliable enough to use outside a demo. I move between code, configuration, editing, and community operations depending on what a project actually needs.",
+    "quote": "I say what I mean, communicate clearly, and care more about a finished result than unnecessary fluff.",
+    "strengths": [
+      {
+        "title": "Direct communication",
+        "description": "Clear feedback, clear expectations, and no guessing about where a project stands."
+      },
+      {
+        "title": "End-to-end building",
+        "description": "I can move from an idea to a working bot, plugin, website, workflow, or finished video."
+      },
+      {
+        "title": "Adaptable",
+        "description": "I work across development, configuration, editing, and community systems without forcing every problem into one tool."
+      },
+      {
+        "title": "Persistent",
+        "description": "I stay with difficult problems, step back when needed, and return with a better solution instead of a rushed one."
+      },
+      {
+        "title": "Privacy-minded",
+        "description": "Most of my source code is private, and I treat credentials, user data, and internal systems accordingly."
+      },
+      {
+        "title": "Community experience",
+        "description": "My work is informed by hands-on experience with creator teams, staff systems, Minecraft networks, and Discord communities."
+      }
+    ]
+  },
+  "projectSettings": {
+    "categories": [
+      {
+        "id": "platforms",
+        "label": "Platforms & Websites"
+      },
+      {
+        "id": "discord",
+        "label": "Discord Bots"
+      },
+      {
+        "id": "minecraft",
+        "label": "Minecraft Development"
+      },
+      {
+        "id": "systems",
+        "label": "Server Systems"
+      }
+    ],
+    "statuses": [
+      {
+        "id": "active",
+        "label": "Active",
+        "color": "#55e6a5"
+      },
+      {
+        "id": "completed",
+        "label": "Completed",
+        "color": "#7ac9ff"
+      },
+      {
+        "id": "maintained",
+        "label": "Maintained",
+        "color": "#91e7ff"
+      },
+      {
+        "id": "beta",
+        "label": "Beta",
+        "color": "#c6a6ff"
+      },
+      {
+        "id": "in-development",
+        "label": "In Development",
+        "color": "#ffd37a"
+      },
+      {
+        "id": "previous",
+        "label": "Previous Work",
+        "color": "#9da9bd"
+      },
+      {
+        "id": "discontinued",
+        "label": "Discontinued",
+        "color": "#ff8296"
+      },
+      {
+        "id": "private",
+        "label": "Private Source",
+        "color": "#aab9ff"
+      }
+    ],
+    "tagColors": {
+      "Discord Bot": "#7b8cff",
+      "Minecraft Plugin": "#79d7a8",
+      "Web Platform": "#6fc1ff",
+      "Website": "#9ba9ff",
+      "Community System": "#63d8d4",
+      "YouTube API": "#ff798e",
+      "Cloudflare": "#ffb86b",
+      "SQLite": "#99d7ff",
+      "Java": "#ff9f7d",
+      "JavaScript": "#ffe176"
+    },
+    "tagStyles": [
+      {
+        "label": "Web Platform",
+        "color": "#6fc1ff",
+        "icon": ""
+      },
+      {
+        "label": "Community System",
+        "color": "#63d8d4",
+        "icon": ""
+      },
+      {
+        "label": "Cloudflare",
+        "color": "#ffb86b",
+        "icon": ""
+      },
+      {
+        "label": "Discord Bot",
+        "color": "#7b8cff",
+        "icon": ""
+      },
+      {
+        "label": "YouTube API",
+        "color": "#ff798e",
+        "icon": ""
+      },
+      {
+        "label": "Hypixel API",
+        "color": "#91e7ff",
+        "icon": ""
+      },
+      {
+        "label": "Verification",
+        "color": "#ff9f7d",
+        "icon": ""
+      },
+      {
+        "label": "Permissions",
+        "color": "#63d8d4",
+        "icon": ""
+      },
+      {
+        "label": "Public Bot",
+        "color": "#6fc1ff",
+        "icon": ""
+      },
+      {
+        "label": "Moderation",
+        "color": "#7b8cff",
+        "icon": ""
+      },
+      {
+        "label": "Tickets",
+        "color": "#55e6a5",
+        "icon": ""
+      },
+      {
+        "label": "Website",
+        "color": "#9ba9ff",
+        "icon": ""
+      },
+      {
+        "label": "Responsive Design",
+        "color": "#ffd37a",
+        "icon": ""
+      },
+      {
+        "label": "Vanish Studios",
+        "color": "#91e7ff",
+        "icon": ""
+      },
+      {
+        "label": "Minecraft Plugin",
+        "color": "#79d7a8",
+        "icon": ""
+      },
+      {
+        "label": "Custom Items",
+        "color": "#63d8d4",
+        "icon": ""
+      },
+      {
+        "label": "Teams",
+        "color": "#6fc1ff",
+        "icon": ""
+      },
+      {
+        "label": "Customization",
+        "color": "#7b8cff",
+        "icon": ""
+      },
+      {
+        "label": "Minigames",
+        "color": "#55e6a5",
+        "icon": ""
+      },
+      {
+        "label": "Minecraft",
+        "color": "#c6a6ff",
+        "icon": ""
+      },
+      {
+        "label": "Economy",
+        "color": "#ffd37a",
+        "icon": ""
+      },
+      {
+        "label": "GUI System",
+        "color": "#91e7ff",
+        "icon": ""
+      },
+      {
+        "label": "Display",
+        "color": "#ff9f7d",
+        "icon": ""
+      }
+    ]
+  },
+  "projects": [
+    {
+      "id": "cloudfun-community-portal",
+      "title": "CloudFun Community Portal",
+      "category": "platforms",
+      "featured": true,
+      "previous": false,
+      "order": 1,
+      "summary": "A full community platform developed for CloudFun Network, currently active and in development ahead of its public release.",
+      "details": "I designed and developed a connected web platform for a Minecraft network rather than a basic landing page. It combines public community features, private submissions, account systems, administration tools, and a visual content editor in one Cloudflare-based application.",
+      "statuses": [
+        "active",
+        "in-development",
+        "private"
+      ],
+      "tags": [
+        "Web Platform",
+        "Community System",
+        "Cloudflare"
+      ],
+      "tech": [
+        "Cloudflare Workers",
+        "Cloudflare D1",
+        "Cloudflare R2",
+        "JavaScript",
+        "HTML",
+        "CSS",
+        "Discord OAuth"
+      ],
+      "features": [
+        "Secure accounts, sessions, email verification, and password recovery",
+        "Discord account linking with automatic role mapping",
+        "Forums, reactions, polls, bookmarks, edit history, moderation, and solved answers",
+        "Applications, reports, support tickets, wiki pages, and announcements",
+        "Granular administration permissions and audit logging",
+        "Visual homepage builder with drag, resize, positioning, and layer controls",
+        "Protected R2 file uploads and portable D1 backups"
+      ],
+      "image": "assets/images/brands/cloudfun.webp",
+      "imageMode": "logo",
+      "links": [],
+      "developedFor": {
+        "name": "CloudFun Network",
+        "type": "Minecraft Network"
+      },
+      "metrics": [
+        {
+          "label": "Architecture",
+          "value": "Workers + D1 + R2"
+        },
+        {
+          "label": "Systems",
+          "value": "Community + CMS"
+        },
+        {
+          "label": "State",
+          "value": "Pre-release"
+        }
+      ],
+      "gallery": []
+    },
+    {
+      "id": "cloudfun-creators",
+      "title": "CloudFun Creators",
+      "category": "discord",
+      "featured": true,
+      "previous": false,
+      "order": 2,
+      "summary": "A private creator-management system developed for CloudFun Network's media and content operations.",
+      "details": "This system handles the operational side of a creator program across Discord servers. It manages the complete path from applications and rank assignment to content requirements, platform metrics, staff notes, analytics, and recurring reminders.",
+      "statuses": [
+        "active",
+        "maintained",
+        "private"
+      ],
+      "tags": [
+        "Discord Bot",
+        "Community System",
+        "YouTube API"
+      ],
+      "tech": [
+        "Node.js",
+        "Discord.js",
+        "SQLite",
+        "YouTube Data API",
+        "Twitch API",
+        "JavaScript"
+      ],
+      "features": [
+        "Creator applications, review workflows, closures, and blacklists",
+        "Database-driven creator ranks and manager permissions",
+        "Content submissions and recurring requirement cycles",
+        "YouTube and Twitch metrics with live-viewer tracking",
+        "Absences, warnings, notes, health checks, and creator history",
+        "Analytics dashboards, reports, exports, panels, and reminders",
+        "Invite tracking and collaboration management across multiple servers"
+      ],
+      "image": "assets/images/brands/cloudfun-media.webp",
+      "imageMode": "logo",
+      "links": [],
+      "developedFor": {
+        "name": "CloudFun Network",
+        "type": "Private Commission"
+      },
+      "metrics": [
+        {
+          "label": "Source",
+          "value": "8K+ lines"
+        },
+        {
+          "label": "Modules",
+          "value": "60+ files"
+        },
+        {
+          "label": "Platforms",
+          "value": "YouTube + Twitch"
+        }
+      ],
+      "gallery": []
+    },
+    {
+      "id": "security",
+      "title": "Security",
+      "category": "discord",
+      "featured": true,
+      "previous": false,
+      "order": 3,
+      "summary": "A Hypixel-linked verification and server security bot developed for YouTuber moxy.",
+      "details": "Security verifies that a Discord user owns the Minecraft account they claim by comparing their Discord identity with the account linked through Hypixel. It also gives staff controlled override tools and detailed diagnostics for API-related failures.",
+      "statuses": [
+        "completed",
+        "maintained",
+        "private"
+      ],
+      "tags": [
+        "Discord Bot",
+        "Hypixel API",
+        "Verification"
+      ],
+      "tech": [
+        "Node.js",
+        "Discord.js",
+        "Hypixel API",
+        "Mojang API",
+        "JavaScript",
+        "JSON Storage"
+      ],
+      "features": [
+        "Button and modal-based Hypixel verification flow",
+        "Mojang UUID resolution and Hypixel social-link matching",
+        "Automatic verified role assignment and Minecraft nickname syncing",
+        "Staff verification, removal, lookup, and override controls",
+        "Live API-key replacement without restarting the bot",
+        "Optional key-expiry alerts that survive restarts",
+        "Detailed diagnostics, rate limits, redaction, and audit logging"
+      ],
+      "image": "assets/images/projects/security.svg",
+      "imageMode": "cover",
+      "links": [
+        {
+          "label": "moxy on YouTube",
+          "url": "https://www.youtube.com/@rbwrivp",
+          "placement": "modal"
+        },
+        {
+          "label": "Community Server",
+          "url": "https://discord.gg/5pE2xzw4WF",
+          "placement": "both"
+        }
+      ],
+      "developedFor": {
+        "name": "moxy",
+        "type": "YouTuber"
+      },
+      "metrics": [
+        {
+          "label": "Source",
+          "value": "4K+ lines"
+        },
+        {
+          "label": "Integration",
+          "value": "Hypixel + Mojang"
+        },
+        {
+          "label": "State",
+          "value": "Maintained"
+        }
+      ],
+      "gallery": []
+    },
+    {
+      "id": "permify",
+      "title": "Permify",
+      "category": "discord",
+      "featured": true,
+      "previous": false,
+      "order": 4,
+      "summary": "A public Discord bot for managing role and channel permissions through structured commands and an interactive control panel.",
+      "details": "Permify turns Discord permission management into a repeatable workflow. It supports bulk changes, permission syncing, safety confirmations, setup guidance, and per-server change tracking without making administrators edit every role and channel manually.",
+      "statuses": [
+        "active",
+        "beta",
+        "private"
+      ],
+      "tags": [
+        "Discord Bot",
+        "Permissions",
+        "Public Bot"
+      ],
+      "tech": [
+        "Node.js",
+        "Discord.js",
+        "JavaScript",
+        "Slash Commands",
+        "JSON Storage"
+      ],
+      "features": [
+        "Allow or deny permissions across multiple roles",
+        "Apply channel overwrites across multiple channels and roles",
+        "Support for role IDs, mentions, and @everyone",
+        "Safety mode with confirmations before changes are applied",
+        "Role and channel permission synchronization",
+        "Per-server change history, logs, and reset tools",
+        "Interactive panel and step-by-step setup wizard"
+      ],
+      "image": "assets/images/projects/permify.svg",
+      "imageMode": "cover",
+      "links": [
+        {
+          "label": "Invite Permify",
+          "url": "https://discord.com/oauth2/authorize?client_id=1519043250634100896",
+          "placement": "both"
+        },
+        {
+          "label": "Support Server",
+          "url": "https://discord.gg/ddRHM7uXY3",
+          "placement": "both"
+        }
+      ],
+      "developedFor": {
+        "name": "Public Release",
+        "type": "Discord Bot"
+      },
+      "metrics": [
+        {
+          "label": "Source",
+          "value": "2.7K+ lines"
+        },
+        {
+          "label": "Control",
+          "value": "Roles + Channels"
+        },
+        {
+          "label": "State",
+          "value": "Beta"
+        }
+      ],
+      "gallery": []
+    },
+    {
+      "id": "indianbedwars-bot",
+      "title": "IndianBedwars Bot",
+      "category": "discord",
+      "featured": true,
+      "previous": false,
+      "order": 5,
+      "summary": "A custom moderation and community-management Discord bot developed for YouTuber IndianBedwars.",
+      "details": "The bot centralizes the moderation and support workflows needed for IndianBedwars' community, including persistent cases, staff actions, tickets, transcripts, self-roles, and member onboarding.",
+      "statuses": [
+        "active",
+        "completed",
+        "private"
+      ],
+      "tags": [
+        "Discord Bot",
+        "Moderation",
+        "Tickets"
+      ],
+      "tech": [
+        "Node.js",
+        "Discord.js",
+        "SQLite",
+        "JavaScript",
+        "Slash Commands"
+      ],
+      "features": [
+        "Warnings, mutes, kicks, bans, and persistent case history",
+        "Moderation history and individual case lookup",
+        "Ticket panels, staff controls, closures, and transcripts",
+        "Self-role menus and welcome messaging",
+        "SQLite persistence for moderation and ticket data",
+        "Custom configuration for the creator's Discord community"
+      ],
+      "image": "assets/images/projects/indianbedwars.svg",
+      "imageMode": "cover",
+      "links": [],
+      "developedFor": {
+        "name": "IndianBedwars",
+        "type": "YouTuber"
+      },
+      "metrics": [
+        {
+          "label": "Source",
+          "value": "1.3K+ lines"
+        },
+        {
+          "label": "Storage",
+          "value": "SQLite"
+        },
+        {
+          "label": "State",
+          "value": "Active"
+        }
+      ],
+      "gallery": []
+    },
+    {
+      "id": "vanish-studios-website",
+      "title": "Vanish Studios Website",
+      "category": "platforms",
+      "featured": true,
+      "previous": false,
+      "order": 6,
+      "summary": "A responsive multi-page company website designed and developed for Vanish Studios.",
+      "details": "I built the full Vanish Studios web presence, including the visual system, project and team pages, contact flow, legal documents, redirects, responsive behavior, and deployment configuration.",
+      "statuses": [
+        "active",
+        "in-development",
+        "private"
+      ],
+      "tags": [
+        "Website",
+        "Responsive Design",
+        "Vanish Studios"
+      ],
+      "tech": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "Netlify",
+        "Netlify Forms"
+      ],
+      "features": [
+        "Responsive home, projects, team, contact, legal, and error pages",
+        "Reusable visual design system and mobile navigation",
+        "Collapsible terms and privacy documents",
+        "First-party privacy request form through Netlify Forms",
+        "Redirects, custom 404 handling, and deployment configuration",
+        "Project and team presentation built without a framework"
+      ],
+      "image": "assets/images/projects/vanish.svg",
+      "imageMode": "cover",
+      "links": [],
+      "developedFor": {
+        "name": "Vanish Studios",
+        "type": "Company Website"
+      },
+      "metrics": [
+        {
+          "label": "Pages",
+          "value": "7+"
+        },
+        {
+          "label": "Stack",
+          "value": "Static Web"
+        },
+        {
+          "label": "State",
+          "value": "In Development"
+        }
+      ],
+      "gallery": []
+    },
+    {
+      "id": "gory-bot",
+      "title": "Gory Bot",
+      "category": "discord",
+      "featured": false,
+      "previous": true,
+      "order": 101,
+      "summary": "A full moderation bot built for gvtt3d's Discord server with tickets, appeals, giveaways, reports, logging, and staff activity tools.",
+      "details": "A large Discord.js moderation project covering case management, community support, reporting, giveaways, message utilities, and internal staff workflows.",
+      "statuses": [
+        "previous",
+        "private"
+      ],
+      "tags": [
+        "Discord Bot",
+        "Moderation"
+      ],
+      "tech": [
+        "Discord.js v14",
+        "Node.js",
+        "SQLite",
+        "Slash Commands",
+        "Modals",
+        "Buttons"
+      ],
+      "features": [
+        "Warn, mute, kick, ban, temp-ban, and case management",
+        "Ticket categories, ratings, and transcript logging",
+        "Appeal forms with cooldowns and staff review",
+        "Giveaways with role requirements and bonus entries",
+        "User reports, staff activity tracking, and message logging"
+      ],
+      "image": "assets/images/projects/discord-bot.svg",
+      "imageMode": "cover",
+      "links": [],
+      "developedFor": {
+        "name": "gvtt3d",
+        "type": "Creator Community"
+      },
+      "metrics": [],
+      "gallery": []
+    },
+    {
+      "id": "vanishitems-v2",
+      "title": "VanishItems v2",
+      "category": "minecraft",
+      "featured": false,
+      "previous": true,
+      "order": 102,
+      "summary": "A rebuilt gear plugin with a configuration-driven ability registry and no hardcoded item logic.",
+      "details": "Abilities are defined in YAML with their triggers, targets, cooldowns, point costs, and effect stacks, making the system easier to extend without rebuilding core logic.",
+      "statuses": [
+        "previous",
+        "private"
+      ],
+      "tags": [
+        "Minecraft Plugin",
+        "Custom Items"
+      ],
+      "tech": [
+        "Java",
+        "Spigot / Paper",
+        "PacketEvents",
+        "YAML"
+      ],
+      "features": [
+        "Configuration-driven ability registry",
+        "Trigger, target, cooldown, cost, and effect definitions",
+        "Extensible custom gear behavior",
+        "Designed for Vanish SMP"
+      ],
+      "image": "assets/images/projects/minecraft.svg",
+      "imageMode": "cover",
+      "links": [],
+      "developedFor": {
+        "name": "Vanish SMP",
+        "type": "Minecraft Server"
+      },
+      "metrics": [],
+      "gallery": []
+    },
+    {
+      "id": "vanishteams-v1",
+      "title": "VanishTeams v1",
+      "category": "minecraft",
+      "featured": false,
+      "previous": true,
+      "order": 103,
+      "summary": "A private BetterTeams fork heavily modified for Vanish SMP's custom team mechanics.",
+      "details": "The plugin was adapted specifically for the server's requirements and permission structure rather than distributed as a general public fork.",
+      "statuses": [
+        "previous",
+        "private"
+      ],
+      "tags": [
+        "Minecraft Plugin",
+        "Teams"
+      ],
+      "tech": [
+        "Java",
+        "Spigot / Paper",
+        "LuckPerms"
+      ],
+      "features": [
+        "Custom team behavior",
+        "Server-specific mechanics",
+        "Permission integration",
+        "Private distribution"
+      ],
+      "image": "assets/images/projects/minecraft.svg",
+      "imageMode": "cover",
+      "links": [],
+      "developedFor": {
+        "name": "Vanish SMP",
+        "type": "Minecraft Server"
+      },
+      "metrics": [],
+      "gallery": []
+    },
+    {
+      "id": "vanishitems-v1",
+      "title": "VanishItems v1",
+      "category": "minecraft",
+      "featured": false,
+      "previous": true,
+      "order": 104,
+      "summary": "A custom gear plugin with more than 40 combat, utility, passive, and visual abilities.",
+      "details": "The first VanishItems release included custom item behavior, armor set bonuses, region awareness, editing tools, and a broad range of gameplay effects.",
+      "statuses": [
+        "completed",
+        "previous",
+        "private"
+      ],
+      "tags": [
+        "Minecraft Plugin",
+        "Custom Items"
+      ],
+      "tech": [
+        "Java",
+        "Spigot / Paper",
+        "WorldGuard",
+        "ProtocolLib"
+      ],
+      "features": [
+        "40+ abilities across multiple categories",
+        "Lifesteal, Shadowstep, Grapple, Homing, and Ore Sight",
+        "Armor set bonuses",
+        "GUI item editor",
+        "WorldGuard and ProtocolLib integration"
+      ],
+      "image": "assets/images/projects/minecraft.svg",
+      "imageMode": "cover",
+      "links": [],
+      "developedFor": {
+        "name": "Vanish SMP",
+        "type": "Minecraft Server"
+      },
+      "metrics": [],
+      "gallery": []
+    },
+    {
+      "id": "vanishcolors-v1",
+      "title": "VanishColors v1",
+      "category": "minecraft",
+      "featured": false,
+      "previous": true,
+      "order": 105,
+      "summary": "A name and chat color plugin supporting standard colors, hex, gradients, and rainbow formatting.",
+      "details": "VanishColors combined a visual picker with persistent storage, permission-controlled features, and placeholder support.",
+      "statuses": [
+        "completed",
+        "previous",
+        "private"
+      ],
+      "tags": [
+        "Minecraft Plugin",
+        "Customization"
+      ],
+      "tech": [
+        "Java",
+        "LuckPerms",
+        "PlaceholderAPI",
+        "SQLite"
+      ],
+      "features": [
+        "Standard, hex, gradient, and rainbow colors",
+        "GUI color picker",
+        "SQLite-backed selections",
+        "Feature-level permissions",
+        "PlaceholderAPI support"
+      ],
+      "image": "assets/images/projects/minecraft.svg",
+      "imageMode": "cover",
+      "links": [],
+      "developedFor": {
+        "name": "Vanish SMP",
+        "type": "Minecraft Server"
+      },
+      "metrics": [],
+      "gallery": []
+    },
+    {
+      "id": "vanish-discord-bot",
+      "title": "Vanish Discord Bot",
+      "category": "discord",
+      "featured": false,
+      "previous": true,
+      "order": 106,
+      "summary": "A large moderation bot for the Vanish Guild with bilingual support, role hierarchy, moderation commands, and DM notifications.",
+      "details": "A private Discord.js project that grew beyond 10,000 lines while supporting the guild's moderation and community workflows.",
+      "statuses": [
+        "discontinued",
+        "previous",
+        "private"
+      ],
+      "tags": [
+        "Discord Bot",
+        "Moderation"
+      ],
+      "tech": [
+        "Discord.js",
+        "Node.js",
+        "JavaScript",
+        "Slash Commands"
+      ],
+      "features": [
+        "English and Arabic support",
+        "Role-based command hierarchy",
+        "Advanced moderation workflows",
+        "Direct-message notifications",
+        "More than 10,000 lines of source code"
+      ],
+      "image": "assets/images/projects/discord-bot.svg",
+      "imageMode": "cover",
+      "links": [],
+      "developedFor": {
+        "name": "Vanish Guild",
+        "type": "Minecraft Community"
+      },
+      "metrics": [
+        {
+          "label": "Source",
+          "value": "10K+ lines"
+        }
+      ],
+      "gallery": []
+    },
+    {
+      "id": "vanish-games-bot",
+      "title": "Vanish Games Bot",
+      "category": "discord",
+      "featured": false,
+      "previous": true,
+      "order": 107,
+      "summary": "An all-in-one Discord gaming bot with 11 interactive button-based games.",
+      "details": "The bot managed per-game state, cooldowns, multiplayer interactions, and slash-command entry points for games such as Tic Tac Toe, Blackjack, and Trivia.",
+      "statuses": [
+        "discontinued",
+        "previous",
+        "private"
+      ],
+      "tags": [
+        "Discord Bot",
+        "Minigames"
+      ],
+      "tech": [
+        "Discord.js",
+        "Node.js",
+        "Button Interactions",
+        "Game State"
+      ],
+      "features": [
+        "11 interactive games",
+        "Button-based interfaces",
+        "Per-game cooldown systems",
+        "Active game-state tracking",
+        "Slash-command controls"
+      ],
+      "image": "assets/images/projects/discord-bot.svg",
+      "imageMode": "cover",
+      "links": [],
+      "developedFor": {
+        "name": "Vanish Guild",
+        "type": "Minecraft Community"
+      },
+      "metrics": [
+        {
+          "label": "Games",
+          "value": "11"
+        }
+      ],
+      "gallery": []
+    },
+    {
+      "id": "silver-currency",
+      "title": "Custom Currency System",
+      "category": "systems",
+      "featured": false,
+      "previous": true,
+      "order": 108,
+      "summary": "A custom Silver economy with Vault integration, placeholders, leaderboards, and balanced server-wide settings.",
+      "details": "I designed and configured the economy as a connected server system rather than an isolated currency command.",
+      "statuses": [
+        "previous",
+        "private"
+      ],
+      "tags": [
+        "Minecraft",
+        "Economy"
+      ],
+      "tech": [
+        "CoinsEngine",
+        "Vault",
+        "PlaceholderAPI",
+        "YAML"
+      ],
+      "features": [
+        "Custom Silver currency",
+        "Vault integration",
+        "Placeholder support",
+        "Leaderboards",
+        "Balanced economy settings"
+      ],
+      "image": "assets/images/projects/minecraft.svg",
+      "imageMode": "cover",
+      "links": [],
+      "developedFor": {
+        "name": "Minecraft Server",
+        "type": "Configuration System"
+      },
+      "metrics": [],
+      "gallery": []
+    },
+    {
+      "id": "rank-shop",
+      "title": "Rank Shop Menu",
+      "category": "systems",
+      "featured": false,
+      "previous": true,
+      "order": 109,
+      "summary": "A complete GUI rank-purchase flow using a custom currency and automated LuckPerms assignment.",
+      "details": "The system connected menu design, economy requirements, progression tiers, and permission changes into one player-facing experience.",
+      "statuses": [
+        "previous",
+        "private"
+      ],
+      "tags": [
+        "Minecraft",
+        "GUI System"
+      ],
+      "tech": [
+        "DeluxeMenus",
+        "LuckPerms",
+        "CoinsEngine",
+        "YAML"
+      ],
+      "features": [
+        "Custom purchase interface",
+        "Silver currency integration",
+        "Automated rank assignment",
+        "Multi-tier progression",
+        "Price-based requirements"
+      ],
+      "image": "assets/images/projects/minecraft.svg",
+      "imageMode": "cover",
+      "links": [],
+      "developedFor": {
+        "name": "Minecraft Server",
+        "type": "Configuration System"
+      },
+      "metrics": [],
+      "gallery": []
+    },
+    {
+      "id": "rank-hierarchy",
+      "title": "Rank Hierarchy",
+      "category": "systems",
+      "featured": false,
+      "previous": true,
+      "order": 110,
+      "summary": "A multi-tier permission structure with inheritance, animated prefixes, and live chat and tab formatting.",
+      "details": "I configured the full hierarchy and connected it to player-facing displays through LuckPerms, TAB, and PlaceholderAPI.",
+      "statuses": [
+        "previous",
+        "private"
+      ],
+      "tags": [
+        "Minecraft",
+        "Permissions"
+      ],
+      "tech": [
+        "LuckPerms",
+        "TAB",
+        "PlaceholderAPI"
+      ],
+      "features": [
+        "Multi-tier rank structure",
+        "Permission inheritance",
+        "Animated prefixes",
+        "Chat formatting",
+        "Live tab-list display"
+      ],
+      "image": "assets/images/projects/minecraft.svg",
+      "imageMode": "cover",
+      "links": [],
+      "developedFor": {
+        "name": "Minecraft Server",
+        "type": "Configuration System"
+      },
+      "metrics": [],
+      "gallery": []
+    },
+    {
+      "id": "scoreboard-system",
+      "title": "Scoreboard System",
+      "category": "systems",
+      "featured": false,
+      "previous": true,
+      "order": 111,
+      "summary": "An animated scoreboard displaying player rank, currency balance, and live server information.",
+      "details": "The scoreboard used TAB and PlaceholderAPI to keep player and server data updated in real time.",
+      "statuses": [
+        "previous",
+        "private"
+      ],
+      "tags": [
+        "Minecraft",
+        "Display"
+      ],
+      "tech": [
+        "TAB",
+        "PlaceholderAPI",
+        "Formatting"
+      ],
+      "features": [
+        "Animated display",
+        "Rank and currency placeholders",
+        "Live server statistics",
+        "Consistent formatting",
+        "Server-wide deployment"
+      ],
+      "image": "assets/images/projects/minecraft.svg",
+      "imageMode": "cover",
+      "links": [],
+      "developedFor": {
+        "name": "Minecraft Server",
+        "type": "Configuration System"
+      },
+      "metrics": [],
+      "gallery": []
+    }
+  ],
+  "experience": {
+    "heading": "Experience & Affiliations",
+    "intro": "Current roles, creator affiliations, and previous hands-on experience across studios and Minecraft networks.",
+    "current": [
+      {
+        "name": "Vanish Studios",
+        "role": "Founder & CEO",
+        "description": "Founded and leads an independent studio working across Minecraft, Discord, websites, media systems, and community infrastructure.",
+        "logo": "",
+        "initials": "VS",
+        "url": "",
+        "kind": "Leadership"
+      },
+      {
+        "name": "Fakepixel",
+        "role": "Admin Rank Holder & Beta Tester",
+        "description": "Currently holds Fakepixel's non-staff Admin rank and contributes as a Beta Tester by testing upcoming features, systems, and server changes. Previously served on the staff team as a Game Master and held YouTube rank, with plans to return to creating content on the network.",
+        "logo": "",
+        "initials": "FP",
+        "url": "",
+        "kind": "Community"
+      },
+      {
+        "name": "UltimisMC",
+        "role": "Partner",
+        "description": "Current content partner. Previous staff and development work is listed under past experience.",
+        "logo": "",
+        "initials": "UM",
+        "url": "",
+        "kind": "Creator"
+      },
+      {
+        "name": "Mineplex",
+        "role": "Content Creator",
+        "description": "Holds the network's creator rank as part of falter3d's Minecraft content work.",
+        "logo": "",
+        "initials": "MP",
+        "url": "",
+        "kind": "Creator"
+      },
+      {
+        "name": "PikaNetwork",
+        "role": "Partner",
+        "description": "Current creator partner through the falter3d channel.",
+        "logo": "",
+        "initials": "PN",
+        "url": "",
+        "kind": "Creator"
+      },
+      {
+        "name": "JartexNetwork",
+        "role": "Partner",
+        "description": "Current creator partner through the falter3d channel.",
+        "logo": "",
+        "initials": "JN",
+        "url": "",
+        "kind": "Creator"
+      }
+    ],
+    "previous": [
+      {
+        "name": "Fakepixel",
+        "role": "Game Master",
+        "description": "Previously handled moderation and community responsibilities as part of the server's staff team.",
+        "logo": "",
+        "initials": "FP",
+        "url": "",
+        "kind": "Staff"
+      },
+      {
+        "name": "Fakepixel",
+        "role": "YouTube Rank",
+        "description": "Previously represented falter3d as a ranked creator on the network.",
+        "logo": "",
+        "initials": "FP",
+        "url": "",
+        "kind": "Creator"
+      },
+      {
+        "name": "UltimisMC",
+        "role": "Configurator Developer",
+        "description": "Previously built and maintained server configurations and connected systems for the network.",
+        "logo": "",
+        "initials": "UM",
+        "url": "",
+        "kind": "Development"
+      },
+      {
+        "name": "UltimisMC",
+        "role": "Moderator",
+        "description": "Previously served on the moderation team before resigning from staff.",
+        "logo": "",
+        "initials": "UM",
+        "url": "",
+        "kind": "Staff"
+      }
+    ]
+  },
+  "contentCreation": {
+    "heading": "Content Creation",
+    "intro": "Minecraft content is the other half of what I do. I plan, record, edit, and publish the videos myself.",
+    "subscriberDisplay": "30K+",
+    "channels": [
+      {
+        "name": "falter3d",
+        "handle": "@falter3d",
+        "description": "My main channel for polished Minecraft Bedwars montages and creator-focused uploads.",
+        "url": "https://youtube.com/@falter3d",
+        "badge": "Main Channel",
+        "subscribers": "30K+",
+        "image": "assets/images/profile.webp"
+      },
+      {
+        "name": "filter2d",
+        "handle": "@filter2d",
+        "description": "My unserious secondary channel for clips, experimental uploads, and videos outside the main channel's usual format.",
+        "url": "https://youtube.com/@filter2d",
+        "badge": "Second Channel",
+        "subscribers": "",
+        "image": "assets/images/profile.webp"
+      }
+    ],
+    "editorial": {
+      "title": "Editing",
+      "description": "I edit non-commentary Minecraft videos with a focus on pacing, clean sync, readable gameplay, and the occasional joke clip at the end.",
+      "tags": [
+        "Video Editing",
+        "Montages",
+        "Pacing",
+        "Music Sync",
+        "YouTube"
+      ]
+    },
+    "videos": []
+  },
+  "workedWith": {
+    "heading": "Built For & Worked With",
+    "intro": "Creators, networks, and projects I have directly built systems for or worked with.",
+    "items": [
+      {
+        "name": "moxy",
+        "type": "YouTuber",
+        "description": "Developed and maintain Security, a Hypixel-linked verification and community security bot.",
+        "logo": "",
+        "initials": "MX",
+        "url": "https://www.youtube.com/@rbwrivp"
+      },
+      {
+        "name": "IndianBedwars",
+        "type": "YouTuber",
+        "description": "Developed the IndianBedwars Bot for moderation, support tickets, roles, and community management.",
+        "logo": "",
+        "initials": "IB",
+        "url": ""
+      },
+      {
+        "name": "CloudFun Network",
+        "type": "Minecraft Network",
+        "description": "Developed the Community Portal and a private creator-management platform for its media operations.",
+        "logo": "assets/images/brands/cloudfun.webp",
+        "initials": "CN",
+        "url": ""
+      },
+      {
+        "name": "Vanish Studios",
+        "type": "Digital Studio",
+        "description": "Founded the studio and developed its current website and project infrastructure.",
+        "logo": "",
+        "initials": "VS",
+        "url": ""
+      }
+    ]
+  },
+  "skills": {
+    "heading": "Skills & Tools",
+    "intro": "Technologies and areas I actively use across development, server work, and content creation.",
+    "groups": [
+      {
+        "name": "Discord Development",
+        "items": [
+          "JavaScript",
+          "Node.js",
+          "Discord.js",
+          "Slash Commands",
+          "Buttons & Modals",
+          "Permission Systems",
+          "Moderation Tooling",
+          "API Integrations"
+        ]
+      },
+      {
+        "name": "Minecraft Development",
+        "items": [
+          "Java",
+          "Paper",
+          "Spigot",
+          "Minecraft Plugins",
+          "Minecraft Mods",
+          "PacketEvents",
+          "ProtocolLib",
+          "WorldGuard"
+        ]
+      },
+      {
+        "name": "Web & Platforms",
+        "items": [
+          "HTML",
+          "CSS",
+          "JavaScript",
+          "Cloudflare Workers",
+          "Cloudflare D1",
+          "Cloudflare R2",
+          "Discord OAuth",
+          "Responsive Design"
+        ]
+      },
+      {
+        "name": "Data & Services",
+        "items": [
+          "SQLite",
+          "JSON Storage",
+          "REST APIs",
+          "YouTube Data API",
+          "Twitch API",
+          "Hypixel API",
+          "Mojang API",
+          "Audit Logging"
+        ]
+      },
+      {
+        "name": "Server Configuration",
+        "items": [
+          "YAML",
+          "LuckPerms",
+          "PlaceholderAPI",
+          "TAB",
+          "DeluxeMenus",
+          "Vault",
+          "Plugin Integration",
+          "System Design"
+        ]
+      },
+      {
+        "name": "Content",
+        "items": [
+          "Video Editing",
+          "Minecraft Montages",
+          "Pacing",
+          "Music Sync",
+          "YouTube Publishing",
+          "Creator Programs"
+        ]
+      }
+    ]
+  },
+  "contact": {
+    "heading": "Contact me on Discord.",
+    "description": "I am not always available for new work, but availability changes. Discord is the fastest and most reliable way to reach me.",
+    "username": "falter3d",
+    "profileUrl": "https://discord.com/users/184491496291041280",
+    "copyLabel": "Copy username",
+    "openLabel": "Open Discord profile"
+  },
+  "socials": [
+    {
+      "name": "YouTube",
+      "label": "falter3d",
+      "url": "https://youtube.com/@falter3d"
+    },
+    {
+      "name": "Second Channel",
+      "label": "filter2d",
+      "url": "https://youtube.com/@filter2d"
+    },
+    {
+      "name": "GitHub",
+      "label": "falter3d",
+      "url": "https://github.com/falter3d"
+    },
+    {
+      "name": "Discord",
+      "label": "falter3d",
+      "url": "https://discord.com/users/184491496291041280"
+    }
+  ],
+  "admin": {
+    "revisionLimit": 25,
+    "allowAdditionalAdmins": true,
+    "scheduledPublishing": true,
+    "ownerDiscordId": "184491496291041280"
+  }
+}

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050b17">
+  <title>falter3d Site Editor</title>
+  <link rel="icon" type="image/png" href="../assets/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <script src="../config.js"></script>
+  <script defer src="admin.js"></script>
+</head>
+<body>
+  <div class="admin-background" aria-hidden="true"></div>
+
+  <section class="auth-screen" id="auth-screen">
+    <div class="auth-card">
+      <a class="auth-brand" href="../"><span>falter</span><strong>3d</strong> site editor</a>
+      <div class="auth-orb"><img src="../assets/images/favicon.png" alt=""></div>
+      <p class="auth-kicker">Protected editor</p>
+      <h1 id="auth-title">Loading editor…</h1>
+      <p id="auth-description">Checking the portfolio backend and your session.</p>
+      <div class="auth-actions" id="auth-actions"></div>
+      <p class="auth-note" id="auth-note"></p>
+    </div>
+  </section>
+
+  <div class="admin-app" id="admin-app" hidden>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><span>falter</span><strong>3d</strong><small>editor</small></div>
+      <button class="sidebar-close" id="sidebar-close" type="button">Close</button>
+      <nav class="sidebar-nav" id="sidebar-nav">
+        <button class="active" data-view="dashboard"><span>01</span>Dashboard</button>
+        <button data-view="site"><span>02</span>Site & Hero</button>
+        <button data-view="projects"><span>03</span>Projects</button>
+        <button data-view="experience"><span>04</span>Experience</button>
+        <button data-view="content"><span>05</span>YouTube</button>
+        <button data-view="worked"><span>06</span>Worked With</button>
+        <button data-view="skills"><span>07</span>Skills</button>
+        <button data-view="socials"><span>08</span>Socials</button>
+        <button data-view="settings"><span>09</span>Settings</button>
+        <button data-view="revisions"><span>10</span>Revisions</button>
+        <button data-view="scheduled"><span>11</span>Scheduled</button>
+        <button data-view="admins"><span>12</span>Administrators</button>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="../" target="_blank" rel="noopener">Open portfolio ↗</a>
+        <button id="logout-button" type="button">Sign out</button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <button class="mobile-sidebar-button" id="mobile-sidebar-button" type="button">Menu</button>
+        <div>
+          <p id="view-kicker">Overview</p>
+          <h1 id="view-title">Dashboard</h1>
+        </div>
+        <div class="draft-state"><i id="draft-dot"></i><span id="draft-label">No unsaved changes</span></div>
+        <div class="publish-actions">
+          <button class="button subtle" id="save-draft" type="button">Save Draft</button>
+          <button class="button subtle" id="preview-draft" type="button">Preview</button>
+          <button class="button primary" id="publish-draft" type="button">Publish</button>
+        </div>
+      </header>
+      <div class="admin-content" id="admin-content"></div>
+    </main>
+  </div>
+
+  <dialog class="editor-dialog" id="editor-dialog">
+    <form method="dialog" id="editor-form">
+      <header class="dialog-header">
+        <div><p id="dialog-kicker">Edit</p><h2 id="dialog-title">Item</h2></div>
+        <button class="icon-button" value="cancel" aria-label="Close">×</button>
+      </header>
+      <div class="dialog-body" id="dialog-body"></div>
+      <footer class="dialog-footer">
+        <button class="button danger" id="dialog-delete" type="button" hidden>Archive / Delete</button>
+        <span></span>
+        <button class="button subtle" value="cancel">Cancel</button>
+        <button class="button primary" id="dialog-save" type="submit" value="default">Save changes</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog class="confirm-dialog" id="confirm-dialog">
+    <form method="dialog">
+      <h2 id="confirm-title">Confirm action</h2>
+      <p id="confirm-message"></p>
+      <div class="confirm-actions">
+        <button class="button subtle" value="cancel">Cancel</button>
+        <button class="button danger" id="confirm-accept" value="default">Confirm</button>
+      </div>
+    </form>
+  </dialog>
+
+  <input id="image-upload-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+  <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+</body>
+</html>
