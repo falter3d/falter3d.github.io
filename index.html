@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#040914">
+  <meta name="description" content="Developer, YouTuber, and editor creating Discord bots, Minecraft projects, websites, community platforms, and more.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://falter3d.github.io/">
+  <meta property="og:title" content="falter3d — Developer, YouTuber & Editor">
+  <meta property="og:description" content="Developer, YouTuber, and editor creating Discord bots, Minecraft projects, websites, community platforms, and more.">
+  <meta property="og:image" content="https://falter3d.github.io/assets/images/profile.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="falter3d — Developer, YouTuber & Editor">
+  <meta name="twitter:description" content="Developer, YouTuber, and editor creating Discord bots, Minecraft projects, websites, community platforms, and more.">
+  <meta name="twitter:image" content="https://falter3d.github.io/assets/images/profile.webp">
+  <title>falter3d — Developer, YouTuber & Editor</title>
+  <link rel="canonical" href="https://falter3d.github.io/">
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260802-7">
+  <script src="config.js?v=20260802-7"></script>
+  <script defer src="assets/js/api.js?v=20260802-7"></script>
+  <script defer src="assets/js/app.js?v=20260802-7"></script>
+</head>
+<body>
+  <div class="loading-screen" id="loading-screen" aria-hidden="true">
+    <div class="loading-moon"><span></span></div>
+    <p>loading falter3d</p>
+  </div>
+
+  <div class="background-layer" aria-hidden="true"></div>
+  <div class="background-noise" aria-hidden="true"></div>
+  <div class="mouse-glow" id="mouse-glow" aria-hidden="true"></div>
+  <div class="custom-cursor" id="custom-cursor" aria-hidden="true"><span></span></div>
+
+  <header class="site-header" id="site-header">
+    <a class="brand" href="#top" aria-label="falter3d home">
+      <span class="brand-word">falter</span><span class="brand-accent">3d</span>
+    </a>
+    <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    <nav class="main-nav" id="main-nav" aria-label="Main navigation"></nav>
+    <a class="nav-contact" href="#contact">Discord <span>↗</span></a>
+  </header>
+
+  <main id="top">
+    <section class="hero section-shell" id="home">
+      <div class="hero-copy reveal">
+        <p class="eyebrow" id="hero-eyebrow"></p>
+        <h1 id="hero-headline"></h1>
+        <p class="hero-summary" id="hero-summary"></p>
+        <div class="hero-actions" id="hero-actions"></div>
+        <p class="hero-availability" id="hero-availability"></p>
+      </div>
+      <div class="hero-visual reveal" data-delay="100">
+        <div class="profile-orbit" aria-hidden="true"><i></i><i></i><i></i></div>
+        <figure class="profile-frame" id="profile-admin-trigger">
+          <img id="profile-image" src="assets/images/profile.webp" alt="falter3d profile artwork">
+          <span class="profile-shine" aria-hidden="true"></span>
+        </figure>
+        <a class="presence-card" id="presence-card" href="https://discord.com/users/184491496291041280" target="_blank" rel="noopener">
+          <span class="presence-avatar-wrap">
+            <img id="presence-avatar" src="assets/images/favicon.png" alt="">
+            <i class="presence-dot offline" id="presence-dot"></i>
+          </span>
+          <span class="presence-copy">
+            <strong>falter3d</strong>
+            <small id="presence-text">Checking Discord status…</small>
+          </span>
+          <span class="presence-arrow">↗</span>
+        </a>
+      </div>
+      <a class="scroll-cue" href="#about" aria-label="Scroll to about"><span></span>scroll</a>
+    </section>
+
+    <div id="dynamic-sections"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div>
+      <span class="footer-brand">falter3d</span>
+      <span class="footer-note">Built for the things I actually do.</span>
+    </div>
+    <div class="footer-socials" id="footer-socials"></div>
+    <button class="admin-moon" id="admin-moon" type="button" aria-label="Open site editor" title="Site editor">◐</button>
+  </footer>
+
+  <dialog class="project-modal" id="project-modal">
+    <button class="modal-close" id="modal-close" type="button" aria-label="Close project">×</button>
+    <div id="project-modal-content"></div>
+  </dialog>
+
+  <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
+  <noscript>
+    <div class="noscript">This portfolio needs JavaScript to load its configurable content.</div>
+  </noscript>
+</body>
+</html>
