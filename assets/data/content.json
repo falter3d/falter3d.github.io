@@ -1436,5 +1436,10 @@
     "allowAdditionalAdmins": true,
     "scheduledPublishing": true,
     "ownerDiscordId": "184491496291041280"
+  },
+  "_meta": {
+    "contentVersion": 1785636689712,
+    "build": "20260802-5",
+    "updatedAt": "2026-08-02T03:07:00+01:00"
   }
 }

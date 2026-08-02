@@ -14,3 +14,5 @@ https://falter3d.github.io
 - GitHub Pages
 - Cloudflare Workers
 - Cloudflare D1
+
+The Cloudflare backend is deployed separately. No credentials or private tokens are stored in this repository.

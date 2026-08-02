@@ -9,19 +9,52 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css?v=20260802-3">
-  <script src="../config.js"></script>
+  <link rel="stylesheet" href="admin.css?v=20260802-5">
+  <script src="../config.js?v=20260802-5"></script>
   <script>
     window.__FALTER_EDITOR_STARTED = false;
-    window.setTimeout(() => {
-      if (window.__FALTER_EDITOR_STARTED) return;
-      const title = document.getElementById("auth-title");
+    window.__FALTER_EDITOR_READY = false;
+
+    function showEditorStartupFailure(title, message) {
+      const heading = document.getElementById("auth-title");
       const description = document.getElementById("auth-description");
-      if (title) title.textContent = "The editor script did not load.";
-      if (description) description.textContent = "GitHub Pages may still be serving an older or missing admin.js file. Refresh with Ctrl + F5 after the deployment finishes.";
-    }, 8000);
+      const actions = document.getElementById("auth-actions");
+      const note = document.getElementById("auth-note");
+      if (!heading || !description || !actions) return;
+
+      heading.textContent = title;
+      description.textContent = message;
+      const apiBase = String(window.FALTER_PORTFOLIO_CONFIG?.API_BASE_URL || "").replace(/\/+$/, "");
+      const loginUrl = apiBase
+        ? `${apiBase}/api/auth/login?returnTo=${encodeURIComponent(location.href)}`
+        : "";
+      actions.innerHTML = loginUrl
+        ? `<a class="button primary" href="${loginUrl}">Sign in with Discord</a><a class="button subtle" href="../">Return to portfolio</a>`
+        : `<a class="button subtle" href="../">Return to portfolio</a>`;
+      if (note) note.textContent = "Editor build 2026.08.02.5";
+    }
+
+    window.addEventListener("error", (event) => {
+      if (window.__FALTER_EDITOR_READY) return;
+      showEditorStartupFailure("The editor script crashed.", event.message || "A JavaScript error stopped the editor from starting.");
+    });
+
+    window.addEventListener("unhandledrejection", (event) => {
+      if (window.__FALTER_EDITOR_READY) return;
+      const reason = event.reason?.message || String(event.reason || "Unknown startup error");
+      showEditorStartupFailure("The editor could not start.", reason);
+    });
+
+    window.setTimeout(() => {
+      if (window.__FALTER_EDITOR_READY) return;
+      if (!window.__FALTER_EDITOR_STARTED) {
+        showEditorStartupFailure("The editor script did not load.", "GitHub Pages is still serving an older or missing admin.js file.");
+      } else {
+        showEditorStartupFailure("The editor did not finish starting.", "The script loaded, but startup did not complete. Use the Discord button below to continue.");
+      }
+    }, 5000);
   </script>
-  <script defer src="admin.js?v=20260802-3"></script>
+  <script defer src="admin.js?v=20260802-5"></script>
 </head>
 <body>
   <div class="admin-background" aria-hidden="true"></div>
@@ -34,7 +67,7 @@
       <h1 id="auth-title">Loading editor…</h1>
       <p id="auth-description">Checking the portfolio backend and your session.</p>
       <div class="auth-actions" id="auth-actions"></div>
-      <p class="auth-note" id="auth-note"></p>
+      <p class="auth-note" id="auth-note">Editor build 2026.08.02.5</p>
     </div>
   </section>
 
@@ -65,10 +98,7 @@
     <main class="admin-main">
       <header class="admin-topbar">
         <button class="mobile-sidebar-button" id="mobile-sidebar-button" type="button">Menu</button>
-        <div>
-          <p id="view-kicker">Overview</p>
-          <h1 id="view-title">Dashboard</h1>
-        </div>
+        <div><p id="view-kicker">Overview</p><h1 id="view-title">Dashboard</h1></div>
         <div class="draft-state"><i id="draft-dot"></i><span id="draft-label">No unsaved changes</span></div>
         <div class="publish-actions">
           <button class="button subtle" id="save-draft" type="button">Save Draft</button>

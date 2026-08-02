@@ -2,9 +2,12 @@
   "use strict";
 
   window.__FALTER_EDITOR_STARTED = true;
+  window.__FALTER_EDITOR_READY = false;
 
   const config = window.FALTER_PORTFOLIO_CONFIG || {};
   const apiBase = String(config.API_BASE_URL || "").replace(/\/+$/, "");
+  const buildVersion = String(config.BUILD_VERSION || "20260802-5");
+  const contentVersion = (content) => Number(content?._meta?.contentVersion || content?.contentVersion || 0) || 0;
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
   const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -103,6 +106,7 @@
   }
 
   function showAuth({ title, description, actions = [], note = "" }) {
+    window.__FALTER_EDITOR_READY = true;
     $("#auth-title").textContent = title;
     $("#auth-description").textContent = description;
     $("#auth-note").textContent = note;
@@ -115,7 +119,7 @@
   }
 
   async function loadBundledContent() {
-    const response = await fetch("../assets/data/content.json", { cache: "no-store" });
+    const response = await fetch(`../assets/data/content.json?v=${encodeURIComponent(buildVersion)}`, { cache: "no-store" });
     if (!response.ok) throw new Error("The bundled portfolio content could not be loaded.");
     return response.json();
   }
@@ -159,10 +163,20 @@
 
     try {
       state.user = await api("/api/auth/me");
-      const draft = await api("/api/admin/draft");
-      state.content = draft.content || await loadBundledContent();
-      state.baseline = clone(state.content);
+      const [draft, bundled] = await Promise.all([
+        api("/api/admin/draft"),
+        loadBundledContent().catch(() => null)
+      ]);
+      const savedContent = draft.content || null;
+      const bundledIsNewer = Boolean(bundled && contentVersion(bundled) > contentVersion(savedContent));
+      state.content = bundledIsNewer ? bundled : (savedContent || bundled);
+      if (!state.content) throw new Error("No editable portfolio content could be loaded.");
+      state.baseline = clone(savedContent || state.content);
       showApp();
+      if (bundledIsNewer) {
+        setDirty(true);
+        toast("A newer site update was loaded from GitHub. Review it, then Publish.");
+      }
     } catch (error) {
       sessionStorage.removeItem("falter3d_admin_session");
       showAuth({
@@ -178,6 +192,7 @@
   }
 
   function showApp() {
+    window.__FALTER_EDITOR_READY = true;
     $("#auth-screen").hidden = true;
     $("#admin-app").hidden = false;
     $("#save-draft").hidden = !can("save_draft");
@@ -863,8 +878,18 @@
     $("#confirm-dialog").showModal();
   }
 
+  function stampContentVersion() {
+    state.content._meta = {
+      ...(state.content._meta || {}),
+      contentVersion: Date.now(),
+      build: buildVersion,
+      updatedAt: new Date().toISOString()
+    };
+  }
+
   async function saveDraft() {
     try {
+      stampContentVersion();
       if (state.localMode || !apiBase) localStorage.setItem("falter3d_portfolio_draft", JSON.stringify(state.content));
       else await api("/api/admin/draft", { method: "PUT", body: { content: state.content } });
       state.baseline = clone(state.content);
@@ -889,6 +914,7 @@
 
   async function publishDraft() {
     try {
+      stampContentVersion();
       if (state.localMode || !apiBase) {
         localStorage.setItem("falter3d_portfolio_local_published", JSON.stringify(state.content));
         localStorage.setItem("falter3d_portfolio_draft", JSON.stringify(state.content));

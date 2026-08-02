@@ -5,5 +5,6 @@ window.FALTER_PORTFOLIO_CONFIG = Object.freeze({
   FALLBACK_CONTENT_URL: "assets/data/content.json",
   DISCORD_USER_ID: "184491496291041280",
   LANYARD_URL: "https://api.lanyard.rest/v1/users/184491496291041280",
-  ADMIN_PATH: "admin/"
+  ADMIN_PATH: "admin/",
+  BUILD_VERSION: "20260802-5"
 });
