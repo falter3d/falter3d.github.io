@@ -381,30 +381,6 @@
     $("#footer-socials").innerHTML = state.content.socials.map((item) => `<a href="${escapeHtml(safeUrl(item.url))}" target="_blank" rel="noopener">${escapeHtml(item.name)}</a>`).join("");
   }
 
-  function raiseCursorAboveModal(dialog = null) {
-    const layer = $("#cursor-layer");
-    const cursor = $("#custom-cursor");
-    if (!layer || !cursor) return;
-
-    if (typeof layer.showPopover === "function") {
-      try {
-        if (layer.matches(":popover-open")) layer.hidePopover();
-        layer.showPopover();
-        return;
-      } catch (_) {
-        // Fall through to the dialog-child fallback below.
-      }
-    }
-
-    if (dialog?.open && !dialog.contains(cursor)) dialog.append(cursor);
-  }
-
-  function restoreCursorLayer() {
-    const layer = $("#cursor-layer");
-    const cursor = $("#custom-cursor");
-    if (layer && cursor && cursor.parentElement !== layer) layer.append(cursor);
-  }
-
   function openProject(id) {
     const project = state.content.projects.find((item) => item.id === id);
     if (!project) return;
@@ -440,14 +416,12 @@
     const dialog = $("#project-modal");
     dialog.showModal();
     document.body.classList.add("modal-open");
-    raiseCursorAboveModal(dialog);
   }
 
   function closeProject() {
     const dialog = $("#project-modal");
     if (dialog.open) dialog.close();
     document.body.classList.remove("modal-open");
-    restoreCursorLayer();
   }
 
   function attachProjectEvents() {
@@ -533,14 +507,17 @@
     const enabled = state.content.site.showCursor !== false && matchMedia("(pointer: fine)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!enabled) return;
     document.body.classList.add("cursor-enabled");
-    raiseCursorAboveModal();
     const cursor = $("#custom-cursor");
     const glow = $("#mouse-glow");
     let x = innerWidth / 2, y = innerHeight / 2, cx = x, cy = y;
-    addEventListener("mousemove", (event) => {
+    const updatePointerPosition = (event) => {
       x = event.clientX; y = event.clientY;
       glow.style.left = `${x}px`; glow.style.top = `${y}px`; glow.style.opacity = state.content.site.showMouseGlow === false ? "0" : "1";
-    }, { passive: true });
+    };
+    // Pointer events keep firing while the custom modal scrollbar has pointer capture.
+    // Mousemove is retained as a fallback for older browsers.
+    addEventListener("pointermove", updatePointerPosition, { passive: true });
+    addEventListener("mousemove", updatePointerPosition, { passive: true });
     const animate = () => {
       cx += (x - cx) * .2; cy += (y - cy) * .2;
       cursor.style.left = `${cx}px`; cursor.style.top = `${cy}px`;
@@ -592,14 +569,11 @@
   function setupModal() {
     $("#modal-close").addEventListener("click", closeProject);
     $("#project-modal").addEventListener("click", (event) => {
-      const rect = event.currentTarget.getBoundingClientRect();
-      const outside = event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
-      if (outside) closeProject();
+      // Native dialog backdrop clicks target the dialog itself. Clicks on modal
+      // controls, including the custom scrollbar, must never close the modal.
+      if (event.target === event.currentTarget) closeProject();
     });
-    $("#project-modal").addEventListener("close", () => {
-      document.body.classList.remove("modal-open");
-      restoreCursorLayer();
-    });
+    $("#project-modal").addEventListener("close", () => document.body.classList.remove("modal-open"));
   }
 
   function hideLoader() {
